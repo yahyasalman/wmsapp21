@@ -1,0 +1,39 @@
+<div class="bg-bgColor min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+    <h1 class="text-2xl font-semibold text-center text-CustomBlack mb-6">
+      Opt-Out Form
+    </h1>
+    <p class="text-sm text-Darkgray mb-6 text-center">
+      By opting out, your data will be permanently deleted from our system. You will receive a confirmation email once the process is complete.
+    </p>
+
+    <!-- Success Message -->
+  <p-message *ngIf="successMessage" severity="success">
+      {{ successProductLabel }}
+    </p-message>
+    <!-- Form -->
+    <form (ngSubmit)="onOptOut()" class="space-y-4">
+      <div>
+        <label for="username" class="block text-sm font-medium text-Darkgray mb-2">
+          Enter your username:
+        </label>
+        <input
+          id="username"
+          type="text"
+          [(ngModel)]="username"
+          name="username"
+          class="w-full px-4 py-2 border border-CustomBorder rounded-md focus:outline-none focus:ring-2 focus:ring-customBlue"
+          placeholder="Your username"
+          required
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-customBlue text-white py-2 rounded-md text-sm font-semibold hover:bg-lightBlue transition"
+      >
+        Opt Out
+      </button>
+    </form>
+  </div>
+</div>

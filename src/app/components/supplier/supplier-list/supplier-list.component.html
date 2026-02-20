@@ -1,0 +1,139 @@
+<section class="px-5 py-10">
+    <app-generic-loader *ngIf="isLoading"></app-generic-loader>
+
+    <form [formGroup]="filters">
+        <div class="mb-6 mt-10 text-sm font-medium shadow-sm bg-white rounded-md p-5">
+            <div class="flex items-center gap-4 flex-wrap md:flex-nowrap mb-6">
+                <div class="flex items-center gap-4 flex-wrap md:flex-nowrap w-full">
+
+                    <div>
+                        <p-button size="large" styleClass="w-full mb-3"
+                            label="{{this.sharedService.T('createSupplier')}}"
+                            (onClick)="supplierCrud(0)">
+                            <i class="pi pi-plus mr-2"></i>
+                        </p-button>
+                    </div>
+
+                    <div class="rounded-md flex justify-end items-end md:ml-auto">
+                        <div class="ps-2 h-10 rounded-md">
+                            <input type="text" formControlName="supplierName"
+                                class="w-64 max-w-full ps-2 h-10 rounded-md border border-gray-300"
+                                placeholder="{{this.sharedService.T('search')}}"
+                                (input)="onSupplierKeyup($event)" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-10">
+            <p-table styleClass="text-sm custom-table" [lazy]="true"
+                [tableStyle]="{'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px'}"
+                [value]="suppliers" [rows]="10" [first]="(filters.get('currentPage')?.value - 1) * 10"
+                responsiveLayout="scroll" (onLazyLoad)="sortColumn($event)" [sortOrder]="-1" sortField="supplierId">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="supplierId">
+                            <p-sortIcon field="supplierId" />
+                        </th>
+                        <th class="table-header-cell">{{ this.sharedService.T('supplierName')}}</th>
+                        <th class="table-header-cell">{{ this.sharedService.T('address')}}</th>
+                        <th class="table-header-cell">{{ this.sharedService.T('telephone')}}</th>
+                        <th class="table-header-cell">{{ this.sharedService.T('extraInfo')}}</th>
+
+                        <th class="table-header-cell text-center rounded-r-xl">{{ this.sharedService.T('actions')}}</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-supplier>
+                    <tr [ngClass]="{'bg-green-100': supplier.supplierId === latestSupplierId,
+                    'bg-transparent': supplier.supplierId !== latestSupplierId}" style="transition: background-color 0.8s ease;" class="p-selectable-row">
+
+                        <td class="id-column-cell rounded-l-lg">
+                            <span class="id-text">{{ supplier.supplierId }}</span>
+                        </td>
+
+                        <td class="!bg-White !border-0 font-medium">{{ supplier.supplierName }}</td>
+                        <td class="!bg-White !border-0">{{ supplier.supplierAddress }}</td>
+                        <td class="!bg-White !border-0">{{ supplier.supplierTelephone }}</td>
+                        <td class="!bg-White !border-0">{{ supplier.supplierExtraInfo }}</td>
+
+                        <td class="!bg-White !border-0 text-center text-Darkgray rounded-r-lg">
+                            <p-button size="small" label="{{ this.sharedService.T('edit') }}" class="pe-3"
+                                (onClick)="supplierCrud(supplier.supplierId)">
+                                <i class="pi pi-pencil mr-1"></i>
+                            </p-button> 
+                        </td>
+
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            @if(pager.totalRecords > 10) {
+            <div class="flex py-10">
+                <div class="my-auto">
+                    <p-select [options]="[10,20,30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}" styleClass="bg-white"
+                        (onChange)="onPageSizeChange($event)" />
+                </div>
+
+                <p-paginator [first]="pager.firstPage" styleClass="!bg-transparent" [rows]="pager.pageSize"
+                    [totalRecords]="pager.totalRecords" (onPageChange)="onPageChange($event)"
+                    [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+                    currentPageReportTemplate="{first} - {last} {{this.sharedService.T('of')}} {totalRecords}">
+                </p-paginator>
+            </div>
+            }
+        </div>
+    </form>
+
+  <p-dialog
+    header="{{ isNewObject ? (this.sharedService.T('createSupplier')) : (this.sharedService.T('editSupplier')) }}"
+    [(visible)]="showSupplierDialog" [modal]="true" [style]="{ width: '600px' }" [draggable]="false"
+    [resizable]="false">
+
+    <form [formGroup]="supplierForm">
+        <div class="bg-white rounded-xl shadow-none">
+            
+            <div class="flex flex-col gap-4">
+
+                <div>
+                    <label class="mb-1 font-semibold block">{{ this.sharedService.T('supplierName') }} <span
+                            class="text-red-500">*</span></label>
+                        <input type="text" formControlName="supplierName" class="w-full p-inputtext"
+                        [ngClass]="{'border-red-500': getf('supplierName')?.invalid && getf('supplierName')?.touched}" />
+                </div>
+
+                <div>
+                    <label class="mb-1 font-semibold block">{{ this.sharedService.T('address')}}</label>
+                    <input type="text" formControlName="supplierAddress" class="w-full p-inputtext" />
+                </div>
+
+                <div>
+                    <label class="mb-1 font-semibold block">{{ this.sharedService.T('telephone')}}</label>
+                    <input type="text" formControlName="supplierTelephone" class="w-full p-inputtext" />
+                </div>
+
+                <div>
+                    <label class="mb-1 font-semibold block">{{ this.sharedService.T('extraInfo')}}</label>
+                    <textarea formControlName="supplierExtraInfo" rows="2" class="w-full p-inputtext"></textarea>
+                </div>
+
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <p-button
+                    label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }}"
+                    (onClick)="onFormSubmit()">
+                </p-button>
+                <p-button styleClass="p-button cancel-button"
+                    label="{{ this.sharedService.T('cancel') }}" (onClick)="closeSupplierDialog()">
+                </p-button>
+            </div>
+        </div>
+    </form>
+</p-dialog>
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+</section>

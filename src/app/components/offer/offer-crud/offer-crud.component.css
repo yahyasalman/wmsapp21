@@ -1,0 +1,50 @@
+::ng-deep.rounded-pill{
+    border: unset !important;
+    padding: 0 !important;
+    margin-right: 3px;
+}
+
+::ng-deep.p-autocomplete.p-component.p-inputwrapper {
+    width: 100% !important;
+}
+::ng-deep.p-autocomplete.p-component.p-inputwrapper input {
+    width: 100% !important;
+    padding: .5rem!important;
+  }
+  ::ng-deep .white_bg_input .p-inputtext {
+    background-color: white !important;
+  }
+
+::ng-deep .p-autocomplete.p-component.p-inputwrapper input:focus,
+::ng-deep .p-autocomplete.p-component.p-inputwrapper input:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.cdk-drag-preview {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    background-color: white;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.5;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms ease;
+}
+
+
+/* input field style */
+.p-autocomplete {
+    display: grid !important;
+
+}
+
+.error_border{
+    border: 1px solid red;
+    border-radius: 5px solid red;
+}
+
+  

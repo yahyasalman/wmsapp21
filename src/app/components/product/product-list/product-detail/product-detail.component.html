@@ -1,0 +1,416 @@
+<section class="px-5 pb-10">
+    <app-generic-loader *ngIf="isLoading"></app-generic-loader>
+
+    <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16">
+        <div class="">
+            <p class="font-normal text-2xl">
+                {{ this.sharedService.T('product') }} #{{this.product?.productId}} - {{this.product?.productName}}
+            </p>
+        </div>
+        <div class="flex gap-2">
+            <span class="my-auto">{{ this.sharedService.workshopName}}</span>
+            <div
+                class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-medium">
+                <p>AS</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-12 gap-9 mt-10">
+
+        <div class="col-span-4 bg-white p-5 text-center rounded-xl shadow space-y-3">
+            <div
+                class="h-[70px] w-[70px] rounded-full mx-auto border border-CustomBorder flex items-center justify-center font-medium text-2xl bg-gray-50">
+                <i class="pi pi-box text-3xl text-gray-500"></i>
+            </div>
+            <p class="mx-auto px-3 py-1 rounded-full text-[10px] bg-[#F3F8FF] text-[#0052CC] w-fit">
+                {{ productCategory }}
+            </p>
+            <p class="text-2xl font-semibold">{{ product?.productName }}</p>
+            <p class="text-xs text-Darkgray">
+                {{ product?.productDescription }}
+            </p>
+        </div>
+
+        <div class="col-span-8 bg-white p-5 rounded-xl shadow">
+            <div class="grid grid-cols-12 gap-4">
+                <div class="lg:col-span-4 md:col-span-6 mb-4">
+                    <p class="font-bold text-sm">{{ this.sharedService.T('quantity') }}</p>
+                    <p class="text-sm font-bold">{{ product?.quantity }}</p>
+                </div>
+                <div class="lg:col-span-4 md:col-span-6 mb-4">
+                    <p class="font-bold text-sm">{{ this.sharedService.T('unit') }}</p>
+                    <p class="text-sm">{{ product?.unit }}</p>
+                </div>
+                <div class="lg:col-span-4 md:col-span-6 mb-4">
+                    <p class="font-bold text-sm">{{ this.sharedService.T('pricewithoutvat') }}</p>
+                    <p class="text-sm font-semibold text-green-600">{{ product?.unitPrice }} SEK</p>
+                </div>
+                <div class="lg:col-span-4 md:col-span-6 mb-4">
+                    <p class="font-bold text-sm">{{ this.sharedService.T('totalItemsPurchased') }}</p>
+                    <p class="text-sm">{{ product?.inHouseQuantity }}</p>
+                </div>
+                <div class="lg:col-span-4 md:col-span-6 mb-4">
+                    <p class="font-bold text-sm">{{ this.sharedService.T('totalItemsSold') }}</p>
+                    <p class="text-sm">{{ product?.invoiceQuantity }}</p>
+                </div>
+                <div class="lg:col-span-4 md:col-span-6 mb-4">
+                    <p class="font-bold text-sm">{{ this.sharedService.T('remainingBalance') }}</p>
+                    <p class="text-sm">{{ product?.invoiceQuantity }}</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-10">
+        <p-tabs value="0">
+            <p-tablist>
+                <p-tab value="0">
+                    {{ this.sharedService.T('purchaseHistory') }}
+                </p-tab>
+                <p-tab value="1">
+                    {{ this.sharedService.T('saleHistory') || 'Info' }}
+                </p-tab>
+            </p-tablist>
+
+            <p-tabpanels>
+
+                <p-tabpanel value="0">
+                    <!-- <div class="bg-white rounded-md flex justify-between items-center">
+                        <div class="flex gap-5">
+                            <div class="flex gap-1 my-auto">
+                                <span class="text-sm">{{ this.sharedService.T('totalPurchased') }}:</span>
+                                <span class="text-sm font-bold">{{ product?.inHouseQuantity }}</span>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="mt-0">
+
+                        <div class="flex justify-end items-center mb-4">
+                            <p-button label="{{ this.sharedService.T('addInventory') }}" icon="pi pi-plus" size="small"
+                                (click)="openInventoryDialog()">
+                            </p-button>
+                        </div>
+
+                        <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="inventories" [rows]="10"
+                            [first]="(inventoryFilters.get('currentPage')?.value - 1) * inventoryFilters.get('pageSize')?.value"
+                            [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+                            (onLazyLoad)="sortColumn($event)" responsiveLayout="scroll" [sortOrder]="-1"
+                            sortField="inventoryId" 
+                            data-testid="inventory-table">
+
+                            <ng-template #header>
+                                <tr class="">
+                                    <th class="table-header-cell id-column-header rounded-l-xl text-left"
+                                        pSortableColumn="inventoryId">
+                                        <p-sortIcon field="inventoryId" />
+                                         {{ this.sharedService.T('purchaseId') }} 
+                                    </th>
+                                    <th class="table-header-cell">
+                                        {{ this.sharedService.T('purchaseDate') }}
+                                    </th>
+
+                                    <th class="table-header-cell ">
+                                        {{ this.sharedService.T('purchaseQuantity') }}
+                                    </th>
+
+                                    <th class="table-header-cell">
+                                        {{ this.sharedService.T('purchaseNote') }}
+                                    </th>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="body" let-inv>
+                                <tr class="p-selectable-row">
+                                    <td class="id-column-cell rounded-l-lg text-left">{{ inv.inventoryId }}</td>
+                                    <td class="p-2 border-0 rounded-l-lg">{{ inv.inventoryDate }}</td>
+                                    <td class="p-2 font-bold border-0">
+                                        <strong> {{ inv.inventoryQuantity }} </strong>
+                                    </td>
+                                    <td class="p-2 border-0 rounded-r-lg">
+                                            {{ inv.inventoryNote }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="3" class="text-center p-4 border-0">{{
+                                        this.sharedService.T('noPurchaseFound.') }}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+
+                        <div *ngIf="inventoryPager.totalRecords > 10" class="flex items-center justify-between py-6">
+                            <div class="flex items-center">
+                                <p-select [options]="[10, 20, 30]" [(ngModel)]="inventoryFilters.value.pageSize"
+                                    [ngModelOptions]="{standalone: true}"
+                                    styleClass="bg-white border border-CustomBorder rounded-md"
+                                    (onChange)="onInventoryPageSizeChange($event)">
+                                </p-select>
+                            </div>
+
+                            <!-- Paginator -->
+                            <p-paginator [first]="inventoryPager.firstPage" [rows]="inventoryPager.pageSize"
+                                [totalRecords]="inventoryPager.totalRecords"
+                                (onPageChange)="onInventoryPageChange($event)" [showCurrentPageReport]="true"
+                                [showFirstLastIcon]="true"
+                                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+                                styleClass="!bg-transparent">
+                                <ng-template pTemplate="firstpagelinkicon">
+                                    <img src="assets/icons/paginator/previus.svg" alt="">
+                                </ng-template>
+                                <ng-template pTemplate="lastpagelinkicon">
+                                    <img src="assets/icons/paginator/next.svg" alt="">
+                                </ng-template>
+                                <ng-template pTemplate="previouspagelinkicon">
+                                    <div class="flex items-center gap-2">
+                                        <div>{{ this.sharedService.T('previous') }}</div>
+
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="nextpagelinkicon">
+                                    <div class="flex items-center gap-2">
+                                        <div>{{ this.sharedService.T('next') }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-paginator>
+                        </div>
+                    </div>
+                </p-tabpanel>
+
+                <p-tabpanel value="1">
+                    <!-- <div class="bg-white rounded-md flex justify-between items-center">
+                        <div class="flex gap-5">
+                            <div class="flex gap-1 my-auto">
+                              <span class="text-sm">{{ this.sharedService.T('totalSold') }}:</span>
+                                <span class="text-sm font-bold">{{ product?.invoiceQuantity }}</span>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <ng-template pTemplate="header">
+                        <i class="pi pi-dollar mr-2"></i>
+                        <span>{{ this.sharedService.T('sales') }}</span>
+                    </ng-template>
+
+                    <div class="bg-white p-5 rounded-md mt-3">
+
+                        <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="sales" [rows]="10"
+                            [first]="(salesFilters.get('currentPage')?.value - 1) * salesFilters.get('pageSize')?.value"
+                            [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+                            (onLazyLoad)="sortColumn($event)" responsiveLayout="scroll" [sortOrder]="-1"
+                            sortField="invoiceId" 
+                            data-testid="sale-table">
+
+                            <ng-template pTemplate="header" styleClass="">
+                                <tr class="table-header-row">
+                                <th class="table-header-cell id-column-header rounded-l-xl text-left"
+                                        pSortableColumn="invoiceId">
+                                        <p-sortIcon field="invoiceId" />
+                                         {{ this.sharedService.T('invoice') }}# 
+                                    </th>
+
+                                    <th class="table-header-cell">{{this.sharedService.T('productService') }}</th>
+                                    <th class="table-header-cell">{{ this.sharedService.T('freeText')}}</th>
+                                    <th class="table-header-cell">{{ this.sharedService.T('quantity') }}</th>
+                                    <th class="table-header-cell">{{this.sharedService.T('unit') }}</th>
+                                    <th class="table-header-cell">{{this.sharedService.T('pricewithoutvat') }}</th>
+                                    <th class="table-header-cell">{{this.sharedService.T('vat') }}%</th>
+                                    <th class="table-header-cell">{{this.sharedService.T('vat') }}</th>
+                                    <th class="table-header-cell">{{this.sharedService.T('discount') }}%</th>
+                                    <th class="table-header-cell">{{ this.sharedService.T('totalwithoutvat') }}</th>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="body" let-sale>
+
+                                <tr class="hover:bg-gray-50 border-0 p-selectable-row">
+                                    <td class="id-column-cell rounded-l-lg">
+                                        <div class="flex items-center gap-2 cursor-pointer"
+                                            (click)="redirectToInvoiceDetailComponent(sale.invoiceId)">
+                                            <span class="id-text">{{ sale.invoiceId }}</span>
+                                            <span class="material-icons text-blue-500 hover:text-blue-700">open_in_new</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-2 border-0 font-medium text-left rounded-l-lg">{{ sale.product }}</td>
+                                    <td class="p-2 border-0 font-medium text-left">{{ sale.description }}</td>
+                                    <td class="p-2 border-0 font-medium text-left rounded-l-lg">{{ sale.quantity }}</td>
+                                    <td class="p-2 border-0 font-medium text-left rounded-l-lg">{{ sale.unit }}</td>
+                                    <td class="p-2 border-0 font-medium text-left rounded-l-lg">{{ sale.unitPrice }}
+                                    </td>
+                                    <td class="p-2 border-0 font-medium text-left rounded-l-lg">{{ sale.vatPercentage }}
+                                    </td>
+                                    <td class="p-2 border-0 font-medium text-left rounded-l-lg">{{ sale.vat }}</td>
+                                    <td class="p-2 border-0 font-medium text-left rounded-l-lg">{{
+                                        sale.discountPercentage }}</td>
+                                    <td class="p-2 text-center border-0 rounded-r-lg">{{ sale.price }} SEK</td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="6" class="text-center p-4 border-0">{{
+                                        this.sharedService.T('noSaleFound') }}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+
+                        <div *ngIf="salesPager.totalRecords > 10" class="flex items-center justify-between py-6">
+                            <div class="flex items-center">
+                                <p-select [options]="[10, 20, 30]" [(ngModel)]="salesFilters.value.pageSize"
+                                    [ngModelOptions]="{standalone: true}"
+                                    styleClass="bg-white border border-CustomBorder rounded-md"
+                                    (onChange)="onSalesPageSizeChange($event)">
+                                </p-select>
+                            </div>
+
+                            <p-paginator [first]="(salesPager.currentPage - 1) * salesPager.pageSize"
+                                [rows]="salesPager.pageSize" [totalRecords]="salesPager.totalRecords"
+                                (onPageChange)="onSalesPageChange($event)" [showCurrentPageReport]="true"
+                                [showFirstLastIcon]="true"
+                                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+                                styleClass="!bg-transparent">
+
+                                <ng-template pTemplate="firstpagelinkicon">
+                                    <img src="assets/icons/paginator/previus.svg" alt="">
+                                </ng-template>
+                                <ng-template pTemplate="lastpagelinkicon">
+                                    <img src="assets/icons/paginator/next.svg" alt="">
+                                </ng-template>
+                                <ng-template pTemplate="previouspagelinkicon">
+                                    <div class="flex items-center gap-2">
+                                        <div>{{ this.sharedService.T('previous') }}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="nextpagelinkicon">
+                                    <div class="flex items-center gap-2">
+                                        <div>{{ this.sharedService.T('next') }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-paginator>
+                        </div>
+                    </div>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+    </div>
+</section>
+
+<p-dialog [modal]="true" [(visible)]="showInventoryDialog" styleClass="rounded-lg shadow-lg"
+    [style]="{ width: '500px' }" (onHide)="onCloseInventoryDialog()">
+    <ng-template #header>
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold text-gray-800">
+                {{ this.sharedService.T('addInventory') }}
+            </h2>
+        </div>
+    </ng-template>
+    <div class="p-3 bg-white rounded-b-lg">
+        <form [formGroup]="inventoryForm">
+            <div class="flex flex-col gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        {{ this.sharedService.T('purchaseDate') }}
+                    </label>
+                    <p-datepicker formControlName="inventoryDate" dataType="string" class="w-full"
+                        styleClass="border border-gray-300 rounded-md" iconDisplay="input" [showIcon]="false"
+                        dateFormat="yy-mm-dd">
+                    </p-datepicker>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        {{ this.sharedService.T('purchaseQuantity') }}
+                    </label>
+                    <p-inputnumber formControlName="inventoryQuantity"
+                        placeholder="{{ this.sharedService.T('inventoryQuantity') }}" inputId="minmax" mode="decimal"
+                        class="w-full" [useGrouping]="false">
+                    </p-inputnumber>
+                </div>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    {{ this.sharedService.T('purchaseNote') }}
+                </label>
+                <textarea class="w-full p-inputtext" formControlName="inventoryNote" rows="3" pInputTextarea></textarea>
+            </div>
+            <div class="flex justify-end gap-3">
+                <p-button label="{{ this.sharedService.T('add') }}" (click)="upsertInventory()"></p-button>
+                <p-button styleClass="p-button cancel-button" label="{{ this.sharedService.T('cancel') }}"
+                    (click)="showInventoryDialog = false"></p-button>
+            </div>
+        </form>
+    </div>
+</p-dialog>
+
+<!-- /edit product model -->
+
+<!-- <p-dialog header="{{ this.sharedService.T('update') }} #{{editProductForm.get('productId')?.value}}"
+    [(visible)]="showProductDialog" [modal]="true" [closable]="false" [draggable]="false" [resizable]="false"
+    styleClass="w-[70vw]">
+    <form [formGroup]="editProductForm">
+        <div class="bg-white p-5 mb-5 rounded-xl shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Product Information</h3>
+            <div class="grid grid-cols-12 gap-3 text-sm">
+                <div class="col-span-4">
+                    <label class="mb-1 font-semibold">Category <span class="text-red-500">*</span></label>
+                    <p-select [options]="sharedService.getEnums('detailCategory')" formControlName="category"
+                        optionLabel="text" optionValue="value" styleClass="w-full"></p-select>
+                </div>
+                <div class="col-span-4">
+                    <label class="mb-1 font-semibold">Produkt / Tjänst <span class="text-red-500">*</span></label>
+                    <input type="text" formControlName="productName" placeholder="Enter the name"
+                        class="w-full p-inputtext"
+                        [ngClass]="{'border-red-500': getf('productName')?.invalid && getf('productName')?.touched}" />
+                </div>
+                <div class="col-span-4">
+                    <label class="mb-1 font-semibold">Fritext</label>
+                    <input type="text" formControlName="productDescription" placeholder="Enter the description"
+                        class="w-full p-inputtext" />
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-5 mb-5 rounded-xl shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Pricing</h3>
+            <div class="grid grid-cols-12 gap-3 text-sm">
+                <div class="col-span-4">
+                    <label class="mb-1 font-semibold">Antal</label>
+                    <input type="number" formControlName="quantity" min="0" placeholder="1" class="w-full p-inputtext"
+                        (change)="onChangeProductQuantity($event)" />
+                </div>
+                <div class="col-span-4">
+                    <label class="mb-1 font-semibold">Enhet</label>
+                    <p-select [options]="sharedService.getEnums('productUnit')" formControlName="unit"
+                        optionLabel="text" optionValue="value" styleClass="w-full"></p-select>
+                </div>
+                <div class="col-span-4">
+                    <label class="mb-1 font-semibold">À Pris <span class="text-red-500">*</span></label>
+                    <input type="number" formControlName="unitPrice" placeholder="Enter the unit price"
+                        class="w-full p-inputtext" (input)="onChangeUnitPrice($event)" />
+                </div>
+                <div class="col-span-4">
+                    <label class="mb-1 font-semibold">Vat</label>
+                    <p-select [options]="sharedService.getEnums('vatPercentage')" formControlName="vat"
+                        optionLabel="text" optionValue="value" styleClass="w-full" (onChange)="onChangeVat($event)" />
+                </div>
+                <div class="col-span-4">
+                    <label class="mb-1 font-semibold">Pris Ink.Vat</label>
+                    <input type="text" formControlName="priceIncVat" class="w-full p-inputtext" readonly />
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-5 mb-5 rounded-xl shadow-md">
+            <div class="col-span-4 flex justify-end items-end gap-3 mt-3 ">
+                <p-button type="submit" size="large" styleClass="whitespace-nowrap px-3"
+                    label="{{ this.sharedService.T('update') }}" (click)="onUpdateProduct()"></p-button>
+                <p-button size="large"
+                    styleClass="whitespace-nowrap px-3 !bg-darkSky !border-BorderColor !text-lightBlue"
+                    label="{{ this.sharedService.T('cancel') }}" (onClick)="closeProductDialog()"></p-button>
+            </div>
+        </div>
+    </form>
+</p-dialog> -->
+
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

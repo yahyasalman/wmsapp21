@@ -1,0 +1,1618 @@
+[
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "sentStatus",
+        "value": "draft",
+        "index": 1,
+        "isdefault": false,
+        "text": "Utkast",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "sentStatus",
+        "value": "sent",
+        "index": 1,
+        "isdefault": false,
+        "text": "Skickad",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "sentStatus",
+        "value": "draft",
+        "index": 1,
+        "isdefault": false,
+        "text": "Draft",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "sentStatus",
+        "value": "sent",
+        "index": 1,
+        "isdefault": false,
+        "text": "Sent",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "workOrderStatus",
+        "value": "booking",
+        "index": 1,
+        "isdefault": true,
+        "text": "Booking",
+        "severity": "secondary"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "workOrderStatus",
+        "value": "booking",
+        "index": 1,
+        "isdefault": true,
+        "text": "Bokning",
+        "severity": "secondary"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "timesheetType",
+        "value": "workhour",
+        "index": 1,
+        "isdefault": true,
+        "text": "Work Hour",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "timesheetType",
+        "value": "workhour",
+        "index": 1,
+        "isdefault": true,
+        "text": "Arbetstid",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "timesheetStatus",
+        "value": "true",
+        "index": 1,
+        "isdefault": true,
+        "text": "Valid",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "timesheetStatus",
+        "value": "true",
+        "index": 1,
+        "isdefault": true,
+        "text": "Giltig",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "timesheetStatus",
+        "value": "false",
+        "index": 2,
+        "isdefault": false,
+        "text": "Not Valid",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "timesheetStatus",
+        "value": "false",
+        "index": 2,
+        "isdefault": false,
+        "text": "Ogiltig",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "timesheetType",
+        "value": "leave",
+        "index": 2,
+        "isdefault": false,
+        "text": "Leave",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "timesheetType",
+        "value": "leave",
+        "index": 2,
+        "isdefault": false,
+        "text": "Ledighet",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "timesheetType",
+        "value": "sickleave",
+        "index": 3,
+        "isdefault": false,
+        "text": "Sick Leave",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "timesheetType",
+        "value": "sickleave",
+        "index": 3,
+        "isdefault": false,
+        "text": "Sjukfrånvaro",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "workOrderStatus",
+        "value": "completed",
+        "index": 4,
+        "isdefault": false,
+        "text": "Completed",
+        "severity": "success"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "workOrderStatus",
+        "value": "completed",
+        "index": 4,
+        "isdefault": false,
+        "text": "Avslutad",
+        "severity": "success"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "workOrderStatus",
+        "value": "awaiting-parts",
+        "index": 3,
+        "isdefault": false,
+        "text": "Awaiting Parts",
+        "severity": "warn"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "workOrderStatus",
+        "value": "awaiting-parts",
+        "index": 3,
+        "isdefault": false,
+        "text": "Vantar på Delar",
+        "severity": "warn"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "workOrderStatus",
+        "value": "in-progress",
+        "index": 2,
+        "isdefault": false,
+        "text": "In Progress",
+        "severity": "help"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "workOrderStatus",
+        "value": "in-progress",
+        "index": 2,
+        "isdefault": false,
+        "text": "Pågående",
+        "severity": "help"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoiceType",
+        "value": "overdue",
+        "index": 1,
+        "isdefault": false,
+        "text": "Förfallen",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoiceType",
+        "value": "paid",
+        "index": 1,
+        "isdefault": false,
+        "text": "Betald",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoiceType",
+        "value": "unpaid",
+        "index": 1,
+        "isdefault": false,
+        "text": "Obetald",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoiceType",
+        "value": "partiallypaid",
+        "index": 1,
+        "isdefault": false,
+        "text": "Delbetald",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoiceType",
+        "value": "credited",
+        "index": 1,
+        "isdefault": false,
+        "text": "Kreditnoterad",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoiceType",
+        "value": "overdue",
+        "index": 1,
+        "isdefault": false,
+        "text": "Overdue",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoiceType",
+        "value": "paid",
+        "index": 1,
+        "isdefault": false,
+        "text": "Paid",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoiceType",
+        "value": "unpaid",
+        "index": 1,
+        "isdefault": false,
+        "text": "UnPaid",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoiceType",
+        "value": "partiallypaid",
+        "index": 1,
+        "isdefault": false,
+        "text": "PartiallyPaid",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoiceType",
+        "value": "credited",
+        "index": 1,
+        "isdefault": false,
+        "text": "Credited",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "paymentType",
+        "value": "cash",
+        "index": 1,
+        "isdefault": false,
+        "text": "Cash",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "paymentType",
+        "value": "card",
+        "index": 1,
+        "isdefault": false,
+        "text": "Card",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "paymentType",
+        "value": "swish",
+        "index": 1,
+        "isdefault": false,
+        "text": "Swish",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "paymentType",
+        "value": "invoice",
+        "index": 1,
+        "isdefault": true,
+        "text": "Invoice",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "paymentType",
+        "value": "cash",
+        "index": 1,
+        "isdefault": false,
+        "text": "Kontant",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "paymentType",
+        "value": "card",
+        "index": 1,
+        "isdefault": false,
+        "text": "Kort",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "paymentType",
+        "value": "swish",
+        "index": 1,
+        "isdefault": false,
+        "text": "Swish",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "paymentType",
+        "value": "invoice",
+        "index": 1,
+        "isdefault": true,
+        "text": "Faktura",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "customerType",
+        "value": "private",
+        "index": 1,
+        "isdefault": false,
+        "text": "Private",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "customerType",
+        "value": "company",
+        "index": 1,
+        "isdefault": true,
+        "text": "Company",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "customerType",
+        "value": "private",
+        "index": 1,
+        "isdefault": false,
+        "text": "Privat",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "customerType",
+        "value": "company",
+        "index": 1,
+        "isdefault": true,
+        "text": "Företag",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "country",
+        "value": "sweden",
+        "index": 1,
+        "isdefault": true,
+        "text": "Sweden",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "country",
+        "value": "finland",
+        "index": 1,
+        "isdefault": false,
+        "text": "Finland",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "country",
+        "value": "denmark",
+        "index": 1,
+        "isdefault": false,
+        "text": "Denmark",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "country",
+        "value": "sweden",
+        "index": 1,
+        "isdefault": true,
+        "text": "Sverige",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "country",
+        "value": "finland",
+        "index": 1,
+        "isdefault": false,
+        "text": "Finland",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "country",
+        "value": "denmark",
+        "index": 1,
+        "isdefault": false,
+        "text": "Danmark",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "productUnit",
+        "value": "hour",
+        "index": 1,
+        "isdefault": false,
+        "text": "hour",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "productUnit",
+        "value": "kg",
+        "index": 1,
+        "isdefault": false,
+        "text": "kg",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "productUnit",
+        "value": "gram",
+        "index": 1,
+        "isdefault": false,
+        "text": "gram",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "productUnit",
+        "value": "liter",
+        "index": 1,
+        "isdefault": false,
+        "text": "liter",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "productUnit",
+        "value": "km",
+        "index": 1,
+        "isdefault": false,
+        "text": "km",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "productUnit",
+        "value": "weeks",
+        "index": 1,
+        "isdefault": false,
+        "text": "weeks",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "productUnit",
+        "value": "st",
+        "index": 1,
+        "isdefault": true,
+        "text": "st",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "productUnit",
+        "value": "hour",
+        "index": 1,
+        "isdefault": false,
+        "text": "timmar",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "productUnit",
+        "value": "kg",
+        "index": 1,
+        "isdefault": false,
+        "text": "kg",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "productUnit",
+        "value": "gram",
+        "index": 1,
+        "isdefault": false,
+        "text": "gram",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "productUnit",
+        "value": "liter",
+        "index": 1,
+        "isdefault": false,
+        "text": "litre",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "productUnit",
+        "value": "km",
+        "index": 1,
+        "isdefault": false,
+        "text": "km",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "productUnit",
+        "value": "weeks",
+        "index": 1,
+        "isdefault": false,
+        "text": "veckor",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "vatPercentage",
+        "value": "25",
+        "index": 1,
+        "isdefault": true,
+        "text": "25%",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "vatPercentage",
+        "value": "12",
+        "index": 1,
+        "isdefault": true,
+        "text": "12%",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "vatPercentage",
+        "value": "0",
+        "index": 1,
+        "isdefault": true,
+        "text": "0%",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "lang",
+        "value": "sv",
+        "index": 1,
+        "isdefault": true,
+        "text": "Swedish",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "lang",
+        "value": "en",
+        "index": 1,
+        "isdefault": false,
+        "text": "English",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "vatPercentage",
+        "value": "25",
+        "index": 1,
+        "isdefault": true,
+        "text": "25%",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "vatPercentage",
+        "value": "12",
+        "index": 1,
+        "isdefault": true,
+        "text": "12%",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "vatPercentage",
+        "value": "0",
+        "index": 1,
+        "isdefault": true,
+        "text": "0%",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "lang",
+        "value": "sv",
+        "index": 1,
+        "isdefault": true,
+        "text": "Svenska",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "lang",
+        "value": "en",
+        "index": 1,
+        "isdefault": false,
+        "text": "Engelska",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "history",
+        "value": "created",
+        "index": 1,
+        "isdefault": false,
+        "text": "Created",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "history",
+        "value": "updated",
+        "index": 1,
+        "isdefault": false,
+        "text": "Updated",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "history",
+        "value": "email",
+        "index": 1,
+        "isdefault": false,
+        "text": "Sent By Email",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "history",
+        "value": "accept",
+        "index": 1,
+        "isdefault": false,
+        "text": "Offer Accepted",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "history",
+        "value": "reject",
+        "index": 1,
+        "isdefault": false,
+        "text": "Offer Rejected",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "detailCategory",
+        "value": "part",
+        "index": 1,
+        "isdefault": true,
+        "text": "Spt.",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "detailCategory",
+        "value": "labour",
+        "index": 1,
+        "isdefault": false,
+        "text": "Lab.",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "history",
+        "value": "created",
+        "index": 1,
+        "isdefault": false,
+        "text": "Skapat",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "history",
+        "value": "updated",
+        "index": 1,
+        "isdefault": false,
+        "text": "Opdateret",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "history",
+        "value": "email",
+        "index": 1,
+        "isdefault": false,
+        "text": "Skickat Email",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "history",
+        "value": "accept",
+        "index": 1,
+        "isdefault": false,
+        "text": "Offert Accepteret",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "history",
+        "value": "reject",
+        "index": 1,
+        "isdefault": false,
+        "text": "Offert Nekad",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "detailCategory",
+        "value": "part",
+        "index": 1,
+        "isdefault": true,
+        "text": "Res.",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "detailCategory",
+        "value": "labour",
+        "index": 1,
+        "isdefault": false,
+        "text": "Arb.",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "offerType",
+        "value": "rejected",
+        "index": 1,
+        "isdefault": false,
+        "text": "Rejected",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "offerType",
+        "value": "rejected",
+        "index": 1,
+        "isdefault": false,
+        "text": "Avvisat",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "priceMode",
+        "value": "0",
+        "index": 1,
+        "isdefault": false,
+        "text": "Including VAT",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "priceMode",
+        "value": "1",
+        "index": 1,
+        "isdefault": true,
+        "text": "Excluding VAT",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoicePromptContext",
+        "value": "mechanical",
+        "index": 1,
+        "isdefault": false,
+        "text": "Focus on Mechanical"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "priceMode",
+        "value": "0",
+        "index": 1,
+        "isdefault": false,
+        "text": "Inkl. moms",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "priceMode",
+        "value": "1",
+        "index": 1,
+        "isdefault": true,
+        "text": "Exkl. moms",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoicePromptContext",
+        "value": "electrical",
+        "index": 1,
+        "isdefault": false,
+        "text": "Focus on Electrical"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoiceStatus",
+        "value": "draft",
+        "index": 1,
+        "isdefault": false,
+        "text": "Utkast",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoiceStatus",
+        "value": "sent",
+        "index": 1,
+        "isdefault": false,
+        "text": "Skickad",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoiceStatus",
+        "value": "draft",
+        "index": 1,
+        "isdefault": false,
+        "text": "Draft",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoiceStatus",
+        "value": "sent",
+        "index": 1,
+        "isdefault": false,
+        "text": "Sent",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "offerType",
+        "value": "accepted",
+        "index": 1,
+        "isdefault": false,
+        "text": "Approved",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "offerType",
+        "value": "accepted",
+        "index": 1,
+        "isdefault": false,
+        "text": "Godkänt",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "offerType",
+        "value": "pending",
+        "index": 1,
+        "isdefault": true,
+        "text": "Pending",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "offerType",
+        "value": "pending",
+        "index": 1,
+        "isdefault": true,
+        "text": "Väntande",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "serviceType",
+        "value": "service",
+        "index": 1,
+        "isdefault": true,
+        "text": "Service",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "serviceType",
+        "value": "service",
+        "index": 1,
+        "isdefault": true,
+        "text": "Service",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "serviceType",
+        "value": "repair",
+        "index": 2,
+        "isdefault": false,
+        "text": "Repair",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "serviceType",
+        "value": "repair",
+        "index": 2,
+        "isdefault": false,
+        "text": "Reparation",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "serviceType",
+        "value": "timingbelt",
+        "index": 3,
+        "isdefault": false,
+        "text": "Timing Belt",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "serviceType",
+        "value": "timingbelt",
+        "index": 3,
+        "isdefault": false,
+        "text": "Kamremsbyte",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "serviceType",
+        "value": "breakservice",
+        "index": 4,
+        "isdefault": false,
+        "text": "Break Change",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "serviceType",
+        "value": "breakservice",
+        "index": 4,
+        "isdefault": false,
+        "text": "Bromsbyte",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "serviceType",
+        "value": "tyrechange",
+        "index": 5,
+        "isdefault": false,
+        "text": "Tyre Change",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "serviceType",
+        "value": "tyrechange",
+        "index": 5,
+        "isdefault": false,
+        "text": "Däckskifte",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "serviceType",
+        "value": "electric",
+        "index": 6,
+        "isdefault": false,
+        "text": "Electric",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "serviceType",
+        "value": "electric",
+        "index": 6,
+        "isdefault": false,
+        "text": "EL",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "serviceType",
+        "value": "other",
+        "index": 7,
+        "isdefault": false,
+        "text": "Other",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "serviceType",
+        "value": "other",
+        "index": 7,
+        "isdefault": false,
+        "text": "Övrigt",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "partsCatalog",
+        "value": "bilxtra",
+        "index": 1,
+        "isdefault": true,
+        "text": "Bilxtra",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "partsCatalog",
+        "value": "bilxtra",
+        "index": 1,
+        "isdefault": true,
+        "text": "Bilxtra",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "partsCatalog",
+        "value": "bds",
+        "index": 2,
+        "isdefault": false,
+        "text": "BDS",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "partsCatalog",
+        "value": "bds",
+        "index": 2,
+        "isdefault": false,
+        "text": "BDS",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "productUnit",
+        "value": "pcs",
+        "index": 1,
+        "isdefault": true,
+        "text": "pcs",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "timesheetType",
+        "value": "vacations",
+        "index": 4,
+        "isdefault": false,
+        "text": "Annual Leave",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "timesheetType",
+        "value": "vacations",
+        "index": 4,
+        "isdefault": false,
+        "text": "Semester",
+        "severity": ""
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "airFilter",
+        "index": 2,
+        "isdefault": false,
+        "text": "Air Filter"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "airFilter",
+        "index": 2,
+        "isdefault": false,
+        "text": "Luftfilter"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "fuelFilter",
+        "index": 3,
+        "isdefault": false,
+        "text": "Fuel Filter"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "fuelFilter",
+        "index": 3,
+        "isdefault": false,
+        "text": "Bränslefilter"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "pollenFilter",
+        "index": 4,
+        "isdefault": false,
+        "text": "Pollen Filter"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "pollenFilter",
+        "index": 4,
+        "isdefault": false,
+        "text": "Kupéfilter"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "coolant",
+        "index": 5,
+        "isdefault": false,
+        "text": "Coolant"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "coolant",
+        "index": 5,
+        "isdefault": false,
+        "text": "Kylvätska"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "brakeFluid",
+        "index": 6,
+        "isdefault": false,
+        "text": "Brake Fluid"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "brakeFluid",
+        "index": 6,
+        "isdefault": false,
+        "text": "Bromsvätska"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "sparkPlugs",
+        "index": 7,
+        "isdefault": false,
+        "text": "Spark Plugs"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "sparkPlugs",
+        "index": 7,
+        "isdefault": false,
+        "text": "Tändstift"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "transmissionOil",
+        "index": 8,
+        "isdefault": false,
+        "text": "Transmission Oil"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "transmissionOil",
+        "index": 8,
+        "isdefault": false,
+        "text": "Växellådsolja"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "acService",
+        "index": 9,
+        "isdefault": false,
+        "text": "AC Service"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "acService",
+        "index": 9,
+        "isdefault": false,
+        "text": "AC-service"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "timingBelt",
+        "index": 10,
+        "isdefault": false,
+        "text": "Timing Belt"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "timingBelt",
+        "index": 10,
+        "isdefault": false,
+        "text": "Kamrem"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "frontBrakePads",
+        "index": 11,
+        "isdefault": false,
+        "text": "Front Brake Pads"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "frontBrakePads",
+        "index": 11,
+        "isdefault": false,
+        "text": "Främre bromsbelägg"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "frontBrakeDiscs",
+        "index": 12,
+        "isdefault": false,
+        "text": "Front Brake Discs"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "frontBrakeDiscs",
+        "index": 12,
+        "isdefault": false,
+        "text": "Främre bromsskivor"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "rearBrakePads",
+        "index": 13,
+        "isdefault": false,
+        "text": "Rear Brake Pads"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "rearBrakePads",
+        "index": 13,
+        "isdefault": false,
+        "text": "Bakre bromsbelägg"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "rearBrakeDiscs",
+        "index": 14,
+        "isdefault": false,
+        "text": "Rear Brake Discs"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "rearBrakeDiscs",
+        "index": 14,
+        "isdefault": false,
+        "text": "Bakre bromsskivor"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalservice",
+        "value": "engineOilAndFilter",
+        "index": 1,
+        "isdefault": false,
+        "text": "Engine Oil & Filter"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalservice",
+        "value": "engineOilAndFilter",
+        "index": 1,
+        "isdefault": false,
+        "text": "Motorolja & filter"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoicePromptContext",
+        "value": "service",
+        "index": 1,
+        "isdefault": false,
+        "text": "Focus on Service"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "invoicePromptContext",
+        "value": "diagnostic",
+        "index": 1,
+        "isdefault": false,
+        "text": "Focus on Diagnostic"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoicePromptContext",
+        "value": "mechanical",
+        "index": 1,
+        "isdefault": false,
+        "text": "Fokus på mekanik"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalserviceType",
+        "value": "service",
+        "index": 1,
+        "isdefault": true,
+        "text": "Service"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalserviceType",
+        "value": "service",
+        "index": 1,
+        "isdefault": true,
+        "text": "Service"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalserviceType",
+        "value": "repairService",
+        "index": 2,
+        "isdefault": false,
+        "text": "Repair Service"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalserviceType",
+        "value": "repairService",
+        "index": 2,
+        "isdefault": false,
+        "text": "Reparationsservice"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalserviceType",
+        "value": "aService",
+        "index": 3,
+        "isdefault": false,
+        "text": "A Service"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalserviceType",
+        "value": "aService",
+        "index": 3,
+        "isdefault": false,
+        "text": "A-service"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalserviceType",
+        "value": "aService",
+        "index": 4,
+        "isdefault": false,
+        "text": "B Service"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalserviceType",
+        "value": "aService",
+        "index": 4,
+        "isdefault": false,
+        "text": "B-service"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoicePromptContext",
+        "value": "electrical",
+        "index": 1,
+        "isdefault": false,
+        "text": "Fokus på el"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoicePromptContext",
+        "value": "service",
+        "index": 1,
+        "isdefault": false,
+        "text": "Fokus på service"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "invoicePromptContext",
+        "value": "diagnostic",
+        "index": 1,
+        "isdefault": false,
+        "text": "Fokus på diagnostik"
+    }
+]

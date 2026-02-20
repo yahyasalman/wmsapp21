@@ -1,0 +1,21 @@
+/* Badge Styling */
+.bg-customBlue {
+  background-color: #4F39F6 !important;
+  color: #ffffff !important;
+}
+
+/* Panel Shadows */
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styling */
+.p-button-primary {
+  background-color: #4F39F6 !important;
+  border-color: #4F39F6 !important;
+}
+
+.p-button-primary:hover {
+  background-color: #3b2dc9 !important;
+  border-color: #3b2dc9 !important;
+}

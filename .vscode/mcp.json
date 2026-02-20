@@ -1,0 +1,19 @@
+{
+  "servers": {
+    // Angular CLI MCP server
+    "angular-cli": {
+      "command": "npx",
+      "args": ["@angular/cli", "mcp"]
+    },
+    // PrimeNG MCP server
+    "primeng": {
+      "command": "npx",
+      "args": ["@primeng/mcp"]
+    },
+    // Tailwind CSS MCP server
+    "tailwindcss-server": {
+      "command": "npx",
+      "args": ["tailwindcss-mcp-server"]
+    }
+  }
+}

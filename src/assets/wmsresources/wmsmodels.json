@@ -1,0 +1,258 @@
+[
+  {
+    "name": "VOLVO",
+    "models": ["240", "740", "940", "850", "S40", "V40", "S60", "V60", "S80", "V70", "XC60", "XC70", "XC40", "XC90", "S90", "V90", "C30", "C70", "EX30", "EX90"]
+  },
+  {
+    "name": "SAAB",
+    "models": ["900", "9000", "9-3", "9-5", "9-4X"]
+  },
+  {
+    "name": "ALFA ROMEO",
+    "models": ["145", "146", "147", "155", "156", "159", "164", "166", "GT", "GTV", "Spider", "Brera", "Giulietta", "MiTo", "Giulia", "Stelvio", "Tonale", "4C"]
+  },
+  {
+    "name": "ASTON MARTIN",
+    "models": ["DB7", "DB9", "DB11", "Vantage", "Vanquish", "Virage", "Rapide", "DB12", "Valkyrie", "Cygnet"]
+  },
+  {
+    "name": "AUDI",
+    "models": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "Q2", "Q3", "Q5", "Q7", "Q8", "TT", "R8", "e-tron", "Q4 e-tron", "e-tron GT"]
+  },
+  {
+    "name": "BENTLEY",
+    "models": ["Continental GT", "Continental Flying Spur", "Flying Spur", "Bentayga", "Mulsanne", "Arnage", "Brooklands", "Azure"]
+  },
+  {
+    "name": "BMW",
+    "models": ["1 Series", "2 Series", "3 Series", "4 Series", "5 Series", "6 Series", "7 Series", "8 Series", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "Z3", "Z4", "Z8", "i3", "i4", "i5", "i7", "iX", "iX3"]
+  },
+  {
+    "name": "BUGATTI",
+    "models": ["EB110", "Veyron", "Chiron", "Divo", "Centodieci", "Mistral"]
+  },
+  {
+    "name": "CADILLAC",
+    "models": ["BLS", "CTS", "ATS", "SRX", "XTS", "Escalade"]
+  },
+  {
+    "name": "CHEVROLET",
+    "models": ["Spark", "Matiz", "Aveo", "Kalos", "Lacetti", "Nubira", "Cruze", "Epica", "Orlando", "Captiva", "Trax", "Camaro", "Corvette"]
+  },
+  {
+    "name": "CHRYSLER",
+    "models": ["300C", "PT Cruiser", "Sebring", "Crossfire", "Voyager", "Grand Voyager", "Ypsilon (rebadge in EU)"]
+  },
+  {
+    "name": "CITROEN",
+    "models": ["AX", "Saxo", "ZX", "Xantia", "XM", "Xsara", "C1", "C2", "C3", "C3 Aircross", "C4", "C4 Cactus", "C4 X", "C5", "C5 X", "C6", "C8", "Berlingo", "C-Crosser", "C-Elysee"]
+  },
+  {
+    "name": "CUPRA",
+    "models": ["Ateca", "Leon", "Formentor", "Born"]
+  },
+  {
+    "name": "DACIA",
+    "models": ["Logan", "Sandero", "Duster", "Lodgy", "Dokker", "Jogger", "Spring"]
+  },
+  {
+    "name": "DAIHATSU",
+    "models": ["Charade", "Sirion", "Cuore", "YRV", "Materia", "Trevis", "Terios"]
+  },
+  {
+    "name": "DS AUTOMOBILES",
+    "models": ["DS3", "DS4", "DS5", "DS7 Crossback", "DS9"]
+  },
+  {
+    "name": "FERRARI",
+    "models": ["348", "355", "360", "F430", "458 Italia", "488", "F8 Tributo", "296 GTB", "SF90 Stradale", "Roma", "Portofino", "812 Superfast", "812 GTS", "LaFerrari"]
+  },
+  {
+    "name": "FIAT",
+    "models": ["Panda", "Uno", "Tipo", "Tempra", "Punto", "Grande Punto", "Bravo", "Brava", "Stilo", "Croma", "Seicento", "500", "500L", "500X", "Multipla", "Idea", "Sedici", "Ulysse", "Barchetta", "Coupe", "Freemont"]
+  },
+  {
+    "name": "FORD",
+    "models": ["Fiesta", "Ka", "Puma", "Focus", "Escort", "Mondeo", "Sierra", "Fusion", "C-MAX", "S-MAX", "Galaxy", "Kuga", "EcoSport", "Edge", "B-MAX", "Mustang", "Probe", "Cougar"]
+  },
+  {
+    "name": "HONDA",
+    "models": ["Jazz", "Civic", "Accord", "Insight", "CR-V", "HR-V", "e", "NSX", "S2000", "Legend", "FR-V", "Prelude"]
+  },
+  {
+    "name": "HYUNDAI",
+    "models": ["i10", "i20", "i30", "i40", "Accent", "Getz", "Elantra", "Sonata", "Coupe", "Veloster", "Bayon", "Kona", "Tucson", "Santa Fe", "Terracan", "Ioniq", "Ioniq 5", "Ioniq 6", "Nexo"]
+  },
+  {
+    "name": "INFINITI",
+    "models": ["G", "Q50", "Q30", "QX30", "FX", "QX70", "M", "Q70", "EX", "QX50"]
+  },
+  {
+    "name": "JAGUAR",
+    "models": ["X-Type", "S-Type", "XJ", "XF", "XE", "XK", "F-Type", "F-Pace", "E-Pace", "I-Pace"]
+  },
+  {
+    "name": "JEEP",
+    "models": ["Wrangler", "Cherokee", "Grand Cherokee", "Compass", "Renegade", "Commander"]
+  },
+  {
+    "name": "KIA",
+    "models": ["Picanto", "Rio", "Ceed", "ProCeed", "XCeed", "Stonic", "Soul", "Carens", "Optima", "Stinger", "Sportage", "Sorento", "Niro", "EV6", "EV9"]
+  },
+  {
+    "name": "LADA",
+    "models": ["Samara", "Niva", "110", "111", "112", "Kalina", "Priora", "Granta", "Vesta", "XRAY"]
+  },
+  {
+    "name": "LAMBORGHINI",
+    "models": ["Diablo", "Murcielago", "Gallardo", "Huracan", "Aventador", "Urus", "Sian"]
+  },
+  {
+    "name": "LANCIA",
+    "models": ["Dedra", "Delta", "Kappa", "Lybra", "Thesis", "Musa", "Phedra", "Y", "Ypsilon", "Zeta", "Flavia", "Thema"]
+  },
+  {
+    "name": "LAND ROVER",
+    "models": ["Defender", "Discovery", "Discovery Sport", "Freelander", "Range Rover", "Range Rover Sport", "Range Rover Evoque", "Range Rover Velar"]
+  },
+  {
+    "name": "LEXUS",
+    "models": ["CT", "IS", "ES", "GS", "LS", "NX", "RX", "UX", "LC", "RC"]
+  },
+  {
+    "name": "LOTUS",
+    "models": ["Elise", "Exige", "Evora", "Emira", "Eletre"]
+  },
+  {
+    "name": "MASERATI",
+    "models": ["3200 GT", "Coupe", "Spyder", "Quattroporte", "Ghibli", "GranTurismo", "GranCabrio", "Levante", "MC20", "Grecale"]
+  },
+  {
+    "name": "MAZDA",
+    "models": ["2", "3", "5", "6", "CX-3", "CX-30", "CX-5", "CX-60", "CX-7", "MX-30", "MX-5", "RX-8", "RX-7"]
+  },
+  {
+    "name": "MCLAREN",
+    "models": ["12C", "540C", "570S", "600LT", "650S", "675LT", "720S", "GT", "765LT", "Artura", "P1", "Senna", "Speedtail", "Elva"]
+  },
+  {
+    "name": "MERCEDES-BENZ",
+    "models": ["A-Class", "B-Class", "C-Class", "E-Class", "S-Class", "CLA", "CLS", "GLA", "GLB", "GLC", "GLE", "GLS", "G-Class", "SLK", "SLC", "SL", "SLS AMG", "AMG GT", "Vaneo", "R-Class", "EQA", "EQB", "EQC", "EQE", "EQS", "EQE SUV", "EQS SUV"]
+  },
+  {
+    "name": "MG",
+    "models": ["F", "TF", "ZR", "ZS", "ZT", "RV8", "MG3", "MG5", "ZS", "HS", "Marvel R", "MG4"]
+  },
+  {
+    "name": "MINI",
+    "models": ["Hatch", "Convertible", "Clubman", "Countryman", "Paceman", "Coupe", "Roadster"]
+  },
+  {
+    "name": "MITSUBISHI",
+    "models": ["Colt", "Space Star", "Lancer", "Carisma", "Galant", "Outlander", "ASX", "Eclipse Cross", "Pajero", "i-MiEV"]
+  },
+  {
+    "name": "NISSAN",
+    "models": ["Micra", "Note", "Juke", "Leaf", "Pulsar", "Almera", "Qashqai", "X-Trail", "Pathfinder", "Murano", "Primera", "370Z", "350Z", "GT-R", "Terrano II"]
+  },
+  {
+    "name": "OPEL",
+    "models": ["Corsa", "Astra", "Vectra", "Insignia", "Omega", "Calibra", "Signum", "Meriva", "Zafira", "Tigra", "Adam", "Karl", "Ampera", "Mokka", "Grandland", "Crossland", "Frontera", "Antara", "Combo Life"]
+  },
+  {
+    "name": "PEUGEOT",
+    "models": ["106", "107", "108", "205 (early 90s)", "206", "207", "208", "306", "307", "308", "405", "406", "407", "508", "605", "607", "2008", "3008", "4007", "4008", "5008", "RCZ", "Partner Tepee"]
+  },
+  {
+    "name": "POLESTAR",
+    "models": ["1", "2"]
+  },
+  {
+    "name": "PORSCHE",
+    "models": ["911", "Boxster", "Cayman", "Panamera", "Cayenne", "Macan", "Taycan"]
+  },
+  {
+    "name": "RENAULT",
+    "models": ["Clio", "Twingo", "Megane", "Laguna", "Safrane", "Vel Satis", "Fluence", "Talisman", "Scenic", "Espace", "Kadjar", "Koleos", "Captur", "Arkana", "Austral", "Zoe", "Twizy", "Modus"]
+  },
+  {
+    "name": "ROLLS-ROYCE",
+    "models": ["Silver Seraph", "Phantom", "Ghost", "Wraith", "Dawn", "Cullinan"]
+  },
+  {
+    "name": "ROVER",
+    "models": ["100", "200", "25", "400", "45", "600", "75", "Streetwise", "CityRover"]
+  },
+  {
+    "name": "SEAT",
+    "models": ["Ibiza", "Cordoba", "Toledo", "Leon", "Altea", "Alhambra", "Ateca", "Arona", "Tarraco", "Mii", "Exeo"]
+  },
+  {
+    "name": "SKODA",
+    "models": ["Favorit (early 90s)", "Felicia", "Fabia", "Octavia", "Superb", "Rapid", "Roomster", "Yeti", "Kodiaq", "Karoq", "Kamiq", "Enyaq"]
+  },
+  {
+    "name": "SMART",
+    "models": ["City-Coupe (Fortwo)", "Fortwo", "Forfour", "Roadster"]
+  },
+  {
+    "name": "SSANGYONG",
+    "models": ["Korando", "Tivoli", "Rexton", "Rodius", "Kyron", "Actyon", "Musso", "Torres"]
+  },
+  {
+    "name": "SUBARU",
+    "models": ["Justy", "Impreza", "Legacy", "Outback", "Forester", "XV", "Crosstrek", "BRZ", "Levorg", "SVX", "Tribeca"]
+  },
+  {
+    "name": "SUZUKI",
+    "models": ["Alto", "Celerio", "Swift", "Baleno", "Ignis", "Splash", "Liana", "SX4", "SX4 S-Cross", "Vitara", "Grand Vitara", "Jimny", "Kizashi"]
+  },
+  {
+    "name": "TESLA",
+    "models": ["Roadster (2008)", "Model S", "Model 3", "Model X", "Model Y"]
+  },
+  {
+    "name": "TOYOTA",
+    "models": ["Aygo", "Yaris", "Corolla", "Auris", "Avensis", "Camry", "Celica", "MR2", "Supra", "Prius", "C-HR", "RAV4", "Highlander", "Land Cruiser", "GT86", "GR86", "Verso", "Verso-S", "iQ", "Urban Cruiser", "ProAce (MPV)"]
+  },
+  {
+    "name": "VAUXHALL",
+    "models": ["Corsa", "Astra", "Vectra", "Insignia", "Omega", "Calibra", "Signum", "Meriva", "Zafira", "Tigra", "Adam", "Viva", "Ampera", "Mokka", "Grandland", "Crossland"]
+  },
+  {
+    "name": "VOLKSWAGEN",
+    "models": ["up!", "Polo", "Golf", "Bora","Caddy" ,"Jetta", "Vento", "Passat", "Arteon", "Scirocco", "Corrado", "Lupo", "Fox", "New Beetle", "Beetle", "Eos", "Tiguan", "T-Roc", "T-Cross", "Touran", "Sharan", "Touareg", "Transporter" ,"Phaeton", "ID.3", "ID.4", "ID.5", "ID.7"]
+  },
+  {
+    "name": "BYD",
+    "models": ["Atto 3", "Han", "Tang", "Seal", "Dolphin"]
+  },
+  {
+    "name": "NIO",
+    "models": ["ET5", "ET7", "ES6", "ES8", "EC6", "EL7"]
+  },
+  {
+    "name": "XPENG",
+    "models": ["P7", "G9"]
+  },
+  {
+    "name": "AIWAYS",
+    "models": ["U5", "U6"]
+  },
+  {
+    "name": "LYNK & CO",
+    "models": ["01"]
+  },
+  {
+    "name": "ORA",
+    "models": ["Funky Cat (03)"]
+  },
+  {
+    "name": "WEY",
+    "models": ["Coffee 01", "Coffee 02"]
+  },
+  {
+    "name": "GENESIS",
+    "models": ["G70", "G80", "GV70", "GV80", "GV60", "Electrified G80"]
+  }
+]

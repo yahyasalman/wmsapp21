@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Support and Help Center for Digital Workshop Service mobile application">
+    <meta name="keywords" content="support, help, FAQs, troubleshooting, Digital Workshop Service">
+    <title>Support - Digital Workshop Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            border-bottom: 3px solid #0066cc;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #0066cc;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        h2 {
+            color: #0066cc;
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #333;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        strong {
+            color: #222;
+            font-weight: 600;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .highlight-box {
+            background-color: #f0f8ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .highlight-box.success {
+            background-color: #f0fff4;
+            border-left-color: #10b981;
+        }
+
+        .highlight-box.warning {
+            background-color: #fffbf0;
+            border-left-color: #ffa500;
+        }
+
+        .contact-box {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .faq-item {
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .faq-question {
+            color: #0066cc;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .faq-answer {
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .quick-link-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .quick-link-card:hover {
+            background-color: #f0f8ff;
+            border-color: #0066cc;
+            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.15);
+        }
+
+        .quick-link-card h4 {
+            color: #0066cc;
+            margin-bottom: 8px;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            h3 {
+                font-size: 1.2em;
+            }
+
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background-color: #fff;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            a {
+                color: #000;
+                text-decoration: underline;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Support & Help Center</h1>
+            <p class="subtitle">Get help with Digital Workshop Service</p>
+        </header>
+
+        <main>
+            <!-- Quick Support Summary -->
+            <div class="highlight-box">
+                <h3 style="margin-top: 0; color: #0066cc;">📞 Need Help?</h3>
+                <p><strong>Email Support:</strong> <a href="mailto:support@digitalworkshop.nu">support&#64;digitalworkshop.nu</a></p>
+                <p><strong>Response Time:</strong> We typically respond within 24 business hours</p>
+                <p style="margin-bottom: 0;"><strong>Website:</strong> <a href="https://digitalworkshop.nu" target="_blank">https://digitalworkshop.nu</a></p>
+            </div>
+
+            <!-- Quick Links -->
+            <section id="quick-links">
+                <h2>Quick Links</h2>
+                <div class="quick-links">
+                    <a href="#getting-started" class="quick-link-card">
+                        <h4>Getting Started</h4>
+                        <p>Learn how to set up your account and add your first vehicle</p>
+                    </a>
+                    <a href="#account-management" class="quick-link-card">
+                        <h4>Account Management</h4>
+                        <p>Manage your profile, password, and preferences</p>
+                    </a>
+                    <a href="#vehicle-management" class="quick-link-card">
+                        <h4>Vehicle Management</h4>
+                        <p>Add, edit, and remove vehicles from your account</p>
+                    </a>
+                    <a href="#service-history" class="quick-link-card">
+                        <h4>Service History</h4>
+                        <p>View and manage your vehicle service records</p>
+                    </a>
+                    <a href="#workshops" class="quick-link-card">
+                        <h4>Workshop Support</h4>
+                        <p>Connect with authorized workshops</p>
+                    </a>
+                    <a href="#troubleshooting" class="quick-link-card">
+                        <h4>Troubleshooting</h4>
+                        <p>Common issues and solutions</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Getting Started -->
+            <section id="getting-started">
+                <h2>Getting Started</h2>
+
+                <h3>How It Works</h3>
+                <p>When you bring your vehicle to an authorized workshop, they register it in the Digital Workshop Service system. Once registered, your vehicle will appear in the app automatically when you sign in.</p>
+
+                <h3>1. Creating Your Account</h3>
+                <ol>
+                    <li>Download the Digital Workshop Service app from the App Store or Google Play Store</li>
+                    <li>Open the app and tap "Sign Up"</li>
+                    <li>Enter the email address you provided to the workshop</li>
+                    <li>Create a strong password</li>
+                    <li>Enter your phone number</li>
+                    <li>Verify your email by clicking the link sent to your inbox</li>
+                    <li>Your account is now active and your registered vehicles will appear!</li>
+                </ol>
+
+                <div class="highlight-box success">
+                    <strong>Important:</strong> Use the same email address that you gave to the workshop. Your vehicles are linked to this email in our system.
+                </div>
+
+                <h3>2. Viewing Your Vehicles</h3>
+                <p>Once you've created your account with the same email registered at the workshop, your vehicles will automatically appear in the app. You can then view their complete service history.</p>
+            </section>
+
+            <!-- Account Management -->
+            <section id="account-management">
+                <h2>Account Management</h2>
+
+                <h3>Changing Your Password</h3>
+                <ol>
+                    <li>Open the app and go to Settings</li>
+                    <li>Tap "Account Settings"</li>
+                    <li>Select "Change Password"</li>
+                    <li>Enter your current password</li>
+                    <li>Enter and confirm your new password</li>
+                    <li>Tap "Update Password"</li>
+                </ol>
+
+                <h3>Updating Your Profile</h3>
+                <ol>
+                    <li>Go to Settings → Account Settings</li>
+                    <li>Tap "Edit Profile"</li>
+                    <li>Update your name, email, or phone number as needed</li>
+                    <li>Tap "Save Changes"</li>
+                </ol>
+
+                <h3>Language Preferences</h3>
+                <p>You can change the app language in Settings → Language. Currently supported languages:</p>
+                <ul>
+                    <li>English</li>
+                    <li>Swedish (Svenska)</li>
+                </ul>
+
+                <h3>Deleting Your Account</h3>
+                <p>If you want to delete your account, please contact our support team:</p>
+                <p><strong>Email:</strong> <a href="mailto:support@digitalworkshop.nu">support&#64;digitalworkshop.nu</a></p>
+                <p>In your email, include your email address and request account deletion. We will process your request and permanently delete your account and associated data within 30 days.</p>
+            </section>
+
+            <!-- Vehicle Management -->
+            <section id="vehicle-management">
+                <h2>Your Vehicles</h2>
+
+                <h3>Viewing Your Vehicles</h3>
+                <p>Once you've created your account with the email address registered at the workshop, all your vehicles will automatically appear in the app. They are managed by the workshop in the system.</p>
+
+                <h3>Vehicle Information</h3>
+                <p>For each vehicle, you can view:</p>
+                <ul>
+                    <li>Vehicle make, model, and year</li>
+                    <li>Registration number</li>
+                    <li>VIN (Vehicle Identification Number)</li>
+                    <li>Complete service and maintenance history</li>
+                </ul>
+
+                <h3>If Your Vehicle Doesn't Appear</h3>
+                <ol>
+                    <li>Make sure you're using the same email address you provided to the workshop</li>
+                    <li>Sign out and sign back in</li>
+                    <li>Refresh the app or close and reopen it</li>
+                    <li>Contact the workshop to confirm your vehicle has been registered</li>
+                </ol>
+            </section>
+
+            <!-- Service History -->
+            <section id="service-history">
+                <h2>Service History</h2>
+
+                <h3>Viewing Your Service History</h3>
+                <ol>
+                    <li>Select a vehicle from your vehicle list</li>
+                    <li>Tap "Service History"</li>
+                    <li>You'll see all recorded services, maintenance, and repairs</li>
+                    <li>Tap on any service record to view details</li>
+                </ol>
+
+                <h3>Understanding Service Records</h3>
+                <p>Each service record includes:</p>
+                <ul>
+                    <li><strong>Date:</strong> When the service was performed</li>
+                    <li><strong>Workshop:</strong> Which authorized workshop performed the service</li>
+                    <li><strong>Service Type:</strong> Regular service, repair, maintenance, etc.</li>
+                    <li><strong>Mileage:</strong> Vehicle mileage at time of service</li>
+                    <li><strong>Details:</strong> Specific work performed</li>
+                    <li><strong>Invoice:</strong> Digital copy of the invoice (if available)</li>
+                </ul>
+
+                <h3>Downloading Service Records</h3>
+                <ol>
+                    <li>Open a service record</li>
+                    <li>Tap the download icon</li>
+                    <li>Select your preferred format (PDF)</li>
+                    <li>The document will be saved to your device</li>
+                </ol>
+
+                <h3>Sharing Service Records</h3>
+                <ol>
+                    <li>Open a service record</li>
+                    <li>Tap the share icon</li>
+                    <li>Choose your sharing method (email, message, etc.)</li>
+                    <li>Complete the sharing process</li>
+                </ol>
+
+                <div class="highlight-box success">
+                    <strong>Benefit:</strong> Digital service records help with resale value documentation and warranty claims.
+                </div>
+            </section>
+
+            <!-- Workshop Support -->
+            <section id="workshops">
+                <h2>Workshop Support</h2>
+
+                <h3>Registering Your Vehicle at a Workshop</h3>
+                <p>To have your vehicle appear in the app:</p>
+                <ol>
+                    <li>Bring your vehicle to an authorized workshop</li>
+                    <li>Provide your email address to the workshop</li>
+                    <li>The workshop will register your vehicle in the system</li>
+                    <li>Sign up in the app with that same email address</li>
+                    <li>Your vehicle and service history will appear automatically</li>
+                </ol>
+
+                <h3>Important: Use the Same Email</h3>
+                <p>Make sure you provide the same email address to the workshop that you use when creating your app account. This links your vehicles to your account.</p>
+
+                <h3>Service Records</h3>
+                <p>After each service at the workshop, your service records will automatically appear in the app. You don't need to do anything - the workshop handles this for you.</p>
+            </section>
+
+            <!-- Troubleshooting -->
+            <section id="troubleshooting">
+                <h2>Troubleshooting</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">I forgot my password. How can I reset it?</div>
+                    <div class="faq-answer">
+                        <p>On the login screen, tap "Forgot Password?" Enter your email address and follow the instructions sent to your inbox. You'll receive a link to create a new password. The link is valid for 24 hours.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">The app is not loading my vehicle information. What should I do?</div>
+                    <div class="faq-answer">
+                        <p>Try these steps:</p>
+                        <ol>
+                            <li>Check your internet connection (WiFi or mobile data)</li>
+                            <li>Close the app completely and reopen it</li>
+                            <li>Make sure you're using the latest version of the app</li>
+                            <li>Try clearing the app cache (Settings → Apps → Digital Workshop → Storage → Clear Cache)</li>
+                            <li>If the problem persists, contact support</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">I entered the wrong registration number/VIN. Can I change it?</div>
+                    <div class="faq-answer">
+                        <p>Vehicle information is managed by the workshop and cannot be changed by you through the app. If there's an error, please contact the workshop where your vehicle is registered and ask them to correct the information.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">The app keeps logging me out. Why?</div>
+                    <div class="faq-answer">
+                        <p>This could happen for security reasons:</p>
+                        <ul>
+                            <li>Your session may have expired after a period of inactivity</li>
+                            <li>You may have changed your password from another device</li>
+                            <li>The app may need to be updated</li>
+                        </ul>
+                        <p>Try:</p>
+                        <ol>
+                            <li>Update the app to the latest version</li>
+                            <li>Clear the app cache</li>
+                            <li>Restart your device</li>
+                            <li>Contact support if the issue continues</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">My service history is not showing. What's wrong?</div>
+                    <div class="faq-answer">
+                        <p>Service history depends on workshop records. If your history is empty:</p>
+                        <ul>
+                            <li>Your vehicle may not have any recorded services yet</li>
+                            <li>The workshop may not have access to record services</li>
+                            <li>You may need to grant workshop permissions</li>
+                        </ul>
+                        <p>Contact your workshop to ensure they have your vehicle information and proper access permissions.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">The app is crashing or freezing. How do I fix this?</div>
+                    <div class="faq-answer">
+                        <p>Try these troubleshooting steps:</p>
+                        <ol>
+                            <li>Force close the app completely</li>
+                            <li>Restart your device</li>
+                            <li>Update the app to the latest version from App Store/Play Store</li>
+                            <li>Clear the app cache (Settings → Apps → Digital Workshop → Storage → Clear Cache)</li>
+                            <li>Ensure you have enough storage space on your device</li>
+                            <li>If the problem persists, uninstall and reinstall the app</li>
+                        </ol>
+                        <p>If crashes continue, please contact support with the error details.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">I'm having trouble with the "Remember Me" feature. How do I manage it?</div>
+                    <div class="faq-answer">
+                        <p>The "Remember Me" feature securely stores your login credentials:</p>
+                        <ul>
+                            <li>Check "Remember Me" on login to stay signed in longer</li>
+                            <li>Uncheck it if you're on a shared device</li>
+                            <li>To disable it, go to Settings → Privacy & Data → Clear Saved Credentials</li>
+                        </ul>
+                        <p>Your data is encrypted using your device's secure storage.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I update the app?</div>
+                    <div class="faq-answer">
+                        <p><strong>For iOS:</strong></p>
+                        <ol>
+                            <li>Open the App Store</li>
+                            <li>Go to the "Updates" tab</li>
+                            <li>Find "Digital Workshop Service" and tap "Update"</li>
+                        </ol>
+                        <p><strong>For Android:</strong></p>
+                        <ol>
+                            <li>Open Google Play Store</li>
+                            <li>Search for "Digital Workshop Service"</li>
+                            <li>If an update is available, tap "Update"</li>
+                        </ol>
+                        <p>Keeping your app updated ensures you get the latest features and security improvements.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">I see an error message. What does it mean?</div>
+                    <div class="faq-answer">
+                        <p>Common error messages and solutions:</p>
+                        <ul>
+                            <li><strong>"Network Error":</strong> Check your internet connection</li>
+                            <li><strong>"Authentication Failed":</strong> Verify your login credentials; try resetting your password</li>
+                            <li><strong>"Vehicle Not Found":</strong> Check that your registration number or VIN is correct</li>
+                            <li><strong>"Server Unavailable":</strong> Please try again later; our servers may be under maintenance</li>
+                        </ul>
+                        <p>If you see an error code, please share it with support for faster assistance.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQs -->
+            <section id="faqs">
+                <h2>Frequently Asked Questions</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">Is my data secure in the app?</div>
+                    <div class="faq-answer">
+                        <p>Yes! We use industry-standard security measures:</p>
+                        <ul>
+                            <li>End-to-end encryption for all data transfers</li>
+                            <li>Secure storage on encrypted servers</li>
+                            <li>Regular security audits and monitoring</li>
+                            <li>GDPR compliant data handling</li>
+                        </ul>
+                        <p>See our <a href="https://www.digitalworkshop.nu/privacy-policy" target="_blank">Privacy Policy</a> for detailed information.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can I use the app offline?</div>
+                    <div class="faq-answer">
+                        <p>The app requires an internet connection for most features. However, previously loaded data (like recent service history) may be cached locally. For the best experience, please ensure you have an active internet connection.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How many vehicles can I add to my account?</div>
+                    <div class="faq-answer">
+                        <p>You don't manually add vehicles. All vehicles registered at workshops with your email address will automatically appear in your app account.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Who can see my vehicle information?</div>
+                    <div class="faq-answer">
+                        <p>Only you can see your vehicle information and service history in the app. Your data is private and secure. The authorized workshop has access to record your service information, but they manage this from their own system.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What should I do if I suspect a security breach?</div>
+                    <div class="faq-answer">
+                        <p>If you believe your account has been compromised:</p>
+                        <ol>
+                            <li>Change your password immediately</li>
+                            <li>Review your account activity in Settings</li>
+                            <li>Revoke access from any unrecognized workshops</li>
+                            <li>Contact support immediately at <a href="mailto:support@digitalworkshop.nu">support&#64;digitalworkshop.nu</a></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How often is the app updated?</div>
+                    <div class="faq-answer">
+                        <p>We regularly release updates with new features, improvements, and security patches. Major updates are released quarterly, with critical security updates as needed. Always keep your app updated to the latest version.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What are the system requirements?</div>
+                    <div class="faq-answer">
+                        <p><strong>iOS:</strong> iOS 15.1 or later</p>
+                        <p><strong>Android:</strong> Android 7.0 or later</p>
+                        <p><strong>Internet:</strong> WiFi or mobile data connection required</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How can I provide feedback or suggest a feature?</div>
+                    <div class="faq-answer">
+                        <p>We love hearing from our users! You can:</p>
+                        <ul>
+                            <li>Email us at <a href="mailto:support@digitalworkshop.nu">support&#64;digitalworkshop.nu</a> with your suggestions</li>
+                            <li>Leave a review on App Store or Google Play Store</li>
+                            <li>Contact us through our website: <a href="https://digitalworkshop.nu" target="_blank">digitalworkshop.nu</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Support -->
+            <section id="contact">
+                <h2>Contact Support</h2>
+                <p>If you couldn't find the answer to your question, our support team is here to help!</p>
+
+                <div class="contact-box">
+                    <h3>Support Channels</h3>
+                    <p><strong>Email:</strong> <a href="mailto:support@digitalworkshop.nu">support&#64;digitalworkshop.nu</a></p>
+                    <p><strong>Response Time:</strong> We aim to respond within 24 business hours</p>
+                    <p><strong>Website:</strong> <a href="https://digitalworkshop.nu" target="_blank">https://digitalworkshop.nu</a></p>
+                    <p><strong>Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM (CET)</p>
+                </div>
+
+                <h3>When Contacting Support, Please Include:</h3>
+                <ul>
+                    <li>Your email address associated with your account</li>
+                    <li>Your device type (iPhone/Android) and OS version</li>
+                    <li>App version number (found in Settings → About)</li>
+                    <li>A detailed description of the issue</li>
+                    <li>Any error messages you received</li>
+                    <li>Steps you've already taken to resolve the issue</li>
+                </ul>
+
+                <p>This information helps us resolve your issue faster and more effectively.</p>
+            </section>
+
+            <!-- Data Protection -->
+            <section id="privacy">
+                <h2>Privacy & Data Protection</h2>
+                <p>We take your privacy seriously. For detailed information about how we collect, use, and protect your data, please see our <a href="https://www.digitalworkshop.nu/privacy-policy" target="_blank">Privacy Policy</a>.</p>
+
+                <div class="highlight-box success">
+                    <strong>Key Points:</strong>
+                    <ul style="margin-bottom: 0;">
+                        <li>Your data is encrypted and securely stored</li>
+                        <li>We comply with GDPR and Swedish data protection laws</li>
+                        <li>You can request, modify, or delete your data anytime</li>
+                        <li>We never sell your data to third parties</li>
+                    </ul>
+                </div>
+            </section>
+
+            <div class="highlight-box success" style="margin-top: 40px;">
+                <h3 style="margin-top: 0;">We're Here to Help</h3>
+                <p style="margin-bottom: 0;">Your satisfaction is our priority. If you have any questions or need assistance, don't hesitate to reach out. We're committed to providing excellent support and continuously improving your experience with Digital Workshop Service.</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2025 Digital Workshop Service. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">
+                <a href="https://www.digitalworkshop.nu/privacy-policy" target="_blank">Privacy Policy</a> | 
+                <a href="https://digitalworkshop.nu" target="_blank">Website</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<header class="navbar">
+  <div class="container-main">
+    <nav class="flex justify-between items-center h-20">
+      <img src="assets/images/homelogo.png" class="h-10" />
+
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#funktioner" class="nav-link">Funktioner</a>
+        <a href="#priser" class="nav-link">Priser</a>
+        <a href="#omoss" class="nav-link">Om Oss</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <button class="btn-primary" (click)="openDialog()">Logga in</button>
+      </div>
+
+      <button class="md:hidden" (click)="toggleMobileMenu()">☰</button>
+    </nav>
+
+    <div *ngIf="mobileMenuOpen" class="md:hidden pb-4 space-y-2">
+      <a href="#funktioner" class="block nav-link">Funktioner</a>
+      <a href="#ai-assistant" class="block nav-link">AI Assistant</a>
+      <a href="#priser" class="block nav-link">Priser</a>
+      <a href="#faq" class="block nav-link">FAQ</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- HERO -->
+<section class="hero-section">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="container-main relative z-10">
+    <div class="hero-title-box fade-in">
+      <h1 class="hero-title">
+        Automatiserar din verkstad.<br />
+        Effektiviserar din vinst.
+      </h1>
+    </div>
+
+    <div class="mt-8 fade-in">
+      <div class="hero-price">
+        Endast 499 kr / användare / månad
+      </div>
+      <p class="binding-text">3 månaders bindningstid gäller</p>
+    </div>
+
+    <p class="mt-8 text-xl text-white max-w-3xl mx-auto fade-in">
+      Sveriges första verkstadssystem med AI Assistant. Smart orderhantering,
+      tidsbokning, kundkommunikation och digital servicebok.
+    </p>
+
+    <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4 fade-in">
+      <button class="btn-white" (click)="openDemo()">Boka en demo</button>
+      <a href="#funktioner" class="btn-primary">Se funktioner</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- FEATURES -->
+<section id="funktioner" class="section-padding">
+  <div class="container-main">
+    <h2 class="text-4xl font-extrabold text-center mb-6">
+      Funktioner som gör skillnad.
+    </h2>
+
+    <p class="text-center mb-16 text-lg">
+      Allt ingår för <span class="text-[var(--color-primary)] font-semibold">
+      499 kr/användare/månad</span>.
+    </p>
+
+    <div class="feature-grid">
+      <div class="card fade-in" *ngFor="let feature of features">
+        <div class="icon-wrapper"></div>
+        <h3 class="card-title">{{ feature.title }}</h3>
+        <p class="card-text">{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container-main flex flex-col md:flex-row justify-between gap-6">
+    <div class="text-sm text-gray-400">
+      © 2025 Digital Workshop. Alla rättigheter förbehållna.
+    </div>
+
+    <div class="flex gap-6">
+      <a href="#funktioner" class="footer-link">Funktioner</a>
+      <a href="#faq" class="footer-link">FAQ</a>
+      <a href="#" class="footer-link">Integritetspolicy</a>
+    </div>
+  </div>
+</footer>
+     <p-dialog [modal]="true" [(visible)]="isDialogVisible" class="custom-dialog" styleClass="!bg-bgColor"
+          [style]="{ width: '50rem' }">
+          <div class="grid grid-cols-2">
+            <div class="bg-[#CCE0FF33] bg-dialog_background bg-contain bg-bottom bg-no-repeat me-7 rounded-l-xl">
+              <div class="m-auto h-full flex justify-center items-center">
+                <img src="assets/images/logo.png" alt="">
+              </div>
+            </div>
+            <div class="pb-9 pe-7 pt-14">
+              <form [formGroup]="loginForm" (ngSubmit)="onLoginFormSubmitted()">
+                <div class="">
+                  <div class="">
+                    <p class="font-semibold text-4xl text-start"><span class="text-blue">Verkstad </span>Logga in</p>
+                  </div>
+                  <p-message severity="error" variant="simple" size="small"> {{invalidMessage}} </p-message>
+
+                  <div class="mb-3">
+                    <p class="flex justify-start font-semibold">UserName</p>
+                    <input type="email" formControlName="email" autocomplete="email"
+                      style="width: 100%; background-color: #0052CC1A;" pInputText />
+                  </div>
+
+                  <div class="mb-3">
+                    <p class="flex justify-start font-semibold">Lösenord</p>
+                    <input type="password" formControlName="password" style="width: 100%; background-color: #0052CC1A;"
+                      pInputText />
+                  </div>
+
+                  <div class="flex justify-between">
+                    <a href="#" class="text-xs text-Darkgray" (click)="navigateToForgotPassword($event)">Glömt
+                      lösenord?</a>
+
+                  </div>
+                  <p-button type="submit" [raised]="true" label="Logga in" size="large"
+                    styleClass="flex px-7 mt-5 !border-0" />
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </p-dialog>

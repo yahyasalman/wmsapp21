@@ -1,0 +1,24 @@
+:host {
+  --booking-primary: #3b82f6;
+  --booking-primary-dark: #2563eb;
+  --booking-primary-ink: #1d4ed8;
+  --booking-primary-light: #60a5fa;
+  --booking-primary-soft: #dbeafe;
+  --booking-blue-10: rgba(59, 130, 246, 0.1);
+  --booking-blue-15: rgba(59, 130, 246, 0.15);
+  --booking-blue-20: rgba(59, 130, 246, 0.2);
+  --booking-blue-25: rgba(59, 130, 246, 0.25);
+  --booking-border: #DBE0E5;
+  --booking-gray-50: #f8fafc;
+  --booking-gray-100: #f1f5f9;
+  --booking-gray-200: #e2e8f0;
+  --booking-gray-300: #cbd5e1;
+  --booking-gray-400: #94a3b8;
+  --booking-gray-500: #64748b;
+  --booking-gray-600: #475569;
+  --booking-gray-900: #0f172a;
+  --booking-primary-deep: #1e40af;
+  --booking-primary-border: #1e3a8a;
+  --booking-weekend: #f3f4f6;
+  --booking-weekend-header: #e5e7eb;
+}

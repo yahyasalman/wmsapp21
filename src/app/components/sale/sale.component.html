@@ -1,0 +1,91 @@
+<section class="px-5 py-10 sales-section">
+  <app-generic-loader *ngIf="isLoading"></app-generic-loader>
+
+  <form [formGroup]="salesForm">
+    <div class="bg-White p-5 mb-5 rounded-xl shadow-md">
+      <div class="grid grid-cols-12 gap-3 text-sm font-medium">
+        <div class="col-span-6">
+          <label class="mb-1 text-Darkgray block">{{ this.sharedService.T('selectPeriod') }} <span class="text-red-500">*</span></label>
+          <p-datepicker formControlName="datePeriod" view="month" dateFormat="mm/yy" [showIcon]="true"
+            iconDisplay="input" placeholder="MM/YYYY" appendTo="body" styleClass="w-full">
+          </p-datepicker>
+        </div>
+
+        <div class="col-span-4">
+          <label class="mb-1 text-Darkgray block">{{ this.sharedService.T('turnover') }} <span class="text-red-500">*</span></label>
+          <input type="number" formControlName="turnover" pInputText placeholder="Enter turnover" class="w-full" />
+        </div>
+
+        <div class="flex gap-3 mt-4 col-span-12">
+          <p-button type="submit" [label]="isEditMode ? this.sharedService.T('update') : this.sharedService.T('add')" 
+            (onClick)="onSalesSubmit()">
+          </p-button>
+          <p-button label="{{ this.sharedService.T('cancel') }}" styleClass="p-button-secondary" (onClick)="resetForm()">
+          </p-button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="mb-10">
+    <p-table [value]="salesList" styleClass="text-sm custom-table"
+      [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+      responsiveLayout="scroll">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="!bg-sky !border-bgColor !border-y-4 rounded-l-xl">{{ this.sharedService.T('year') }}</th>
+          <th class="!bg-sky !border-bgColor !border-y-4 text-center">{{ this.sharedService.T('month') }}</th>
+          <th class="!bg-sky !border-bgColor !border-y-4 text-center">{{ this.sharedService.T('turnover') }}</th>
+          <th class="!bg-sky !border-bgColor !border-y-4 text-center rounded-r-xl">{{ this.sharedService.T('actions') }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-sale>
+        <tr class="p-selectable-row">
+          <td class="!bg-White !border-0 rounded-l-lg">{{ sale.saleYear }}</td>
+          <td class="!bg-White !border-0 text-center">{{ sale.saleMonth }}</td>
+          <td class="!bg-White !border-0 text-center font-semibold text-blue-600">{{ sale.turnover | number }}</td>
+          <td class="!bg-White !border-0 text-center rounded-r-lg">
+            <div class="flex gap-2 justify-center">
+            <p-button icon="pi pi-trash" severity="danger" (onClick)="deleteSale(sale)"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <div *ngIf="pager.totalRecords > 0" class="flex items-center justify-between py-6">
+      <div class="flex items-center">
+        <p-select [options]="[10, 20, 30]" [(ngModel)]="pager.pageSize" [ngModelOptions]="{standalone: true}"
+          styleClass="bg-white border border-CustomBorder rounded-md" (onChange)="onPageSizeChange($event)">
+        </p-select>
+      </div>
+
+      <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
+        (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+        currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+        styleClass="!bg-transparent">
+        
+        <ng-template pTemplate="firstpagelinkicon">
+          <img src="assets/icons/paginator/previus.svg" alt="first">
+        </ng-template>
+        <ng-template pTemplate="lastpagelinkicon">
+          <img src="assets/icons/paginator/next.svg" alt="last">
+        </ng-template>
+        <ng-template pTemplate="previouspagelinkicon">
+          <div class="flex items-center gap-2">
+            <div>{{ this.sharedService.T('previous') }}</div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="nextpagelinkicon">
+          <div class="flex items-center gap-2">
+            <div>{{ this.sharedService.T('next') }}</div>
+          </div>
+        </ng-template>
+      </p-paginator>
+    </div>
+  </div>
+  <p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>
+</section>

@@ -1,0 +1,103 @@
+<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16">
+    <div class="">
+        <p class="font-normal text-2xl">{{ this.sharedService.T('employees') }}</p>
+    </div>
+    <div class="flex gap-2">
+        <span class="my-auto">{{ this.sharedService.workshopName}}</span>
+        <div class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
+            <p>AS</p>
+        </div>
+    </div>
+</header>
+<section class="px-5 py-10">
+  <div class="mb-6 mt-4 text-sm font-medium shadow-sm bg-white rounded-md p-5">
+    <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
+      <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
+        <p-button [raised]="true" label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('employee') }}" size="large"
+          icon="pi pi-plus" (click)="redirectToEmployeeCrudComponent()"></p-button>
+      </div>
+
+      <div class="ml-auto">
+        <p-autoComplete
+          placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('employee') }}" [suggestions]="employees"
+          (onClear)="onClearEmployeeName()" (keyup)="keyupEmployeeName($event.target)"
+          optionLabel="fullName" optionValue="fullName" [showClear]="true"
+          inputStyleClass="w-64 ps-2 h-10 rounded-md">
+          <ng-template let-emp pTemplate="item">
+            <div class="flex items-center gap-2">
+              <div>{{ emp.fullName }}</div>
+            </div>
+          </ng-template>
+        </p-autoComplete>
+      </div>
+    </div>
+
+    <hr class="border-CustomBorder" />
+  </div>
+
+  <div class="mb-10">
+    <p-table styleClass="text-sm"
+      [tableStyle]="{'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px'}"
+      [value]="employees" [rows]="1" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr class="table-header-row">
+          <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="employeeId"><p-sortIcon field="employeeId"/></th>
+          <th class="table-header-cell">Full Name</th>
+          <th class="table-header-cell">Job Title</th>
+          <th class="table-header-cell">Telephone</th>
+          <th class="table-header-cell">Email</th>
+          <th class="table-header-cell">Active</th>
+          <th class="table-header-cell">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-emp>
+        <tr class="" style="background-color: transparent;">
+          <td class="!bg-White !border-0 rounded-l-lg">{{emp.employeeId}}</td>
+          <td class="!bg-White !border-0">{{emp.fullName}}</td>
+          <td class="!bg-White !border-0 text-center">{{emp.jobTitle}}</td>
+          <td class="!bg-White !border-0 text-center">{{emp.telephone}}</td>
+          <td class="!bg-White !border-0 text-center">{{emp.email}}</td>
+          <td class="!bg-White !border-0 text-center">{{emp.isActive ? 'Yes' : 'No'}}</td>
+          <td class="!bg-White !border-0 text-center text-Darkgray rounded-r-lg">
+            <p-button size="small" label="Edit" class="pe-3 w-6" (onClick)="editEmployee(emp.employeeId)">
+              <img src="assets/icons/product/edit_square.svg" alt="">
+            </p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    
+    @if(pager.totalRecords > 10) {
+    <div class="flex py-10">
+      <div class="my-auto">
+        <p-select [options]="[10,20,30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}" styleClass="bg-white"
+          (onChange)="onPageSizeChange($event)" />
+      </div>
+
+      <p-paginator [first]="pager.firstPage" styleClass="!bg-transparent" [rows]="pager.pageSize"
+        [totalRecords]="pager.totalRecords" (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true"
+        [showFirstLastIcon]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}">
+        <ng-template pTemplate="firstpagelinkicon">
+          <img src="assets/icons/paginator/previus.svg" alt="">
+        </ng-template>
+
+        <ng-template pTemplate="lastpagelinkicon">
+          <img src="assets/icons/paginator/next.svg" alt="">
+        </ng-template>
+
+        <ng-template pTemplate="previouspagelinkicon">
+          <div class="flex align-items-center gap-12 ">
+            <div>Previous</div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="nextpagelinkicon">
+          <div class="flex align-items-center gap-2">
+            <div>Next</div>
+          </div>
+        </ng-template>
+      </p-paginator>
+    </div>
+    }
+  </div>
+</section>
+ <app-generic-loader *ngIf="isLoading"></app-generic-loader>

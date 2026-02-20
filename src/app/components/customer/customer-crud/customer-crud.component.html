@@ -1,0 +1,170 @@
+<!-- header start -->
+ <app-generic-loader *ngIf="isLoading"></app-generic-loader>
+<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
+  <div class="">
+            <p class="font-normal text-2xl">{{isNewObject ? this.sharedService.T('newInvoice') : this.sharedService.T('editInvoice')}}
+            #{{customer.get('customerId')?.value}}</p>
+  </div>
+  <div class="flex gap-2">
+    <span class="my-auto">{{ this.sharedService.workshopName}}</span>
+    <div
+      class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
+      <p>AS</p>
+    </div>
+  </div>
+</header>
+<!-- header end -->
+<!-- <main class="flex-1 overflow-x-hidden overflow-y-auto bg-bgColor">
+            <div class="container px-4 mx-auto"> -->
+
+<p-toast></p-toast>
+<section class="p-5 pb-10 bg-bgColor">
+  <form [formGroup]="customer">
+    <div class="mt-5 mb-10 bg-White p-8 gap-3 text-sm font-semibold rounded-lg shadow-lg bg-white">
+      <!-- Form Header -->
+      <div class="grid grid-cols-2 gap-12">
+        <!-- Left Section -->
+        <div>
+          <p class="text-2xl my-6">{{ this.sharedService.T('general') }}</p>
+
+          <!-- Customer Type and Tag -->
+          <div class="grid grid-cols-2 gap-6">
+            <div class="mb-6">
+              <label class="mb-2 block" for="customerType">{{ this.sharedService.T('customerType')}}</label>
+
+              <p-select [options]="customerTypes" formControlName="customerType" optionLabel="customerTypeName"
+                optionValue="customerTypeId" (onChange)="onChangeCustomerType($event)" class="w-full"></p-select>
+            </div>
+            <div class="mb-6">
+              <label class="mb-2 block" for="customerTag">{{ this.sharedService.T('customerTag') }}</label>
+              <p-select [options]="customerTags" formControlName="customerTag" optionLabel="customerTagName"
+                optionValue="customerTagId" (onChange)="onChangeCustomerTag($event)" class="w-full"></p-select>
+            </div>
+          </div>
+
+          <!-- Customer Name -->
+          <div class="mb-6">
+            <label class="mb-2 block" for="customerName">{{ this.sharedService.T('customerName') }} 
+              <span class="text-red-500">*</span>
+            </label>
+            <input type="text" formControlName="customerName" [invalid]="customer.get('customerName')?.touched && customer.get('customerName')?.errors"
+              [appRemovePlaceholderOnFocus]="this.sharedService.T('customerName')" class="w-full" pInputText />
+          </div>
+
+          <!-- Organization Number and VAT ID -->
+          <div class="grid grid-cols-2 gap-6">
+            <div class="mb-6">
+              <label class="mb-2 block" for="organizationNo">{{ this.sharedService.T('organizationNumber')
+                }}</label>
+              <input type="text" formControlName="organizationNo"
+                [appRemovePlaceholderOnFocus]="this.sharedService.T('organizationNumber')" 
+                class="w-3/4" pInputText />
+               <p-button 
+              size="small" 
+              severity="secondary"
+              label="{{ this.sharedService.T('fetchInfo') }}" 
+              (click)="fetchCompanyInfo()"></p-button> 
+              </div>
+            <div class="mb-6">
+              <label class="mb-2 block" for="vatId">{{ this.sharedService.T('vatRegistrationNumber') }}</label>
+              <input type="text" formControlName="vatId" [appRemovePlaceholderOnFocus]="this.sharedService.T('vatRegistrationNumber')"
+                class="w-full" pInputText />
+            </div>
+          </div>
+
+          <!-- Payment Terms and Telephone -->
+          <div class="grid grid-cols-2 gap-6">
+            <div class="mb-6">
+              <label class="mb-2 block" for="Invoice.InvoiceYourRef">{{ this.sharedService.T('paymentTerms') }}({{ this.sharedService.T('days') }})</label>
+              <p-select [options]="creditDays" formControlName="invoiceCreditDays" class="w-full "></p-select>
+            </div>
+            <div class="mb-6">
+              <label class="mb-2 block" for="telephone">{{ this.sharedService.T('telephone') }}</label>
+              <input type="tel" formControlName="telephone" [appRemovePlaceholderOnFocus]="this.sharedService.T('telephone')"
+                class="w-full" pInputText />
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="mb-2 block" for="email">
+              {{ this.sharedService.T('email') }}
+            </label>
+
+            <input type="text" formControlName="email" [appRemovePlaceholderOnFocus]="this.sharedService.T('email')"
+              class="w-full" [ngClass]="{
+      'border-red-500': customer.get('email')?.touched && customer.get('email')?.invalid
+    }" pInputText />
+          </div>
+
+          <!-- digitalServiceId -->
+          <div class="mb-6">
+            <label class="mb-2 block" for="digitalserviceid">{{ this.sharedService.T('digitalWorkshopId')
+              }}</label>
+            <input type="text" formControlName="digitalServiceId"
+              [appRemovePlaceholderOnFocus]="this.sharedService.T('digitalWorkshopId')" 
+              class="w-full" 
+              [invalid]="customer.get('digitalServiceId')?.touched && customer.get('digitalServiceId')?.invalid"  pInputText />
+          </div>
+
+        </div>
+
+        <!-- Right Section -->
+        <div>
+          <p class="text-2xl my-6">{{ this.sharedService.T('billingAddress') }}</p>
+
+          <!-- Care Of -->
+          <div class="mb-6">
+            <label class="mb-2 block" for="careOf">{{ this.sharedService.T('careof') }}</label>
+            <input type="text" formControlName="careOf" [appRemovePlaceholderOnFocus]="this.sharedService.T('careof')"
+              class="w-full" pInputText />
+          </div>
+
+          <!-- Address -->
+          <div class="mb-6">
+            <label class="mb-2 block" for="customerAddress">{{ this.sharedService.T('address') }}</label>
+            <input type="text" formControlName="customerAddress"
+              [appRemovePlaceholderOnFocus]="this.sharedService.T('address')" class="w-full" pInputText />
+          </div>
+
+          <!-- Postal Code -->
+          <div class="mb-6">
+            <label class="mb-2 block" for="customerPostNo">{{ this.sharedService.T('postalCode') }}</label>
+            <input type="text" formControlName="customerPostNo"
+              [appRemovePlaceholderOnFocus]="this.sharedService.T('postalCode')" class="w-full" pInputText />
+          </div>
+
+          <!-- City -->
+          <div class="mb-6">
+            <label class="mb-2 block" for="customerCsity">{{ this.sharedService.T('city') }}</label>
+            <input type="text" formControlName="customerCity" [appRemovePlaceholderOnFocus]="this.sharedService.T('city')"
+              class="w-full" pInputText />
+          </div>
+
+          <!-- Country -->
+          <div class="mb-6">
+            <label class="mb-2 block" for="customerCountry">{{ this.sharedService.T('country') }}</label>
+            <p-select [options]="this.sharedService.getEnums('country')" formControlName="customerCountry"
+              optionLabel="text" optionValue="value" class="w-full "></p-select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-4 mt-8">
+        <p-button 
+          [raised]="true"
+          label="{{ isNewObject ? this.sharedService.T('createCustomer') : this.sharedService.T('updateCustomer') }}" 
+          size="large"
+          icon="pi pi-plus"
+          (click)="onFormSubmit()"></p-button>
+          <p-button 
+          severity="secondary"
+          label="{{ this.sharedService.T('cancel') }}" 
+          size="large" 
+          (click)=" onCancelForm()"></p-button>
+      </div>
+    </div>
+  </form>
+  <p-confirmDialog></p-confirmDialog>
+</section>
+<!-- </div></main> -->

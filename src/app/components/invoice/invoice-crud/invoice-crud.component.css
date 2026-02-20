@@ -1,0 +1,97 @@
+::ng-deep.rounded-pill{
+    border: unset !important;
+    padding: 0 !important;
+    margin-right: 3px;
+}
+
+::ng-deep.p-autocomplete.p-component.p-inputwrapper {
+    width: 100% !important;
+}
+::ng-deep.p-autocomplete.p-component.p-inputwrapper input {
+    width: 100% !important;
+    padding: .5rem!important;
+  }
+  ::ng-deep .white_bg_input .p-inputtext {
+    background-color: white !important;
+  }
+
+::ng-deep .p-autocomplete.p-component.p-inputwrapper input:focus,
+::ng-deep .p-autocomplete.p-component.p-inputwrapper input:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* .cdk-drag-preview {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    background-color: grey;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.5;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms ease;
+} */
+
+.cdk-drag-preview {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border: 2px solid #4F39F6; /* Custom blue border */
+    background: linear-gradient(135deg, #F3F8FF, #CCE0FF); /* Light gradient */
+    border-radius: 8px;
+    transform: scale(1.05); /* Slightly enlarge the preview */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.8;
+    border: 2px dashed #4F39F6; /* Dashed border for placeholder */
+    background-color: #F3F8FF; /* Light blue background */
+    border-radius: 8px;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.cdk-drag-animating {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cdk-drag-handle {
+    cursor: grab;
+}
+
+.cdk-drag-handle:active {
+    cursor: grabbing;
+}
+
+
+
+/* input field style */
+.p-autocomplete {
+    display: grid !important;
+
+}
+
+.error_border{
+    border: 1px solid red;
+    border-radius: 5px solid red;
+}
+
+  
+::ng-deep .with-out-border .p-inputnumber-input {
+    border: none !important; /* Completely remove borders */
+    box-shadow: none !important; /* Remove any focus shadow */
+    background-color: transparent !important; /* Ensure transparent background */
+    color: #1f2937 !important; /* Ensure consistent text color */
+    padding: 0px !important; /* Remove padding */
+    outline: none !important; /* Remove outline */
+  }
+  
+  ::ng-deep .with-out-border.p-inputwrapper.p-inputnumber.p-component  {
+    border: none !important; /* Remove the wrapper border */
+    box-shadow: none !important; /* Remove any shadow */
+    background-color: transparent !important; /* Ensure transparent background */
+    padding: 0px !important; /* Remove any padding */
+  }
+
+  

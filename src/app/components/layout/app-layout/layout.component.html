@@ -1,0 +1,95 @@
+<div class="relative">
+  <!-- Sidebar -->
+  <aside class="fixed left-0 top-0 h-screen w-60 shadow flex flex-col z-10 bg-white">
+    <!-- Logo -->
+    <div class="py-3 pl-6">
+      <img src="assets/images/logo.png" alt="Logo" />
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="grow overflow-y-auto px-4 space-y-3">
+      
+      <p-menu [model]="items"></p-menu>
+
+      <p-checkbox
+        [(ngModel)]="isDark"
+        binary="true"
+        inputId="darkMode"
+        label="Dark theme"
+        (onChange)="onDarkChange($event.checked)">
+      </p-checkbox>
+
+      <p-select
+        [options]="palettes"
+        [(ngModel)]="selected"
+        optionLabel="label"
+        (onChange)="onPaletteChange($event.value)">
+      </p-select>
+    </div>
+
+    <!-- Pinned bottom language select -->
+    <div class="px-4 pb-4">
+      <p-select
+        [options]="sharedService.getEnums('lang')"
+        [(ngModel)]="selectedLang"
+        optionLabel="text"
+        optionValue="value"
+        class="w-full rounded-none h-12"
+        (onChange)="ChangeLang($event)">
+        <ng-template #selectedItem let-selectedOption>
+          <div class="flex items-center gap-2" *ngIf="selectedOption">
+            <img [src]="'assets/images/' + selectedOption.value + '.png'" class="w-4 h-4" />
+            <div>{{ selectedOption.text }}</div>
+          </div>
+        </ng-template>
+        <ng-template #item let-language>
+          <div class="flex items-center gap-2">
+            <img [src]="'assets/images/' + language.value + '.png'" class="w-4 h-4" />
+            <div>{{ language.text }}</div>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+  </aside>
+
+  <!-- Main content (fills remaining width, scrolls; extra bottom space for fixed footer) -->
+  <main class="ml-60 h-screen overflow-y-auto pb-12 bg-slate-100">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Fixed footer aligned to the right of the sidebar -->
+  <footer class="fixed bottom-0 right-0 left-60 h-12 px-5 border-t flex justify-between items-center bg-white">
+    <ul class="flex gap-4 text-sm">
+      <li class="flex gap-1 items-center">
+        <img src="assets/images/faq.png" alt="">
+        <a target="_blank" href="#">FAQ</a>
+      </li>
+      <li class="flex gap-1 items-center">
+        <img src="assets/images/help.png" alt="">
+        <a href="#">Help</a>
+      </li>
+      <li class="flex gap-1 items-center">
+        <img src="assets/images/emailus.png" alt="">
+        <a href="#">Email us</a>
+      </li>
+      <li class="flex gap-1 items-center">
+        <img src="assets/images/phone.png" alt="">
+        <a href="#">Ring oss</a>
+      </li>
+      <li class="flex gap-1 items-center">
+        <img src="assets/images/clock.png" alt="">
+        <span>Mon - thu 09:00 - 12:00</span>
+      </li>
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <span>V{{version}}</span>
+      <button class="flex gap-1 text-sm px-2.5 py-1.5 rounded-full">
+        <img src="assets/images/Bhelp.png" alt="">
+        <span>help</span>
+      </button>
+    </div>
+  </footer>
+</div>
+
+

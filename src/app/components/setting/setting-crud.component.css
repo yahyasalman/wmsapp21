@@ -1,0 +1,587 @@
+/* Arrow (for right position) */
+::ng-deep .custom-tooltip.p-tooltip.p-tooltip-top .p-tooltip-arrow {
+    border-top-color: #F3F8FF !important;
+  }
+    
+::ng-deep .custom-tooltip.p-tooltip .p-tooltip-text {
+  background-color: #F3F8FF !important;
+  color: black !important;
+  border-radius: 0.375rem;
+  font-size: 12px;
+  width: 200px !important;
+}
+
+::ng-deep .settings-selectbutton .p-selectbutton .p-button {
+  background: #f8fafc;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  border-radius: 9999px;
+  padding: 0.45rem 1.1rem;
+  font-weight: 600;
+}
+
+::ng-deep .settings-selectbutton .p-selectbutton .p-button.p-highlight {
+  background: #0052cc;
+  border-color: #0052cc;
+  color: #ffffff;
+}
+
+::ng-deep .settings-selectbutton .p-selectbutton .p-button:not(.p-highlight):hover {
+  border-color: #0052cc;
+  color: #0052cc;
+}
+
+.settings-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.settings-card-span {
+  grid-column: span 2;
+}
+
+.settings-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 24px -18px rgba(15, 23, 42, 0.35);
+  height: 100%;
+}
+
+.settings-banner {
+  padding: 12px 16px;
+  border-style: dashed;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+}
+
+.settings-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.settings-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-card-grid {
+  row-gap: 18px;
+  column-gap: 18px;
+}
+
+.company-row {
+  display: flex;
+  gap: 18px;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+}
+
+.company-row .settings-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-toggle-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.form-toggle-block {
+  flex: 1 1 0;
+}
+
+.contact-row {
+  display: flex;
+  gap: 18px;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.contact-row .settings-field {
+  width: 100%;
+}
+
+.settings-field label {
+  margin-bottom: 0;
+}
+
+.settings-input {
+  width: 100%;
+  max-width: 420px;
+  min-height: 42px;
+}
+
+.settings-input-wide {
+  max-width: 420px;
+}
+
+.logo-frame {
+  min-height: 180px;
+  border: 1px dashed #cbd5f0;
+  border-radius: 16px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.logo-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.payment-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.payment-field {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-field input {
+  width: 100%;
+}
+
+.customers-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+}
+
+.customer-card {
+  position: relative;
+}
+
+.customer-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.customer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.customer-form-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.customer-input {
+  width: 100%;
+  min-height: 42px;
+  max-width: 420px;
+}
+
+.customer-form-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.customer-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.customer-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.customer-chip {
+  background: #f1f5ff;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 8px 18px -16px rgba(15, 23, 42, 0.35);
+}
+
+.customer-chip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.customer-chip-meta {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.customer-chip-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 900px) {
+  .company-row,
+  .form-toggle-row {
+    flex-wrap: wrap;
+  }
+
+  .company-row .settings-field,
+  .form-toggle-block {
+    min-width: 240px;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-card-span {
+    grid-column: auto;
+  }
+
+  .settings-input {
+    max-width: 100%;
+  }
+
+  .customers-shell {
+    padding: 18px;
+  }
+
+  .customer-form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}    /* Arrow (for right position) */
+::ng-deep .custom-tooltip.p-tooltip.p-tooltip-top .p-tooltip-arrow {
+    border-top-color: #F3F8FF !important;
+  }
+    
+::ng-deep .custom-tooltip.p-tooltip .p-tooltip-text {
+  background-color: #F3F8FF !important;
+  color: black !important;
+  border-radius: 0.375rem;
+  font-size: 12px;
+  width: 200px !important;
+}
+
+::ng-deep .settings-selectbutton .p-selectbutton .p-button {
+  background: #f8fafc;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  border-radius: 9999px;
+  padding: 0.45rem 1.1rem;
+  font-weight: 600;
+}
+
+::ng-deep .settings-selectbutton .p-selectbutton .p-button.p-highlight {
+  background: #0052cc;
+  border-color: #0052cc;
+  color: #ffffff;
+}
+
+::ng-deep .settings-selectbutton .p-selectbutton .p-button:not(.p-highlight):hover {
+  border-color: #0052cc;
+  color: #0052cc;
+}
+
+.settings-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.settings-card-span {
+  grid-column: span 2;
+}
+
+.settings-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 24px -18px rgba(15, 23, 42, 0.35);
+  height: 100%;
+}
+
+.settings-banner {
+  padding: 12px 16px;
+  border-style: dashed;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+}
+
+.settings-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.settings-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-card-grid {
+  row-gap: 18px;
+  column-gap: 18px;
+}
+
+.company-row {
+  display: flex;
+  gap: 18px;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+}
+
+.company-row .settings-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-toggle-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.form-toggle-block {
+  flex: 1 1 0;
+}
+
+.contact-row {
+  display: flex;
+  gap: 18px;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.contact-row .settings-field {
+  width: 100%;
+}
+
+.settings-field label {
+  margin-bottom: 0;
+}
+
+.settings-input {
+  width: 100%;
+  max-width: 420px;
+  min-height: 42px;
+}
+
+.settings-input-wide {
+  max-width: 420px;
+}
+
+.logo-frame {
+  min-height: 180px;
+  border: 1px dashed #cbd5f0;
+  border-radius: 16px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.logo-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.payment-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.payment-field {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-field input {
+  width: 100%;
+}
+
+.customers-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+}
+
+.customer-card {
+  position: relative;
+}
+
+.customer-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.customer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.customer-form-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.customer-input {
+  width: 100%;
+  min-height: 42px;
+  max-width: 420px;
+}
+
+.customer-form-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.customer-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.customer-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.customer-chip {
+  background: #f1f5ff;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 8px 18px -16px rgba(15, 23, 42, 0.35);
+}
+
+.customer-chip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.customer-chip-meta {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.customer-chip-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 900px) {
+  .company-row,
+  .form-toggle-row {
+    flex-wrap: wrap;
+  }
+
+  .company-row .settings-field,
+  .form-toggle-block {
+    min-width: 240px;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-card-span {
+    grid-column: auto;
+  }
+
+  .settings-input {
+    max-width: 100%;
+  }
+
+  .customers-shell {
+    padding: 18px;
+  }
+
+  .customer-form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

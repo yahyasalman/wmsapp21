@@ -1,0 +1,253 @@
+@import "tailwindcss";
+/* =========================
+   THEME
+========================= */
+@theme {
+  --color-primary: #4F39F6;
+  --color-primary-soft: #7e6ef81A;
+  --color-primary-accent: #7e6ef833;
+  --color-bg-light: #F7F9FB;
+  --color-gray-dark: #555555;
+  --color-gray-header: #222222;
+}
+
+/* =========================
+   BASE
+========================= */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-[var(--color-bg-light)] text-[var(--color-gray-dark)] antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* =========================
+   COMPONENTS
+========================= */
+@layer components {
+
+  .container-main {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-20 sm:py-28;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    @apply sticky top-0 z-50 bg-white shadow-md;
+  }
+
+  .nav-link {
+    @apply font-medium text-[var(--color-gray-dark)] transition;
+  }
+
+  .nav-link:hover {
+    @apply text-[var(--color-primary)];
+  }
+
+  .btn-primary {
+    @apply bg-[var(--color-primary)] text-white font-semibold rounded-xl px-6 py-3 transition shadow-md;
+  }
+
+  .btn-primary:hover {
+    @apply opacity-90 shadow-lg;
+  }
+
+  .btn-white {
+    @apply bg-white text-[var(--color-primary)] font-extrabold rounded-2xl px-10 py-4 shadow-xl transition;
+  }
+
+  .btn-white:hover {
+    @apply shadow-2xl scale-105;
+  }
+
+  /* HERO */
+  .hero-section {
+    @apply relative text-center overflow-hidden pt-24 pb-32 sm:pt-36 sm:pb-48;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+  }
+
+  .hero-bg {
+    @apply absolute inset-0 bg-[var(--color-primary)];
+  }
+
+  .hero-overlay {
+    @apply absolute inset-0 bg-[var(--color-primary)] opacity-70;
+  }
+
+  .hero-title-box {
+    @apply bg-white/15 backdrop-blur-sm rounded-3xl inline-block shadow-2xl border border-white/20 p-6;
+  }
+
+  .hero-title {
+    @apply text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-tight;
+  }
+
+  .hero-price {
+    @apply inline-flex items-center rounded-2xl px-6 py-3 text-white font-bold text-xl backdrop-blur-md border border-white/30 bg-white/20;
+  }
+
+  .binding-text {
+    @apply text-xs text-white/60 mt-1;
+  }
+
+  /* FEATURES */
+  .feature-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8;
+  }
+
+  .card {
+    @apply p-8 rounded-2xl border border-gray-200 bg-gradient-to-b from-white to-blue-50 shadow-sm transition;
+  }
+
+  .card:hover {
+    @apply shadow-xl -translate-y-1;
+  }
+
+  .card-title {
+    @apply text-xl font-bold text-[var(--color-gray-header)] mb-3;
+  }
+
+  .card-text {
+    @apply text-[var(--color-gray-dark)];
+  }
+
+  .icon-wrapper {
+    @apply w-14 h-14 flex items-center justify-center rounded-2xl bg-[var(--color-primary-soft)] mb-5;
+  }
+
+  /* FOOTER */
+  .footer {
+    @apply bg-white py-12;
+  }
+
+  .footer-link {
+    @apply text-gray-400 transition text-sm;
+  }
+
+  .footer-link:hover {
+    @apply text-[var(--color-primary)];
+  }
+
+  /* ANIMATION */
+  .fade-in {
+    @apply opacity-0 translate-y-6 transition duration-700;
+  }
+
+  .fade-in.visible {
+    @apply opacity-100 translate-y-0;
+  }
+}
+
+/* =========================
+   PrimeNG CUSTOMIZATION
+========================= */
+
+
+.icon-primary { color: var(--p-primary-600)},
+
+/* =========================
+   DATATABLE CUSTOMIZATION
+========================= */
+
+.p-datatable .p-datatable-thead > tr,
+.table-header-row {
+  background-color: var(--table-header-bg);
+  border-bottom: 2px solid var(--table-border-color);
+}
+.p-datatable .p-datatable-thead > tr > th,
+.table-header-cell {
+  color: var(--table-text-color);
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+.p-datatable .p-datatable-tbody > tr,
+.p-selectable-row {
+  background-color: var(--p-surface-0) !important;
+  color: var(--table-text-color);
+  transition: background-color .2s ease-in-out, color .2s ease-in-out;
+}
+.p-datatable .p-datatable-tbody > tr:hover,
+.p-selectable-row:hover {
+  background-color: var(--p-primary-100) !important;
+} 
+.p-datatable .p-datatable-tbody > tr.p-highlight,
+.p-selectable-row.p-highlight {
+  background-color: var(--table-selected-bg) !important;
+  color: var(--table-accent-contrast) !important;
+}
+.p-datatable .p-datatable-tbody > tr > td,
+.p-selectable-row > td {
+  background: transparent !important;
+  border: none !important;
+}
+.p-datatable .p-datatable-tbody > tr:not(:last-child) > td {
+  border-bottom: 1px solid var(--table-border-color) !important;
+}
+.p-datatable .p-datatable-thead > tr > th.id-column-header,
+.id-column-header {
+  font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  background-color: var( --p-primary-400);
+}
+.p-datatable .p-datatable-tbody > tr > td.id-column-cell,
+.id-column-cell {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--table-accent);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color .2s ease-in-out;
+}
+.p-datatable .p-datatable-tbody > tr > td.id-column-cell:hover,
+.id-column-cell:hover {
+  background-color: var(--table-selected-bg);
+  border-radius: 4px;
+}
+.id-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-weight: 700;
+}
+/* End */ 
+
+.p-paginator {
+  background-color: transparent !important; /* Set background as transparent */
+  box-shadow: none !important; /* Remove any shadow if present */
+  border: none !important; /* Remove any border if present */
+}
+
+
+/* This fix is for select option when it is selected with check mark then this will work */
+.p-select-option[data-p-selected="true"] {
+  background-color: var(--p-primary-500) !important; /* Primary background color */
+  color: var(--p-primary-contrast) !important; /* Contrast text color */
+}
+
+
+/* Highlighted option in the autocomplete dropdown */
+.p-autocomplete-item[data-p-highlight="true"] {
+  background-color: var(--p-primary-600) !important; /* Primary background color */
+  color: var(--p-primary-contrast) !important; /* Contrast text color */
+}
+
+/* Selected option (if applicable) */
+.p-autocomplete-item[data-p-selected="true"] {
+  background-color: var(--p-primary-600) !important; /* Primary background color */
+  color: var(--p-primary-contrast) !important; /* Contrast text color */
+}
+
+/* Optional: Customize the hover effect */
+.p-autocomplete-item:hover {
+  background-color: var(--p-primary-700) !important; /* Slightly darker primary color */
+  color: var(--p-primary-contrast) !important; /* Contrast text color */
+}

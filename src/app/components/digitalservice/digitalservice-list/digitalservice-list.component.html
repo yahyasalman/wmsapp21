@@ -1,0 +1,353 @@
+<app-generic-loader *ngIf="isLoading"></app-generic-loader>
+<!-- header start -->
+<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16">
+  <div class="">
+    <p class="font-normal text-2xl">{{ this.sharedService.T('digitalServiceRecord') }}</p>
+  </div>
+  <div class="flex gap-2">
+    <span class="my-auto">{{ this.sharedService.workshopName}}</span>
+    <div
+      class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
+      <p>AS</p>
+    </div>
+  </div>
+</header>
+
+<!-- header end -->
+
+<!-- <main class="flex-1 overflow-x-hidden overflow-y-auto bg-bgColor">
+ <div class="container px-4 mx-auto"> -->
+
+<section class="p-6 pb-12 bg-bgColor">
+  <p-toast />
+  <p-confirmdialog />
+  <form [formGroup]="filters">
+    <!-- 🔹 Filter Section -->
+    <div class="mb-6 mt-10 text-sm font-medium shadow-sm bg-white rounded-md p-5">
+      <div class="ds-filter-row flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
+        <!-- Left Filters -->
+        <div class="ds-left-filter flex items-center gap-3">
+          <p-button size="large" styleClass="create-ds-btn ds-filter-item shrink-0"
+            label="{{ this.sharedService.T('createDigitalservice') }}" icon="pi pi-plus" (onClick)="openDigitalServiceDialog()">
+          </p-button>
+
+          <div class="ds-underline-wrap ds-filter-item flex items-center whitespace-nowrap shrink-0">
+            <p-checkbox inputId="ds-current-workshop" [(ngModel)]="onlyThisWmsid" [ngModelOptions]="{standalone: true}" [binary]="true"
+              (onChange)="onChangeCurrentWorkshop($event)">
+            </p-checkbox>
+            <label class="ds-checkbox-label ml-2" for="ds-current-workshop">{{ this.sharedService.workshopName
+              }}</label>
+          </div>
+        </div>
+
+        <!-- Right Filters -->
+        <div class="ds-date-line lg:ml-auto">
+          <p-datepicker formControlName="year" size="large" view="year" dateFormat="yy"
+            class="ds-underline-control ds-filter-item ds-year w-16 shrink-0" (onSelect)="onSelectYear($event)">
+          </p-datepicker>
+
+
+          <div class="ds-date-range">
+            <p-date-picker dataType="string" formControlName="fromDate"
+              class="ds-underline-control ds-filter-item ds-date small-calendar w-[105px] shrink-0"
+              dateFormat="yy-mm-dd" [iconDisplay]="'input'" [showIcon]="false" (onSelect)="onSelectFromDate()">
+            </p-date-picker>
+
+            <span class="ds-date-connector" aria-hidden="true"></span>
+
+            <p-date-picker dataType="string" formControlName="toDate"
+              class="ds-underline-control ds-filter-item ds-date small-calendar w-[105px] shrink-0"
+              dateFormat="yy-mm-dd" [iconDisplay]="'input'" [showIcon]="false" (onSelect)="onSelectToDate()">
+            </p-date-picker>
+          </div>
+
+          <p-autoComplete formControlName="vehiclePlate" [suggestions]="vehiclePlates"
+            styleClass="ds-underline-control ds-filter-item ds-search shrink-0"
+            placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('vehiclePlate') }}"
+            (onSelect)="onSelectNumberPlate($event)" (onClear)="onClearNumberPlate()"
+            (keyup)="keyupNumberPlate($event.target)" [showClear]="true" inputStyleClass="w-64 ps-2 h-10 rounded-md">
+            <ng-template let-plate pTemplate="item">
+              <div>{{ plate }}</div>
+            </ng-template>
+          </p-autoComplete>
+        </div>
+      </div>
+      <hr class="border-CustomBorder">
+    </div>
+
+    <!-- Table Section -->
+
+    <div class="mb-12">
+      <!-- Digital Services Table -->
+      <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="digitalServices" [rows]="10"
+        [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
+        [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+        (onLazyLoad)="sortColumn($event)" sortField="creationDate" responsiveLayout="scroll" [sortOrder]="-1">
+
+        <!-- Header -->
+        <ng-template pTemplate="header">
+          <tr class="table-header-row">
+            <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="creationDate">
+              <p-sortIcon field="creationDate" />
+            </th>
+            <th class="table-header-cell">{{ this.sharedService.T('vehiclePlate') }}</th>
+            <th class="table-header-cell">{{ this.sharedService.T('vehicleMake') }}</th>
+            <th class="table-header-cell">{{ this.sharedService.T('vehicleModel') }}</th>
+            <th class="table-header-cell">{{ this.sharedService.T('vehicleYear') }}</th>
+            <th class="table-header-cell">{{ this.sharedService.T('serviceType') }}</th>
+            <th class="table-header-cell">{{ this.sharedService.T('serviceDate') }}</th>
+            <th class="table-header-cell">{{ this.sharedService.T('nextServiceDate') }}</th>
+            <th class="table-header-cell">{{ this.sharedService.T('nextServiceMileage') }}</th>
+            <th class="table-header-cell">{{ this.sharedService.T('workshop') }}</th>
+            <th class="table-header-cell rounded-r-xl">{{ this.sharedService.T('comments') }}</th>
+          </tr>
+        </ng-template>
+
+        <!-- Body -->
+        <ng-template pTemplate="body" let-ds>
+          <tr class="p-selectable-row">
+            <!-- Workshop -->
+            <!-- <td title="{{ ds.workshopName }}">
+              {{ ds.workshopName?.length > 18 ? (ds.workshopName | slice : 0 : 18) + '...' : ds.workshopName }}
+            </td> -->
+            <!-- <td
+              pTooltip="WorkshopName: {{ ds.workshopName }},Address: {{ ds.workshopAddress }}, {{ ds.workshopCity }}&#10;Telephone: {{ ds.telephone }}&#10;Email: {{ ds.email }}"
+              tooltipPosition="top">
+              {{ ds.workshopName?.length > 18 ? (ds.workshopName | slice : 0 : 18) + '...' : ds.workshopName }}
+            </td> -->
+            <td class="id-column-cell rounded-l-lg">
+              {{ ds.creationDate }}
+            </td>
+            <td>
+                            <div class="flex items-center gap-2 cursor-pointer"
+                (click)="redirectToVehicleDetailComponent(ds.vehiclePlate)"
+                [title]="'Vehicle Number: ' + ds.vehiclePlate">
+                <span class="id-text">{{ ds.vehiclePlate }}</span>
+                <span class="material-icons text-blue-500 hover:text-blue-700">
+                  open_in_new
+                </span>
+              </div>
+
+            </td>
+            <td>{{ ds.vehicleManufacturer }}</td>
+            <td>{{ ds.vehicleModel }}</td>
+            <td>{{ ds.vehicleYear }}</td>
+            <!-- Service Type with Badge -->
+
+            <td>
+              <!-- <span class="px-3 py-1 rounded-md text-xs font-medium" [ngClass]="{
+                  'bg-green-100 text-green-700': ds.serviceType === 'maintenance' || ds.serviceType === 'Maintenance',
+                  'bg-yellow-100 text-yellow-700': ds.serviceType === 'reparation' || ds.serviceType === 'Repair',
+                  'bg-blue-100 text-blue-700': ds.serviceType === 'inspection' || ds.serviceType === 'Inspection'
+                }">
+                {{ ds.serviceType }}
+              </span> -->
+              <strong> {{ this.sharedService.getEnumByValue('digitalserviceType', ds.serviceType).text  }}</strong>
+            </td>
+            <!-- Service Date -->
+            <td>{{ ds.serviceDate | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ ds.nextServiceDate | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ ds.nextServiceVehicleMileage }}</td>
+            <td [pTooltip]="
+    '<div class=\'tooltip-content\'>' +
+      '<b>Workshop Name:</b><br>' + ds.workshopName + '<br><br>' +
+      '<b>Address:</b><br>' + ds.workshopAddress + ', ' + ds.workshopCity + '<br><br>' +
+      '<b>Telephone:</b><br>' + ds.telephone + '<br><br>' +
+      '<b>Email:</b><br>' + ds.email +
+    '</div>'
+  " tooltipPosition="top" [tooltipOptions]="{ escape: false }" tooltipStyleClass="custom-tooltip">
+              {{ ds.workshopName?.length > 18 ? (ds.workshopName | slice : 0 : 18) + '...' : ds.workshopName }}
+            </td>
+            <!-- Comments -->
+            <td class="!border-0 rounded-r-lg">{{ ds.comments }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- ✅ Invoice-Style Pager Section -->
+      <div *ngIf="pager.totalRecords > 2" class="flex items-center justify-between py-6">
+
+        <!-- Page Size Dropdown -->
+        <div class="flex items-center">
+          <p-select [options]="[10, 20, 30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}"
+            styleClass="bg-white border border-CustomBorder rounded-md" (onChange)="onPageSizeChange($event)">
+          </p-select>
+        </div>
+
+        <!-- Paginator -->
+        <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
+          (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+          currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+          styleClass="!bg-transparent">
+          <ng-template pTemplate="firstpagelinkicon">
+            <img src="assets/icons/paginator/previus.svg" alt="">
+          </ng-template>
+          <ng-template pTemplate="lastpagelinkicon">
+            <img src="assets/icons/paginator/next.svg" alt="">
+          </ng-template>
+          <ng-template pTemplate="previouspagelinkicon">
+            <div class="flex items-center gap-2">
+              <div>{{ this.sharedService.T('previous') }}</div>
+
+            </div>
+          </ng-template>
+          <ng-template pTemplate="nextpagelinkicon">
+            <div class="flex items-center gap-2">
+              <div>{{ this.sharedService.T('next') }}</div>
+            </div>
+          </ng-template>
+        </p-paginator>
+      </div>
+    </div>
+  </form>
+
+   <!-- digital service popup code -->
+
+ <p-dialog [modal]="true" [(visible)]="showDigitalServiceDialog" class="custom-dialog" styleClass="!bg-bgColor"
+  [contentStyle]="{ padding: '1rem 2rem'}">
+
+  <header class="text-2xl font-bold mb-2">
+    {{ this.sharedService.T('createDigitalservice') }}
+  </header>
+
+  <p-message severity="warn">
+    {{ this.sharedService.T('verifyBeforeCreateDigitalService') }}
+  </p-message>
+
+  <hr class="my-3" />
+
+  <form [formGroup]="digitalService">
+    <div class="text-sm font-medium shadow-sm bg-white rounded-md p-5 border border-CustomBorder">
+
+      <div class="grid grid-cols-2 gap-6">
+
+        <div class="flex flex-col gap-4">
+
+          <div>
+            <label class="block mb-1">{{ this.sharedService.T('invoice') }} # </label>
+            <div class="flex gap-2">
+              <input formControlName="invoiceId" class="w-full" pInputText />
+              <p-button [raised]="true" label="{{ this.sharedService.T('validateAndAttachInvoice') }}" size="large"  
+              class="whitespace-nowrap border-none"
+              (click)="validateAndAttachInvoice(digitalService.get('invoiceId')?.value)">
+              </p-button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block mb-1">{{ this.sharedService.T('digitalWorkshopId') }} *</label>
+            <input type="text" formControlName="userId" class="w-full" pInputText 
+              [ngClass]="{'ng-invalid ng-dirty': f['userId'].invalid && f['userId'].touched}" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="relative">
+              <label class="block mb-1">{{ this.sharedService.T('vehiclePlate') }} *</label>
+              <div class="relative">
+                <input pInputText type="text" formControlName="vehiclePlate" maxlength="10" placeholder="ABC123"
+                  (input)="onInputChange($event)"
+                  [ngClass]="{'ng-invalid ng-dirty': f['vehiclePlate'].invalid && f['vehiclePlate'].touched}"
+                   class="uppercase p-2 border border-gray-300 rounded-md focus:outline-none w-full pl-12 h-[38px]" />
+                <img src="assets/images/eu-flag.png" alt="EU Flag"
+                   class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-auto"  />
+              </div>
+            </div>
+            <div>
+              <label class="block mb-1">{{ this.sharedService.T('vehicleMake') }} *</label>
+              <p-autoComplete formControlName="vehicleManufacturer" [suggestions]="manufacturers"
+                (completeMethod)="filterManufacturers($event)" [minLength]="1" placeholder="Ange söktext"
+                forceSelection="true" styleClass="w-full" 
+                [inputStyleClass]="(f['vehicleManufacturer'].invalid && f['vehicleManufacturer'].touched) ? 'ng-invalid ng-dirty w-full h-[38px]' : 'w-full h-[38px]'">
+              </p-autoComplete>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block mb-1">{{ this.sharedService.T('vehicleModel') }} *</label>
+              <p-autoComplete formControlName="vehicleModel" [suggestions]="models"
+                (completeMethod)="filterModels($event)" [minLength]="1" placeholder="Välj modell"
+                forceSelection="true" styleClass="w-full"
+                [inputStyleClass]="(f['vehicleModel'].invalid && f['vehicleModel'].touched) ? 'ng-invalid ng-dirty w-full h-[38px]' : 'w-full h-[38px]'">
+              </p-autoComplete>
+            </div>
+            <div>
+              <label class="block mb-1">{{ this.sharedService.T('vehicleYear') }} *</label>
+              <input type="number" formControlName="vehicleYear" class="w-full" pInputText style="height: 38px;"
+                [ngClass]="{'ng-invalid ng-dirty': f['vehicleYear'].invalid && f['vehicleYear'].touched}" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block mb-1">{{ this.sharedService.T('serviceDate') }} *</label>
+              <p-date-picker formControlName="serviceDate" dataType="string" dateFormat="yy-mm-dd"
+                icon="pi pi-calendar" styleClass="w-full" 
+                [inputStyleClass]="(f['serviceDate'].invalid && f['serviceDate'].touched) ? 'ng-invalid ng-dirty w-full h-[38px]' : 'w-full h-[38px]'">
+              </p-date-picker>
+            </div>
+            <div>
+              <label class="block mb-1">{{ this.sharedService.T('nextServiceDate') }} *</label>
+              <p-date-picker formControlName="nextServiceDate" dataType="string" dateFormat="yy-mm-dd"
+                icon="pi pi-calendar" styleClass="w-full" 
+                [inputStyleClass]="(f['nextServiceDate'].invalid && f['nextServiceDate'].touched) ? 'ng-invalid ng-dirty w-full h-[38px]' : 'w-full h-[38px]'">
+              </p-date-picker>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block mb-1">{{ this.sharedService.T('vehicleMileage') }} *</label>
+              <input type="text" formControlName="vehicleMileage" class="w-full" pInputText style="height: 38px;"
+                [ngClass]="{'ng-invalid ng-dirty': f['vehicleMileage'].invalid && f['vehicleMileage'].touched}" />
+            </div>
+            <div>
+              <label class="block mb-1">{{ this.sharedService.T('nextServiceMileage') }} *</label>
+              <input formControlName="nextServiceVehicleMileage" class="w-full" pInputText style="height: 38px;"
+                [ngClass]="{'ng-invalid ng-dirty': f['nextServiceVehicleMileage'].invalid && f['nextServiceVehicleMileage'].touched}" />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-4">
+          <div>
+            <label class="block mb-1">{{ this.sharedService.T('serviceType') }} *</label>
+            <p-select [options]="this.sharedService.getEnums('digitalserviceType')" formControlName="serviceType"
+              optionLabel="text" optionValue="value" editable="true" styleClass="w-full h-[38px]"
+              [styleClass]="(f['serviceType'].invalid && f['serviceType'].touched) ? 'ng-invalid ng-dirty w-full' : 'w-full'"
+              (onChange)="onServiceTypeChange($event)">
+            </p-select>
+          </div>
+          <div class="flex-grow">
+            <label class="block mb-1">{{ this.sharedService.T('workCarriedOut') }} *</label>
+            <p-listbox [options]="this.sharedService.getEnums('digitalservice')" [multiple]="true" [checkbox]="true"
+              formControlName="services" optionLabel="text" optionValue="value" class="w-full custom-listbox"
+              [ngClass]="{'listbox-invalid': f['services'].invalid && (f['services'].touched || f['services'].dirty)}"
+              [style]="{'width':'100%', 'height': '350px', 'margin': '0', 'padding': '0'}">
+            </p-listbox>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 mb-6">
+        <label class="block mb-1">{{ this.sharedService.T('description') }}</label>
+        <textarea formControlName="comments" class="w-full shadow-sm border border-gray-300 rounded-md p-2" rows="3" pTextarea></textarea>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <p-button [raised]="true" label="{{ this.sharedService.T('createDigitalservice') }}" size="large"
+          (click)="validateDigitalService($event)">
+        </p-button>
+        <p-button size="large" styleClass="cancel-button" label="{{ this.sharedService.T('cancel') }}"
+          (click)="closeDigitalServiceDialog()">
+        </p-button>
+      </div>
+
+    </div>
+  </form>
+</p-dialog>
+
+
+</section>
+<!-- </div>
+</main> -->

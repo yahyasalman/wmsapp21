@@ -1,0 +1,164 @@
+<section class="mt-5 mb-10 bg-White p-8 gap-3 text-sm font-semibold rounded-lg shadow-lg border border-CustomBorder">
+  
+  <form [formGroup]="employee" (ngSubmit)="onFormSubmit()">
+
+    <div class="grid grid-cols-2 gap-12">
+      <!-- Left Section -->
+      <div>
+        <p class="text-2xl my-6 text-CustomBlack">General Information</p>
+
+        <!-- Full Name and Friendly Name -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="fullName">
+              Full Name <span class="text-red-500">*</span>
+            </label>
+            <input formControlName="fullName" type="text" placeholder="Enter full name" class="w-full" pInputText
+              [class.border-red-500]="(employee.get('fullName')?.invalid && employee.get('fullName')?.touched) || duplicateNameMessage"
+              (focus)="onFullNameFocus()" />
+          </div>
+
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="friendlyName">Friendly Name</label>
+            <input formControlName="friendlyName" type="text" placeholder="Enter friendly name" class="w-full"
+              pInputText />
+          </div>
+        </div>
+
+        <!-- Person Number and Job Title -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="personNumber">Person Number <span
+                class="text-red-500">*</span></label>
+            <input type="text" formControlName="personNumber" inputmode="numeric" pattern="\d{12}" maxlength="12"
+              placeholder="input 12 digits" class="w-full" pInputText (input)="onPersonNumberInput($event)"
+              (keypress)="onPersonNumberKeyPress($event)" />
+          </div>
+
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="jobTitle">Job Title <span class="text-red-500">*</span></label>
+            <input formControlName="jobTitle" type="text" placeholder="Job title" class="w-full" pInputText />
+          </div>
+        </div>
+
+        <!-- Hire Date and Termination Date -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="hireDate">Hire Date <span class="text-red-500">*</span></label>
+            <p-calendar formControlName="hireDate" dataType="string" dateFormat="yy-mm-dd" icon="pi pi-calendar"
+              styleClass="w-full" />
+          </div>
+
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="terminationDate">Termination Date</label>
+            <p-calendar formControlName="terminationDate" dataType="string" dateFormat="yy-mm-dd" icon="pi pi-calendar"
+              styleClass="w-full" [disabled]="isNewObject" />
+          </div>
+        </div>
+
+        <!-- Monthly Salary and Calendar Color -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="monthlySalary">Monthly Salary</label>
+            <input formControlName="monthlySalary" type="number" placeholder="0" class="w-full" pInputText />
+          </div>
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="calendarColor">Calendar Color</label>
+            <p-select [options]="calendarColorOptions" optionLabel="text" optionValue="value"
+              formControlName="calendarColor" styleClass="w-full" placeholder="Select calendar color" />
+          </div>
+        </div>
+
+        @if(!isNewObject) {
+        <div class="mb-6">
+          <label class="mb-2 text-Darkgray block" for="isActive">Active Status</label>
+          <p-select [options]="activeOptions" optionLabel="text" optionValue="value" formControlName="isActive"
+            styleClass="w-full" />
+        </div>
+        }
+
+        <!-- Skills -->
+        <div class="mb-6">
+          <label class="mb-2 text-Darkgray block" for="skills">Skills</label>
+          <textarea formControlName="skills" maxlength="200" placeholder="Enter skills (max 200 characters)"
+            class="w-full p-3 border rounded-md resize-none focus:outline-none focus:border-blue-500"
+            rows="3"></textarea>
+          <div class="text-xs text-gray-500 mt-1">{{ employee.get('skills')?.value?.length || 0 }}/200 characters</div>
+        </div>
+
+        <!-- Certifications -->
+        <div class="mb-6">
+          <label class="mb-2 text-Darkgray block" for="certifications">Certifications</label>
+          <textarea formControlName="certifications" maxlength="200"
+            placeholder="Enter certifications (max 200 characters)"
+            class="w-full p-3 border rounded-md resize-none focus:outline-none focus:border-blue-500"
+            rows="3"></textarea>
+          <div class="text-xs text-gray-500 mt-1">{{ employee.get('certifications')?.value?.length || 0 }}/200
+            characters</div>
+        </div>
+      </div>
+
+      <!-- Right Section -->
+      <div>
+        <p class="text-2xl my-6 text-CustomBlack">Contact & Address Information</p>
+
+        <!-- Telephone and Email -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="telephone">Telephone</label>
+            <input formControlName="telephone" type="tel" inputmode="numeric" pattern="[0-9]*" class="w-full" pInputText
+              (input)="onTelephoneInput($event)" (keypress)="onTelephoneKeyPress($event)" />
+          </div>
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="email">Email</label>
+            <input formControlName="email" type="email" class="w-full" pInputText />
+          </div>
+        </div>
+
+        <!-- Street and Post No -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="street">Street</label>
+            <input formControlName="street" type="text" class="w-full" pInputText />
+          </div>
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="postNo">Post No</label>
+            <input formControlName="postNo" type="text" class="w-full" pInputText />
+          </div>
+        </div>
+
+        <!-- City and Country -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="city">City</label>
+            <input formControlName="city" type="text" class="w-full" pInputText />
+          </div>
+          <div class="mb-6">
+            <label class="mb-2 text-Darkgray block" for="country">Country</label>
+            <input formControlName="country" type="text" class="w-full" pInputText />
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="mb-2 text-Darkgray block" for="country">Employee Country</label>
+          <input formControlName="country" type="text" class="w-full" pInputText />
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-6 mt-12">
+
+      <button type="submit" pButton [raised]="true" label="{{ isNewObject ? 'Create' : 'Update' }} Employee"
+        size="large" styleClass="!border-0 !px-6 bg-blue hover:bg-lightBlue text-White">
+      </button>
+
+      <button type="button" pButton size="large"
+        styleClass="!border !border-BorderColor !bg-darkSky !text-lightBlue !px-6" label="Cancel"
+        (click)="onCancelForm()">
+      </button>
+    </div>
+
+  </form>
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+</section>
+<app-generic-loader *ngIf="isLoading"></app-generic-loader>

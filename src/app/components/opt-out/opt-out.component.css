@@ -1,0 +1,28 @@
+/* Centering the form and styling */
+.bg-bgColor {
+  background-color: #f5f6fa;
+}
+
+.text-CustomBlack {
+  color: #0c182d;
+}
+
+.text-Darkgray {
+  color: #55627a;
+}
+
+.bg-customBlue {
+  background-color: #4f39f6;
+}
+
+.hover\:bg-lightBlue:hover {
+  background-color: #0052cc;
+}
+
+.border-CustomBorder {
+  border-color: #dbe0e5;
+}
+
+.focus\:ring-customBlue:focus {
+  --tw-ring-color: #4f39f6;
+}

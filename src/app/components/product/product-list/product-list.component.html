@@ -1,0 +1,325 @@
+<section class="px-5 py-10">
+    <app-generic-loader *ngIf="isLoading"></app-generic-loader>
+
+    <form [formGroup]="filters">
+        <div class="mb-6 mt-10 text-sm font-medium shadow-sm bg-white rounded-md p-5">
+            <div class="flex items-center gap-4 flex-wrap md:flex-nowrap mb-6">
+                <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
+                  <p-button [raised]="true" label="{{this.sharedService.T('createProduct')}}" size="large" icon="pi pi-plus"
+                    (onClick)="productCrud(0)"></p-button>
+
+                    <p-select [options]="this.sharedService.getEnums('detailCategory')" formControlName="category" optionLabel="text" optionValue="value"
+                        [showClear]="true" placeholder="{{ this.sharedService.T('chooseCategory') }}" styleClass="w-48"
+                        (onChange)="onChangeCategory($event)" (onClear)="onClearCategory()">
+                    </p-select>
+
+                    <div class="flex items-center">
+                        <p-checkbox [(ngModel)]="hideDeletedProducts" [binary]="true"
+                            [ngModelOptions]="{standalone: true}" (onChange)="HideDeletedProducts($event)">
+                        </p-checkbox>
+                        <label class="ml-2 whitespace-nowrap">{{this.sharedService.T('hideDeletedProducts')}}</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <p-checkbox [(ngModel)]="isInventoryChecked" [binary]="true"
+                            [ngModelOptions]="{standalone: true}" (onChange)="onChangeCurrentWorkshop($event)">
+                        </p-checkbox>
+                        <label class="ml-2 whitespace-nowrap">{{this.sharedService.T('stockProducts')}}</label>
+                    </div>
+                    <div class="flex items-center">
+                        <p-checkbox [(ngModel)]="isSelingProductChecked" [binary]="true"
+                            [ngModelOptions]="{standalone: true}" (onChange)="onChangeSellingProduct($event)">
+                        </p-checkbox>
+                        <label class="ml-2 whitespace-nowrap">{{this.sharedService.T('productsWithSalesHistory')}}</label>
+                    </div>
+
+                </div>
+                <div class="rounded-md flex justify-end items-end md:ml-auto">
+                        <div class="ps-2 h-10 rounded-md">
+                            <input type="text" formControlName="productName"
+                                class="w-64 max-w-full ps-2 h-10 rounded-md border border-gray-300"
+                                placeholder="{{this.sharedService.T('search') }} {{this.sharedService.T('product') }}"
+                                (input)="onProductKeyup($event)" />
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-10">
+            <p-table styleClass="text-sm custom-table" [lazy]="true"
+                [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+                [value]="products" [rows]="10" [first]="(filters.get('currentPage')?.value - 1) * 10"
+                responsiveLayout="scroll" (onLazyLoad)="sortColumn($event)" [sortOrder]="-1" sortField="productId"
+                data-testid="product-table">
+
+                <ng-template #header>
+                    <tr>
+                        <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="productId">
+                            <p-sortIcon field="productId" />
+                        </th>
+                        <th class="table-header-cell">{{ this.sharedService.T('category') }}</th>
+                        <th class="table-header-cell">{{ this.sharedService.T('productService') }}</th>
+                        <th class="table-header-cell text-center">{{ this.sharedService.T('freeText') }}</th>
+                        <th class="table-header-cell text-center">{{ this.sharedService.T('quantity') }}</th>
+                        <th class="table-header-cell text-center">{{ this.sharedService.T('unit') }}</th>
+                        <th class="table-header-cell text-center">{{ this.sharedService.T('pricewithoutvat') }}</th>
+                        <th class="table-header-cell text-center">{{ this.sharedService.T('vat')}}%</th>
+                        <th class="table-header-cell text-center">{{ this.sharedService.T('remainingQuantity') }}</th>
+                        <th class="table-header-cell text-center rounded-r-xl">{{ this.sharedService.T('actions') }}
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-product>
+                    <tr [ngClass]="{
+                        'row-inactive': product.isActive === 0,
+                        'bg-green-100': product.productId === latestProductId
+                    }" style="transition: background-color 0.8s ease;" class="p-selectable-row">
+
+                        <td class="id-column-cell rounded-l-lg">
+                            <div class="flex items-center gap-2 cursor-pointer"
+                                (click)="redirectToProductDetail(product.productId)">
+                                <span class="id-text">{{ product.productId }}</span>
+                                <span class="material-icons text-blue-500 hover:text-blue-700"
+                                    style="font-size: 18px;">open_in_new</span>
+                            </div>
+                        </td>
+
+                        <td class="!bg-White !border-0">{{ this.sharedService.getEnumByValue('detailCategory',
+                            product.category).text }}</td>
+                        <td class="!bg-White !border-0">{{ product.productName }}</td>
+                        <td class="!bg-White !border-0 text-center">{{ product.productDescription }}</td>
+                        <td class="!bg-White !border-0 text-center">{{ product.quantity }}</td>
+                        <td class="!bg-White !border-0 text-center">{{ product.unit }}</td>
+                        <td class="!bg-White !border-0 text-center">{{ product.unitPrice }}</td>
+                        <td class="!bg-White !border-0 text-center">{{ product.vatPercentage }}</td>
+                        <td class="!bg-White !border-0 text-center">{{ product.inHouseQuantity - product.invoiceQuantity
+                            }}</td>
+
+                        <td class="!bg-White !border-0 text-center text-Darkgray rounded-r-lg">
+                            <div class="flex gap-2 justify-center">
+                                <p-button size="small" label="{{ this.sharedService.T('edit') }}"
+                                    [disabled]="product.isActive === 0" (onClick)="productCrud(product.productId)">
+                                    <img src="assets/icons/product/edit_square.svg" alt="" />
+                                </p-button>
+
+                                <p-button size="small" severity="danger" label="{{ this.sharedService.T('delete') }}"
+                                    icon="pi pi-trash" [disabled]="loadingDelete" (onClick)="deleteProduct(product)">
+                                </p-button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+      <!-- Pager Section -->
+      <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
+        <!-- Page Size Dropdown -->
+        <div class="flex items-center">
+          <p-select [options]="[10, 20, 30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}"
+            styleClass="bg-white border border-CustomBorder rounded-md"
+            (onChange)="onPageSizeChange($event)"></p-select>
+        </div>
+        <!-- Paginator -->
+        <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
+              (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+              styleClass="!bg-transparent">
+              <ng-template pTemplate="firstpagelinkicon">
+                <img src="assets/icons/paginator/previus.svg" alt="">
+              </ng-template>
+              <ng-template pTemplate="lastpagelinkicon">
+                <img src="assets/icons/paginator/next.svg" alt="">
+              </ng-template>
+              <ng-template pTemplate="previouspagelinkicon">
+                <div class="flex items-center gap-2">
+                  <div>{{ this.sharedService.T('previous') }}</div>
+
+                </div>
+              </ng-template>
+              <ng-template pTemplate="nextpagelinkicon">
+                <div class="flex items-center gap-2">
+                  <div>{{ this.sharedService.T('next') }}</div>
+                </div>
+              </ng-template>
+            </p-paginator>
+      </div>
+            
+        </div>
+    </form>
+
+    <p-dialog [modal]="true" [(visible)]="showInventoryDialog" styleClass="rounded-lg shadow-lg"
+        [style]="{ width: '600px' }" (onHide)="onCloseInventoryDialog()">
+        <ng-template #header>
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-800">{{ this.sharedService.T('inventory') }}</h2>
+            </div>
+        </ng-template>
+        <div class="p-3 bg-white rounded-b-lg">
+            <form [formGroup]="inventoryForm">
+                <div class="mb-6">
+                    <div class="text-right space-y-4">
+                        <p class="text-base text-gray-600 right-aligned-label">
+                            {{ this.sharedService.T('totalQuantity') }}:
+                            <p-inputnumber [(ngModel)]="selectedPriceIncvat" [ngModelOptions]="{ standalone: true }"
+                                mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="0"
+                                [locale]="sharedService.currentLocale" readonly="true"
+                                class="with-out-border right-aligned-input"></p-inputnumber>
+                        </p>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <p class="text-lg font-semibold text-gray-700">{{ this.sharedService.T('inventoryHistory') }}</p>
+                    <p-table styleClass="text-sm" [tableStyle]="{ 'min-width': '100%' }" [value]="selectedProducts"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr class="bg-gray-100 text-gray-700">
+                                <th class="p-2 text-left">{{ this.sharedService.T('action') }}</th>
+                                <th class="p-2 text-left">{{ this.sharedService.T('inventoryDate') }}</th>
+                                <th class="p-2 text-center">{{ this.sharedService.T('inventoryQuantity') }}</th>
+                                <th class="p-2 text-center">{{ this.sharedService.T('inventoryNote') }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-inv>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-2"><img src="assets/icons/invoice/cancel1.svg" alt=""
+                                        class="cursor-pointer" /></td>
+                                <td class="p-2">{{ inv.inventoryDate }}</td>
+                                <td class="p-2 text-center">{{ inv.inventoryQuantity }}</td>
+                                <td class="p-2 text-center">
+                                    <p-button [pTooltip]="inv.inventoryNote" tooltipPosition="right"
+                                        tooltipStyleClass="custom-tooltip" label="N"></p-button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{
+                            this.sharedService.T('inventoryDate') }}</label>
+                        <p-datepicker formControlName="inventoryDate" dataType="string" class="w-full"
+                            styleClass="border border-gray-300 rounded-md" dateFormat="yy-mm-dd"></p-datepicker>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{
+                            this.sharedService.T('inventoryQuantity') }}</label>
+                        <p-inputnumber formControlName="inventoryQuantity" mode="decimal" class="w-full"
+                            [useGrouping]="false"></p-inputnumber>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ this.sharedService.T('inventoryNote')
+                        }}</label>
+                    <textarea class="w-full" formControlName="inventoryNote" rows="2" pInputTextarea></textarea>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <p-button label="{{ this.sharedService.T('addInventory') }}" (click)="upsertInventory()"></p-button>
+                    <p-button styleClass="p-button cancel-button" label="{{ this.sharedService.T('cancel') }}"
+                        (click)="showInventoryDialog = false"></p-button>
+                </div>
+            </form>
+        </div>
+    </p-dialog>
+
+  <p-dialog 
+    header="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }} #{{product.get('productId')?.value}}" 
+    [(visible)]="showProductDialog" 
+    [modal]="true" 
+    [closable]="false" 
+    [draggable]="false" 
+    [resizable]="false" 
+    styleClass="w-[95vw]">
+    
+    <form [formGroup]="product">
+        <div class="px-2 text-xs mb-3">
+            @if(successProductLabel != '') { 
+                <p-message severity="success"> {{this.successProductLabel}} </p-message> 
+            }
+            @else if (failProductLabel != '') { 
+                <p-message severity="error"> {{this.failProductLabel}} </p-message> 
+            }
+        </div>
+
+        <div class="flex gap-2 mb-2 text-sm font-semibold px-4 text-gray-600">
+            <div class="w-[12%]">{{ this.sharedService.T('category') }} <span class="text-red-500">*</span></div>
+            <div class="w-[15%]">{{ this.sharedService.T('produktService') }} <span class="text-red-500">*</span></div>
+            <div class="w-[15%]">Fritext</div>
+            <div class="w-[10%]">{{ this.sharedService.T('quantity') }}</div>
+            <div class="w-[10%]">{{ this.sharedService.T('unit') }}</div>
+            <div class="w-[12%]">{{ this.sharedService.T('pricewithoutvat') }} <span class="text-red-500">*</span></div>
+            <div class="w-[12%]">{{ this.sharedService.T('vat') }}</div>
+            <div class="w-[12%]">{{ this.sharedService.T('pricewithvat') }}</div>
+        </div>
+
+        <div class="flex gap-2 p-5 bg-white rounded-xl shadow-md border border-gray-100 items-center mb-5">
+            
+            <div class="w-[12%]">
+                <p-select [options]="sharedService.getEnums('detailCategory')" 
+                          formControlName="category"
+                          optionLabel="text" 
+                          optionValue="value" 
+                          styleClass="w-full bg-white"></p-select>
+            </div>
+
+            <div class="w-[15%]">
+                <input type="text" formControlName="productName" 
+                       class="w-full p-inputtext bg-white"
+                       [ngClass]="{'border-red-500': getf('productName')?.invalid && getf('productName')?.touched}" />
+            </div>
+
+            <div class="w-[15%]">
+                <input type="text" formControlName="productDescription" 
+                       class="w-full p-inputtext bg-white" />
+            </div>
+
+            <div class="w-[10%]">
+                <input type="number" formControlName="quantity" min="0" 
+                       class="w-full p-inputtext bg-white"
+                       (change)="onChangeProductQuantity($event)" />
+            </div>
+
+            <div class="w-[10%]">
+                <p-select [options]="sharedService.getEnums('productUnit')" 
+                          formControlName="unit"
+                          optionLabel="text" 
+                          optionValue="value" 
+                          styleClass="w-full bg-white"></p-select>
+            </div>
+
+            <div class="w-[12%]">
+                <input type="number" formControlName="unitPrice" 
+                       class="w-full p-inputtext bg-white"
+                       (input)="onChangeUnitPrice($event)" />
+            </div>
+
+            <div class="w-[12%]">
+                <p-select [options]="sharedService.getEnums('vatPercentage')" 
+                          formControlName="vat"
+                          optionLabel="text" 
+                          optionValue="value" 
+                          styleClass="w-full bg-white"></p-select>
+            </div>
+
+            <div class="w-[12%]">
+                <input type="text" formControlName="priceIncVat" 
+                       class="w-full p-inputtext bg-white" />
+            </div>
+        </div>
+
+        <div class="flex justify-end items-center gap-3 mt-4">
+            <p-button size="large"
+                      styleClass="whitespace-nowrap px-5 !bg-darkSky !border-BorderColor !text-lightBlue"
+                      label="{{ this.sharedService.T('cancel') }}" 
+                      (onClick)="closeProductDialog()"></p-button>
+            
+            <p-button type="submit" size="large" 
+                      styleClass="whitespace-nowrap px-5"
+                      label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }}"
+                      (click)="onFormSubmit()"></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+</section>

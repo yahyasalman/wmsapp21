@@ -1,0 +1,1727 @@
+[
+    {
+        "tkey": "achieved",
+        "en": "Achieved",
+        "sv": "Uppnått"
+    },
+    {
+        "tkey": "action",
+        "en": "Action",
+        "sv": "Åtgärd"
+    },
+    {
+        "tkey": "actions",
+        "en": "Actions",
+        "sv": "Åtgärder"
+    },
+    {
+        "tkey": "add",
+        "en": "Add",
+        "sv": "Lägg till"
+    },
+    {
+        "tkey": "addOffer",
+        "en": "Add Offer",
+        "sv": "Lägg till offert"
+    },
+    {
+        "tkey": "address",
+        "en": "Address",
+        "sv": "Adress"
+    },
+    {
+        "tkey": "addTag",
+        "en": "Add Tag",
+        "sv": "Lägg till tagg"
+    },
+    {
+        "tkey": "addType",
+        "en": "Add Type",
+        "sv": "Lägg till typ"
+    },
+    {
+        "tkey": "adjustment",
+        "en": "Adjustment",
+        "sv": "Justering"
+    },
+    {
+        "tkey": "amount",
+        "en": "Amount",
+        "sv": "Belopp"
+    },
+    {
+        "tkey": "hideDeletedBookings",
+        "en": "Hide deleted bookings",
+        "sv": "Dölj borttagna bokningar"
+    },
+    {
+        "tkey": "puchaseorderCount",
+        "en": "Purchase Order Count",
+        "sv": "Antal inköpsorder"
+    },
+    {
+        "tkey": "approvedForFTax",
+        "en": "Approved for F-tax",
+        "sv": "Godkänd för F-skatt"
+    },
+    {
+        "tkey": "april",
+        "en": "April",
+        "sv": "April"
+    },
+    {
+        "tkey": "attendanceRegister",
+        "en": "Attendance Register",
+        "sv": "Personalliggare"
+    },
+    {
+        "tkey": "august",
+        "en": "August",
+        "sv": "Augusti"
+    },
+    {
+        "tkey": "avgOrderValue",
+        "en": "Avg. Order Value",
+        "sv": "Genomsnittligt ordervärde"
+    },
+    {
+        "tkey": "rejected",
+        "en": "Rejected",
+        "sv": "Avvisad"
+    },
+    {
+        "tkey": "suppliers",
+        "en": "Suppliers",
+        "sv": "Leverantörer"
+    },
+    {
+        "tkey": "billingAddress",
+        "en": "Billing Address",
+        "sv": "Faktureringsadress"
+    },
+    {
+        "tkey": "bookingDate",
+        "en": "Booking date",
+        "sv": "Bokningsdatum"
+    },
+    {
+        "tkey": "bookings",
+        "en": "Bookings",
+        "sv": "Bokningar"
+    },
+    {
+        "tkey": "bookingTime",
+        "en": "Booking time",
+        "sv": "Bokningstid"
+    },
+    {
+        "tkey": "addPayment",
+        "en": "Add Payment",
+        "sv": "Lägg till betalning"
+    },
+    {
+        "tkey": "addProduct",
+        "en": "Add Product",
+        "sv": "Lägg till produkt"
+    },
+    {
+        "tkey": "addTemplate",
+        "en": "Add Template",
+        "sv": "Lägg till mall"
+    },
+    {
+        "tkey": "addText",
+        "en": "Add Text",
+        "sv": "Lägg till text"
+    },
+    {
+        "tkey": "supplier",
+        "en": "Supplier",
+        "sv": "Leverantör"
+    },
+    {
+        "tkey": "sendOffer",
+        "en": "Send Offer",
+        "sv": "Skicka offert"
+    },
+    {
+        "tkey": "viewCustomer",
+        "en": "View Customer",
+        "sv": "Visa kund"
+    },
+    {
+        "tkey": "cancel",
+        "en": "Cancel",
+        "sv": "Avbryt"
+    },
+    {
+        "tkey": "cancelled",
+        "en": "Cancelled",
+        "sv": "Avbruten"
+    },
+    {
+        "tkey": "careof",
+        "en": "Care of",
+        "sv": "C\/O"
+    },
+    {
+        "tkey": "category",
+        "en": "Category",
+        "sv": "Kategori"
+    },
+    {
+        "tkey": "choose",
+        "en": "Choose",
+        "sv": "Välj"
+    },
+    {
+        "tkey": "chooseEmployees",
+        "en": "Choose Employees",
+        "sv": "Välj anställda"
+    },
+    {
+        "tkey": "chooseStatus",
+        "en": "Choose Status",
+        "sv": "Välj status"
+    },
+    {
+        "tkey": "city",
+        "en": "City",
+        "sv": "Stad"
+    },
+    {
+        "tkey": "fullDay",
+        "en": "Full day",
+        "sv": "Heldag"
+    },
+    {
+        "tkey": "company",
+        "en": "Company",
+        "sv": "Företag"
+    },
+    {
+        "tkey": "companyEmail",
+        "en": "Company Email",
+        "sv": "Företagets e-post"
+    },
+    {
+        "tkey": "companyName",
+        "en": "Company Name",
+        "sv": "Företagsnamn"
+    },
+    {
+        "tkey": "companySettings",
+        "en": "Company Settings",
+        "sv": "Företagsinställningar"
+    },
+    {
+        "tkey": "invoiceValidAndAttached",
+        "en": "The invoice is valid and has been attached",
+        "sv": "Fakturan är giltig och har bifogats"
+    },
+    {
+        "tkey": "validateAndAttachInvoice",
+        "en": "Validate and attach invoice",
+        "sv": "Validera och bifoga faktura"
+    },
+    {
+        "tkey": "confirmMessageInvoice",
+        "en": "Are you sure you want to change status to ",
+        "sv": "Är du säker på att du vill ändra status till "
+    },
+    {
+        "tkey": "confirmMessageOffer",
+        "en": "Do you want to create a new quote based on the contents of this one?",
+        "sv": "Vill du skapa en ny offert baserad på innehållet i denna?"
+    },
+    {
+        "tkey": "confirmMessageWorkorder",
+        "en": "Do you want to create a new work order based on the contents of this one?",
+        "sv": "Vill du skapa en ny arbetsorder baserad på innehållet i denna?"
+    },
+    {
+        "tkey": "genericErrorContactSupport",
+        "en": "Something went wrong. Please contact support",
+        "sv": "Något gick fel. Vänligen kontakta support"
+    },
+    {
+        "tkey": "confirmSave",
+        "en": "Yes, Continue",
+        "sv": "Ja, fortsätt"
+    },
+    {
+        "tkey": "confirmSaveMessage",
+        "en": "You have chosen to continue",
+        "sv": "Du har valt att fortsätta"
+    },
+    {
+        "tkey": "country",
+        "en": "Country",
+        "sv": "Land"
+    },
+    {
+        "tkey": "create",
+        "en": "Create",
+        "sv": "Skapa"
+    },
+    {
+        "tkey": "createCustomer",
+        "en": "Create Customer",
+        "sv": "Skapa kund"
+    },
+    {
+        "tkey": "createDigitalservice",
+        "en": "Create Digital Service",
+        "sv": "Skapa digital service"
+    },
+    {
+        "tkey": "createNewCustomer",
+        "en": "Create New Customer",
+        "sv": "Skapa ny kund"
+    },
+    {
+        "tkey": "createOffer",
+        "en": "Create Offer",
+        "sv": "Skapa Offert"
+    },
+    {
+        "tkey": "createProduct",
+        "en": "Create Product",
+        "sv": "Skapa Produkt"
+    },
+    {
+        "tkey": "createService",
+        "en": "Create Service",
+        "sv": "Skapa tjänst"
+    },
+    {
+        "tkey": "createWorkorder",
+        "en": "Create Workorder",
+        "sv": "Skapa Arbetsorder"
+    },
+    {
+        "tkey": "creditConfirmMessage",
+        "en": "Are you sure you want to credit this invoice? Pressing Yes will generate a credit note for this invoice.",
+        "sv": "Är du säker på att du vill kreditera denna faktura? Om du trycker Ja skapas en kreditnota för fakturan."
+    },
+    {
+        "tkey": "creditCustomer",
+        "en": "Credit Customer",
+        "sv": "Kreditkund"
+    },
+    {
+        "tkey": "creditInvoice",
+        "en": "Credit note",
+        "sv": "Kreditnota"
+    },
+    {
+        "tkey": "creditSuccessMessage",
+        "en": "Success! invoice credited",
+        "sv": "Fakturan har krediterats"
+    },
+    {
+        "tkey": "customer",
+        "en": "Customer",
+        "sv": "Kund"
+    },
+    {
+        "tkey": "createInvoice",
+        "en": "Create Invoice",
+        "sv": "Skapa faktura"
+    },
+    {
+        "tkey": "customerName",
+        "en": "Customer Name",
+        "sv": "Kundnamn"
+    },
+    {
+        "tkey": "customerPaymentMethod",
+        "en": "How should your customers pay",
+        "sv": "Hur ska dina kunder betala"
+    },
+    {
+        "tkey": "customers",
+        "en": "Customers",
+        "sv": "Kunder"
+    },
+    {
+        "tkey": "customerTag",
+        "en": "Customer Tag",
+        "sv": "Kundtagg"
+    },
+    {
+        "tkey": "customerType",
+        "en": "Customer Type",
+        "sv": "Kundtyp"
+    },
+    {
+        "tkey": "dashboard",
+        "en": "Dashboard",
+        "sv": "Översikt"
+    },
+    {
+        "tkey": "date",
+        "en": "Date",
+        "sv": "Datum"
+    },
+    {
+        "tkey": "dayOff",
+        "en": "Day Off",
+        "sv": "Ledig dag"
+    },
+    {
+        "tkey": "days",
+        "en": "Days",
+        "sv": "Dagar"
+    },
+    {
+        "tkey": "december",
+        "en": "December",
+        "sv": "December"
+    },
+    {
+        "tkey": "delete",
+        "en": "Delete",
+        "sv": "Ta bort"
+    },
+    {
+        "tkey": "deleteOffer",
+        "en": "Delete Offer",
+        "sv": "Ta bort offert"
+    },
+    {
+        "tkey": "deliveryStatus",
+        "en": "Delivery Status",
+        "sv": "Leveransstatus"
+    },
+    {
+        "tkey": "description",
+        "en": "Description",
+        "sv": "Beskrivning"
+    },
+    {
+        "tkey": "digitalServiceBook",
+        "en": "Digital Service Book",
+        "sv": "Digital servicebok"
+    },
+    {
+        "tkey": "digitalWorkshopId",
+        "en": "Digital Workshop ID",
+        "sv": "Digital workshop-ID"
+    },
+    {
+        "tkey": "paymentType",
+        "en": "Payment Type",
+        "sv": "Betalningsmetod"
+    },
+    {
+        "tkey": "paymentHistory",
+        "en": "Payment History",
+        "sv": "Betalningshistorik"
+    },
+    {
+        "tkey": "digitalServiceRecord",
+        "en": "Digital Service Record",
+        "sv": "Digital servicehistorik"
+    },
+    {
+        "tkey": "oilType",
+        "en": "Oil Type",
+        "sv": "Oljestyp"
+    },
+    {
+        "tkey": "product",
+        "en": "Product",
+        "sv": "Produkt"
+    },
+    {
+        "tkey": "employee",
+        "en": "Employee",
+        "sv": "Anställd"
+    },
+    {
+        "tkey": "discount",
+        "en": "Discount",
+        "sv": "Rabatt"
+    },
+    {
+        "tkey": "dontForgetToSaveChanges",
+        "en": "Don’t forget to save your changes",
+        "sv": "Glöm inte att spara dina ändringar"
+    },
+    {
+        "tkey": "dueDate",
+        "en": "Due Date",
+        "sv": "Förfallodatum"
+    },
+    {
+        "tkey": "duplicate",
+        "en": "Duplicate",
+        "sv": "Duplicera"
+    },
+    {
+        "tkey": "duplicateConfirmMessage",
+        "en": "Do you want to create a new invoice based on the contents of this one?",
+        "sv": "Vill du skapa en ny faktura baserad på denna?"
+    },
+    {
+        "tkey": "edit",
+        "en": "Edit",
+        "sv": "Redigera"
+    },
+    {
+        "tkey": "editCustomer",
+        "en": "Edit Customer",
+        "sv": "Redigera Kund"
+    },
+    {
+        "tkey": "editInvoice",
+        "en": "Edit Invoice",
+        "sv": "Redigera Faktura"
+    },
+    {
+        "tkey": "editOffer",
+        "en": "Edit Offer",
+        "sv": "Redigera offert"
+    },
+    {
+        "tkey": "email",
+        "en": "Email",
+        "sv": "E-post"
+    },
+    {
+        "tkey": "emailSentSuccess",
+        "en": "Email sent successfully",
+        "sv": "E-post skickades framgångsrikt"
+    },
+    {
+        "tkey": "employees",
+        "en": "Employees",
+        "sv": "Anställda"
+    },
+    {
+        "tkey": "enterCustomerTagName",
+        "en": "Enter Customer Tag Name",
+        "sv": "Ange kundtagg"
+    },
+    {
+        "tkey": "enterCustomerTypeName",
+        "en": "Enter Customer Type Name",
+        "sv": "Ange kundtyp"
+    },
+    {
+        "tkey": "error",
+        "en": "error",
+        "sv": "fel"
+    },
+    {
+        "tkey": "errormessage",
+        "en": "An error occurred! Please contact support for help",
+        "sv": "Det uppstod ett fel. Kontakta supporten för hjälp"
+    },
+    {
+        "tkey": "employees",
+        "en": "Employees",
+        "sv": "Anställda"
+    },
+    {
+        "tkey": "estimatedHours",
+        "en": "Estimated Hours",
+        "sv": "Beräknade timmar"
+    },
+    {
+        "tkey": "estimatedWorkingTime",
+        "en": "Estimated Working Time",
+        "sv": "Beräknad arbetstid"
+    },
+    {
+        "tkey": "excludingVat",
+        "en": "Excluding VAT",
+        "sv": "Exklusive moms"
+    },
+    {
+        "tkey": "february",
+        "en": "February",
+        "sv": "Februari"
+    },
+    {
+        "tkey": "fetch",
+        "en": "Fetch",
+        "sv": "Hämta"
+    },
+    {
+        "tkey": "first",
+        "en": "First",
+        "sv": "Första"
+    },
+    {
+        "tkey": "absence",
+        "en": "Absence",
+        "sv": "Fri"
+    },
+    {
+        "tkey": "freeText",
+        "en": "Free text",
+        "sv": "Fritext"
+    },
+    {
+        "tkey": "friday",
+        "en": "Friday",
+        "sv": "Fredag"
+    },
+    {
+        "tkey": "general",
+        "en": "General",
+        "sv": "Allmänt"
+    },
+    {
+        "tkey": "approved",
+        "en": "Approved",
+        "sv": "Godkänd"
+    },
+    {
+        "tkey": "history",
+        "en": "History",
+        "sv": "Historik"
+    },
+    {
+        "tkey": "holiday",
+        "en": "Holiday",
+        "sv": "Helgdag"
+    },
+    {
+        "tkey": "includeMessage",
+        "en": "Include message",
+        "sv": "Inkludera meddelande"
+    },
+    {
+        "tkey": "incVat",
+        "en": "Inc. VAT",
+        "sv": "Ink. moms"
+    },
+    {
+        "tkey": "attachInvoiceText",
+        "en": "To attach the invoice, click Validate and attach invoice",
+        "sv": "För att bifoga fakturan, klicka på Validera och bifoga faktura"
+    },
+    {
+        "tkey": "invoice",
+        "en": "Invoice",
+        "sv": "Faktura"
+    },
+    {
+        "tkey": "invoiceDate",
+        "en": "Invoice Date",
+        "sv": "Fakturadatum"
+    },
+    {
+        "tkey": "invoiceHistory",
+        "en": "Invoice History",
+        "sv": "Fakturahistorik"
+    },
+    {
+        "tkey": "invoices",
+        "en": "Invoices",
+        "sv": "Fakturor"
+    },
+    {
+        "tkey": "january",
+        "en": "January",
+        "sv": "Januari"
+    },
+    {
+        "tkey": "july",
+        "en": "July",
+        "sv": "Juli"
+    },
+    {
+        "tkey": "june",
+        "en": "June",
+        "sv": "Juni"
+    },
+    {
+        "tkey": "customerEmail",
+        "en": "Customer Email",
+        "sv": "Kundens e-postadress"
+    },
+    {
+        "tkey": "customerTelephone",
+        "en": "Customer Telephone",
+        "sv": "Kundens telefonnummer"
+    },
+    {
+        "tkey": "last",
+        "en": "Last",
+        "sv": "Sista"
+    },
+    {
+        "tkey": "logo",
+        "en": "Logo",
+        "sv": "Logotyp"
+    },
+    {
+        "tkey": "logout",
+        "en": "Log out",
+        "sv": "Logga ut"
+    },
+    {
+        "tkey": "march",
+        "en": "March",
+        "sv": "Mars"
+    },
+    {
+        "tkey": "may",
+        "en": "May",
+        "sv": "Maj"
+    },
+    {
+        "tkey": "mechanic",
+        "en": "Mechanic",
+        "sv": "Mekaniker"
+    },
+    {
+        "tkey": "monday",
+        "en": "Monday",
+        "sv": "Måndag"
+    },
+    {
+        "tkey": "monthlyTarget",
+        "en": "Monthly Target",
+        "sv": "Månadsmål"
+    },
+    {
+        "tkey": "net",
+        "en": "Net",
+        "sv": "Netto"
+    },
+    {
+        "tkey": "newCustomer",
+        "en": "New Customer",
+        "sv": "Ny Kund"
+    },
+    {
+        "tkey": "newCustomers",
+        "en": "New Customers",
+        "sv": "Nya kunder"
+    },
+    {
+        "tkey": "requiredFields",
+        "en": "Please fill in all required fields",
+        "sv": "Vänligen fyll i alla obligatoriska fält"
+    },
+    {
+        "tkey": "newDigitalServices",
+        "en": "New Digital Services",
+        "sv": "Nya Digital Services"
+    },
+    {
+        "tkey": "newInvoice",
+        "en": "New Invoice",
+        "sv": "Ny Faktura"
+    },
+    {
+        "tkey": "newOffer",
+        "en": "New Offer",
+        "sv": "Ny offert"
+    },
+    {
+        "tkey": "newOffers",
+        "en": "New Offers",
+        "sv": "Nya offerter"
+    },
+    {
+        "tkey": "newWorkorder",
+        "en": "New Workorder",
+        "sv": "Ny Arbetsorder"
+    },
+    {
+        "tkey": "newWorkorders",
+        "en": "New Workorders",
+        "sv": "Nya arbetsorder"
+    },
+    {
+        "tkey": "next",
+        "en": "Next",
+        "sv": "Nästa"
+    },
+    {
+        "tkey": "nextServiceDate",
+        "en": "Next Service Date",
+        "sv": "Nästa servicedatum"
+    },
+    {
+        "tkey": "nextServiceMileage",
+        "en": "Next Service Mileage (km)",
+        "sv": "Nästa serviceintervall (km)"
+    },
+    {
+        "tkey": "no",
+        "en": "No",
+        "sv": "Nej"
+    },
+    {
+        "tkey": "noBookings",
+        "en": "No Booking",
+        "sv": "Inga bokningar"
+    },
+    {
+        "tkey": "noHistory",
+        "en": "No history available",
+        "sv": "Ingen historik tillgänglig"
+    },
+    {
+        "tkey": "notSent",
+        "en": "Not Sent",
+        "sv": "Ej skickad"
+    },
+    {
+        "tkey": "november",
+        "en": "November",
+        "sv": "November"
+    },
+    {
+        "tkey": "october",
+        "en": "October",
+        "sv": "Oktober"
+    },
+    {
+        "tkey": "of",
+        "en": "of",
+        "sv": "av"
+    },
+    {
+        "tkey": "offer",
+        "en": "Offer",
+        "sv": "Offert"
+    },
+    {
+        "tkey": "priceMode",
+        "en": "Price Mode",
+        "sv": "Prisläge"
+    },
+    {
+        "tkey": "offer validity(days)",
+        "en": "Offer validity (days)",
+        "sv": "Offert giltighet (dagar)"
+    },
+    {
+        "tkey": "offerDate",
+        "en": "Offer Date",
+        "sv": "Offertdatum"
+    },
+    {
+        "tkey": "offers",
+        "en": "Offers",
+        "sv": "Offerter"
+    },
+    {
+        "tkey": "oilCapacity",
+        "en": "Oil Capacity",
+        "sv": "Oljekapacitet"
+    },
+    {
+        "tkey": "priceModeText",
+        "en": "This setting applies when creating invoices and offers.",
+        "sv": "Denna inställning gäller vid skapande av fakturor och offerter"
+    },
+    {
+        "tkey": "organizationNumber",
+        "en": "Organization Number",
+        "sv": "Organisationsnummer"
+    },
+    {
+        "tkey": "outstandingBalance",
+        "en": "Outstanding Balance",
+        "sv": "Utestående belopp"
+    },
+    {
+        "tkey": "sendByEmail",
+        "en": "Send by email",
+        "sv": "Skicka via e-post"
+    },
+    {
+        "tkey": "chooseCustomer",
+        "en": "Choose customer",
+        "sv": "Välj kund"
+    },
+    {
+        "tkey": "paid",
+        "en": "Paid",
+        "sv": "Betalt"
+    },
+    {
+        "tkey": "paidAmount",
+        "en": "Paid amount",
+        "sv": "Betalt belopp"
+    },
+    {
+        "tkey": "payment",
+        "en": "Payment",
+        "sv": "Betalning"
+    },
+    {
+        "tkey": "paymentDate",
+        "en": "Payment date",
+        "sv": "Betalningsdatum"
+    },
+    {
+        "tkey": "paymentDeleteConfirmMessage",
+        "en": "Are you sure you want to delete this record?",
+        "sv": "Är du säker på att du vill ta bort posten?"
+    },
+    {
+        "tkey": "paymentDeleteConfirmMessageSave",
+        "en": "Done! The payment has been deleted",
+        "sv": "Klart! Betalningen har tagits bort"
+    },
+    {
+        "tkey": "paymentDeleteSuccessMessage",
+        "en": "Success! Payment has been deleted",
+        "sv": "Betalningen har tagits bort"
+    },
+    {
+        "tkey": "bookingInformation",
+        "en": "Booking information",
+        "sv": "Bokningsinformation"
+    },
+    {
+        "tkey": "paymentNote",
+        "en": "Payment Note",
+        "sv": "Betalningsnotering"
+    },
+    {
+        "tkey": "paymentStatus",
+        "en": "Payment status",
+        "sv": "Betalstatus"
+    },
+    {
+        "tkey": "paymentsTerms",
+        "en": "Payment Terms",
+        "sv": "Betalningsvillkor"
+    },
+    {
+        "tkey": "paymentTerms",
+        "en": "Payment Terms",
+        "sv": "Betalningsvillkor"
+    },
+    {
+        "tkey": "paymentTermsDays",
+        "en": "Payment Terms (days)",
+        "sv": "Betalningsvillkor (dagar)"
+    },
+    {
+        "tkey": "free",
+        "en": "Free",
+        "sv": "Ledig"
+    },
+    {
+        "tkey": "purchaseorder",
+        "en": "Purchaseorder",
+        "sv": "Inköporder"
+    },
+    {
+        "tkey": "downloadPdf",
+        "en": "Download PDF",
+        "sv": "Ladda ner PDF"
+    },
+    {
+        "tkey": "createPdf",
+        "en": "Generate PDF",
+        "sv": "Skapa PDF"
+    },
+    {
+        "tkey": "pdf",
+        "en": "PDF",
+        "sv": "PDF"
+    },
+    {
+        "tkey": "noFilesUploaded",
+        "en": "No files have been uploaded. Use Upload file to upload a file",
+        "sv": "Inga filer har laddats upp. Använd Ladda upp fil för att ladda upp en fil"
+    },
+    {
+        "tkey": "personalNotes",
+        "en": "Personal Notes",
+        "sv": "Egna anteckningar"
+    },
+    {
+        "tkey": "phone",
+        "en": "Phone",
+        "sv": "Telefon"
+    },
+    {
+        "tkey": "postalCode",
+        "en": "Postal Code",
+        "sv": "Postnummer"
+    },
+    {
+        "tkey": "previous",
+        "en": "Previous",
+        "sv": "Föregående"
+    },
+    {
+        "tkey": "previous3Months",
+        "en": "Previous 3 Months",
+        "sv": "Föregående 3 månader"
+    },
+    {
+        "tkey": "previous6Months",
+        "en": "Previous 6 Months",
+        "sv": "Föregående 6 månader"
+    },
+    {
+        "tkey": "previousYear",
+        "en": "Previous Year",
+        "sv": "Föregående år"
+    },
+    {
+        "tkey": "pricewithoutvat",
+        "en": "Price excl. VAT",
+        "sv": "Pris exkl. moms"
+    },
+    {
+        "tkey": "noRecordsFound",
+        "en": "No records found",
+        "sv": "Inga poster hittades"
+    },
+    {
+        "tkey": "pricewithvat",
+        "en": "Price incl. VAT",
+        "sv": "Pris inkl. moms"
+    },
+    {
+        "tkey": "products",
+        "en": "Products",
+        "sv": "Produkter"
+    },
+    {
+        "tkey": "productService",
+        "en": "Product \/ Service",
+        "sv": "Produkt \/ Tjänst"
+    },
+    {
+        "tkey": "quantity",
+        "en": "Quantity",
+        "sv": "Antal"
+    },
+    {
+        "tkey": "referenceNumber",
+        "en": "Reference number",
+        "sv": "Referensnummer"
+    },
+    {
+        "tkey": "registeredOn",
+        "en": "Registered On",
+        "sv": "Registrerad"
+    },
+    {
+        "tkey": "remaining",
+        "en": "Remaining",
+        "sv": "Återstående"
+    },
+    {
+        "tkey": "salePerformance",
+        "en": "Sales & Performance",
+        "sv": "Försäljning & resultat"
+    },
+    {
+        "tkey": "saturday",
+        "en": "Saturday",
+        "sv": "Lördag"
+    },
+    {
+        "tkey": "saveSettings",
+        "en": "Save Settings",
+        "sv": "Spara inställningar"
+    },
+    {
+        "tkey": "search",
+        "en": "Search",
+        "sv": "Sök"
+    },
+    {
+        "tkey": "searchCustomer",
+        "en": "Search Customer",
+        "sv": "Sök kund"
+    },
+    {
+        "tkey": "searchVehicle",
+        "en": "Search Vehicle",
+        "sv": "Sök fordon"
+    },
+    {
+        "tkey": "send",
+        "en": "Send",
+        "sv": "Skicka"
+    },
+    {
+        "tkey": "sendByEmail",
+        "en": "Send by email",
+        "sv": "Skicka via e-post"
+    },
+    {
+        "tkey": "sendDigitalservicebook",
+        "en": "Send Digital Service Book",
+        "sv": "Skicka digital servicebok"
+    },
+    {
+        "tkey": "sendInvoice",
+        "en": "Send Invoice",
+        "sv": "Skicka Faktura"
+    },
+    {
+        "tkey": "sent",
+        "en": "Sent",
+        "sv": "Skickad"
+    },
+    {
+        "tkey": "sent.confirm.message.error",
+        "en": "Failed to send email. Please contact support",
+        "sv": "Misslyckades att skicka e-post. Kontakta support"
+    },
+    {
+        "tkey": "sentConfirmMessage",
+        "en": "Are you sure you want to mark this invoice as sent?",
+        "sv": "Är du säker på att du vill markera fakturan som skickad?"
+    },
+    {
+        "tkey": "topMake",
+        "en": "Top Make",
+        "sv": "Toppmärke"
+    },
+    {
+        "tkey": "digitalServiceIdInvalid",
+        "en": "The provided Digital Service ID is invalid",
+        "sv": "Det angivna Digital Service-ID är ogiltigt"
+    },
+    {
+        "tkey": "hideDeletedProducts",
+        "en": "Hide deleted products",
+        "sv": "Dölj borttagna Produkter"
+    },
+    {
+        "tkey": "sentSuccessMessage",
+        "en": "Success! Offer sent successfully to the recipient",
+        "sv": "Offerten har skickats"
+    },
+    {
+        "tkey": "september",
+        "en": "September",
+        "sv": "September"
+    },
+    {
+        "tkey": "serviceDate",
+        "en": "Service Date",
+        "sv": "Servicedatum"
+    },
+    {
+        "tkey": "serviceHours",
+        "en": "Service Hours",
+        "sv": "Tjänstetid"
+    },
+    {
+        "tkey": "serviceName",
+        "en": "Service Name",
+        "sv": "Tjänstnamn"
+    },
+    {
+        "tkey": "services",
+        "en": "Services",
+        "sv": "Tjänster"
+    },
+    {
+        "tkey": "serviceType",
+        "en": "Service Type",
+        "sv": "Servicetyp"
+    },
+    {
+        "tkey": "remainingQuantity",
+        "en": "Remaining Quantity",
+        "sv": "Återstående antal"
+    },
+    {
+        "tkey": "setAsDefault",
+        "en": "Set as Default",
+        "sv": "Ange som standard"
+    },
+    {
+        "tkey": "settings",
+        "en": "Settings",
+        "sv": "Inställningar"
+    },
+    {
+        "tkey": "showPdf",
+        "en": "Show PDF",
+        "sv": "Visa PDF"
+    },
+    {
+        "tkey": "status",
+        "en": "Status",
+        "sv": "Status"
+    },
+    {
+        "tkey": "statusConfirmMessage",
+        "en": "is now marked as ",
+        "sv": "är nu markerad som "
+    },
+    {
+        "tkey": "supplier",
+        "en": "Supplier",
+        "sv": "Leverantör"
+    },
+    {
+        "tkey": "supplierReferenceNo",
+        "en": "Supplier Reference No.",
+        "sv": "Leverantörsreferensnr"
+    },
+    {
+        "tkey": "telephone",
+        "en": "Telephone",
+        "sv": "Telefon"
+    },
+    {
+        "tkey": "template",
+        "en": "Template",
+        "sv": "Mall"
+    },
+    {
+        "tkey": "thursday",
+        "en": "Thursday",
+        "sv": "Torsdag"
+    },
+    {
+        "tkey": "totalAmountToPay",
+        "en": "Total Amount to Pay",
+        "sv": "Totalt att betala"
+    },
+    {
+        "tkey": "actions",
+        "en": "Actions",
+        "sv": "Åtgärder"
+    },
+    {
+        "tkey": "totalDue",
+        "en": "Total Due",
+        "sv": "Totalt att betala"
+    },
+    {
+        "tkey": "totalOrders",
+        "en": "Total Orders",
+        "sv": "Totalt antal order"
+    },
+    {
+        "tkey": "totalSales",
+        "en": "Total Sales",
+        "sv": "Total försäljning"
+    },
+    {
+        "tkey": "totalSum",
+        "en": "Total Amount",
+        "sv": "Totalsumma"
+    },
+    {
+        "tkey": "note",
+        "en": "Note",
+        "sv": "Anteckning"
+    },
+    {
+        "tkey": "totalwithoutvat",
+        "en": "Total excl. VAT",
+        "sv": "Totalt exkl. moms"
+    },
+    {
+        "tkey": "addInventory",
+        "en": "Add Inventory",
+        "sv": "Lägg till lager"
+    },
+    {
+        "tkey": "totalwithvat",
+        "en": "Total incl. VAT",
+        "sv": "Totalt inkl. moms"
+    },
+    {
+        "tkey": "productInformation",
+        "en": "Product Information",
+        "sv": "Produktinformation"
+    },
+    {
+        "tkey": "inventory",
+        "en": "Inventory",
+        "sv": "Lager"
+    },
+    {
+        "tkey": "showPaymentHistory",
+        "en": "View Payment History",
+        "sv": "Visa betalningshistorik"
+    },
+    {
+        "tkey": "totalQuantity",
+        "en": "Total Quantity",
+        "sv": "Totalt antal"
+    },
+    {
+        "tkey": "purchaseHistory",
+        "en": "Purchase History",
+        "sv": "Inköpshistorik"
+    },
+    {
+        "tkey": "purchaseDate",
+        "en": "Purchase Date",
+        "sv": "Inköpsdatum"
+    },
+    {
+        "tkey": "purchaseQuantity",
+        "en": "Purchase Quantity",
+        "sv": "Inköpsantal"
+    },
+    {
+        "tkey": "tuesday",
+        "en": "Tuesday",
+        "sv": "Tisdag"
+    },
+    {
+        "tkey": "unansweredOffers",
+        "en": "Unanswered Offers",
+        "sv": "Obesvarade offerter"
+    },
+    {
+        "tkey": "unit",
+        "en": "Unit",
+        "sv": "Enhet"
+    },
+    {
+        "tkey": "unpaidInvoices",
+        "en": "Unpaid Invoices",
+        "sv": "Obetalda fakturor"
+    },
+    {
+        "tkey": "unpaidInvoicesByCustomers",
+        "en": "Unpaid Invoices by Customer",
+        "sv": "Obetalda fakturor per kund"
+    },
+    {
+        "tkey": "update",
+        "en": "Update",
+        "sv": "Uppdatera"
+    },
+    {
+        "tkey": "updateCustomer",
+        "en": "Update Customer",
+        "sv": "Uppdatera Kund"
+    },
+    {
+        "tkey": "updateInvoice",
+        "en": "Update Invoice",
+        "sv": "Uppdatera Faktura"
+    },
+    {
+        "tkey": "updateOffer",
+        "en": "Update Offer",
+        "sv": "Uppdatera offert"
+    },
+    {
+        "tkey": "uploadFile",
+        "en": "Upload File",
+        "sv": "Ladda upp fil"
+    },
+    {
+        "tkey": "validFrom",
+        "en": "Valid From",
+        "sv": "Giltig från"
+    },
+    {
+        "tkey": "validTo",
+        "en": "Valid To",
+        "sv": "Giltig till"
+    },
+    {
+        "tkey": "vat",
+        "en": "VAT",
+        "sv": "Moms"
+    },
+    {
+        "tkey": "purchaseNote",
+        "en": "Purchase Note",
+        "sv": "Inköpsanteckning"
+    },
+    {
+        "tkey": "vatRegistrationNumber",
+        "en": "VAT ID",
+        "sv": "Momsregistreringsnummer"
+    },
+    {
+        "tkey": "vehicleInfo",
+        "en": "Vehicle Info",
+        "sv": "Fordonsinformation"
+    },
+    {
+        "tkey": "totalItemsPurchased",
+        "en": "Total Purchased",
+        "sv": "Totalt inköpt"
+    },
+    {
+        "tkey": "vehicleMake",
+        "en": "Make",
+        "sv": "Märke"
+    },
+    {
+        "tkey": "totalItemsSold",
+        "en": "Total Sold",
+        "sv": "Totalt sålt"
+    },
+    {
+        "tkey": "remainingBalance",
+        "en": "Remaining Balance",
+        "sv": "Återstående saldo"
+    },
+    {
+        "tkey": "noPurchaseFound",
+        "en": "No purchases found",
+        "sv": "Inga inköp hittades"
+    },
+    {
+        "tkey": "vehicleMileage",
+        "en": "Mileage (km)",
+        "sv": "Miltal (km)"
+    },
+    {
+        "tkey": "saleHistory",
+        "en": "Sales History",
+        "sv": "Försäljningshistorik"
+    },
+    {
+        "tkey": "noSaleFound",
+        "en": "No sales found",
+        "sv": "Inga försäljningar hittades"
+    },
+    {
+        "tkey": "vehicleModel",
+        "en": "Model",
+        "sv": "Modell"
+    },
+    {
+        "tkey": "topCustomer",
+        "en": "Top Customer",
+        "sv": "Toppkund"
+    },
+    {
+        "tkey": "orders",
+        "en": "orders",
+        "sv": "ordrar"
+    },
+    {
+        "tkey": "vehiclePlate",
+        "en": "Vehicle Plate",
+        "sv": "Registreringsnummer"
+    },
+    {
+        "tkey": "worth",
+        "en": "worth",
+        "sv": "värda"
+    },
+    {
+        "tkey": "vehicleYear",
+        "en": "Vehicle Year",
+        "sv": "Årsmodell"
+    },
+    {
+        "tkey": "inLast",
+        "en": "in last",
+        "sv": "de senaste"
+    },
+    {
+        "tkey": "verifyBeforeCreateDigitalService",
+        "en": "Please verify that all information is correct before creating the Digital Service. You can retrieve data by entering the invoice number and clicking the Fetch button.",
+        "sv": "Kontrollera att all information är korrekt innan du skapar den digitala servicen. Du kan hämta information genom att ange fakturanummer och klicka på knappen Hämta."
+    },
+    {
+        "tkey": "Verkstadstjänster",
+        "en": "Workshop Services",
+        "sv": "Verkstadstjänster"
+    },
+    {
+        "tkey": "viewCustomer",
+        "en": "View Customer",
+        "sv": "Visa Kund"
+    },
+    {
+        "tkey": "wednesday",
+        "en": "Wednesday",
+        "sv": "Onsdag"
+    },
+    {
+        "tkey": "week",
+        "en": "Week",
+        "sv": "Vecka"
+    },
+    {
+        "tkey": "workCarriedOut",
+        "en": "Work Carried Out",
+        "sv": "Utfört arbete"
+    },
+    {
+        "tkey": "workingDay",
+        "en": "Working Day",
+        "sv": "Arbetsdag"
+    },
+    {
+        "tkey": "workorder",
+        "en": "Workorder",
+        "sv": "Arbetsorder"
+    },
+    {
+        "tkey": "confirmMessage",
+        "en": "Yes, continue",
+        "sv": "Ja, fortsät"
+    },
+    {
+        "tkey": "inLast30Days",
+        "en": "in last 30 days",
+        "sv": "de senaste 30 dagarna"
+    },
+    {
+        "tkey": "invoiceInvalid",
+        "en": "The invoice is invalid",
+        "sv": "Fakturan är ogiltig"
+    },
+    {
+        "tkey": "workorders",
+        "en": "Workorders",
+        "sv": "Arbetsordrar"
+    },
+    {
+        "tkey": "workshop",
+        "en": "Workshop",
+        "sv": "Verkstad"
+    },
+    {
+        "tkey": "workshopCalendar",
+        "en": "Workshop Calendar",
+        "sv": "Verkstadskalender"
+    },
+    {
+        "tkey": "workshopServices",
+        "en": "Workshop Services",
+        "sv": "Verkstadsservice"
+    },
+    {
+        "tkey": "yes",
+        "en": "Yes",
+        "sv": "Ja"
+    },
+    {
+        "tkey": "sale",
+        "en": "Sale",
+        "sv": "Försäljning"
+    },
+    {
+        "tkey": "yourRef",
+        "en": "Your reference",
+        "sv": "Er referens"
+    },
+    {
+        "tkey": "invalidFormat",
+        "en": "Invalid format",
+        "sv": "Felaktigt format"
+    },
+    {
+        "tkey": "timeRegisterSuccess",
+        "en": "Time registered successfully",
+        "sv": "Tiden har registrerats"
+    },
+    {
+        "tkey": "enterTimeFormat",
+        "en": "Enter time as HH:MM (e.g., 13:30)",
+        "sv": "Ange tid som HH:MM (t.ex. 13:30)"
+    },
+    {
+        "tkey": "timeOverlapDetected",
+        "en": "Overlapping time entries detected",
+        "sv": "Överlappande tidsregistreringar upptäckta"
+    },
+    {
+        "tkey": "operationFailed",
+        "en": "Operation failed",
+        "sv": "Åtgärden misslyckades"
+    },
+    {
+        "tkey": "timeOverlapWithRecords",
+        "en": "The time entry overlaps with existing records",
+        "sv": "Tidsregistreringen överlappar med befintliga poster"
+    },
+    {
+        "tkey": "commentsUpdated",
+        "en": "Comments updated",
+        "sv": "Kommentarer uppdaterade"
+    },
+    {
+        "tkey": "invalidTime",
+        "en": "Invalid time",
+        "sv": "Ogiltig tid"
+    },
+    {
+        "tkey": "purchaseId",
+        "en": "Purchase Id",
+        "sv": "Inköpsid"
+    },
+    {
+        "tkey": "selectFocus",
+        "en": "Select focus",
+        "sv": "Välj fokus"
+    },
+    {
+        "tkey": "aiTextAdded",
+        "en": "AI text added",
+        "sv": "AI-text tillagd"
+    },
+    {
+        "tkey": "autoGenerateText",
+        "en": "Auto-generate text",
+        "sv": "Autogenerera text"
+    },
+    {
+        "tkey": "productsWithSalesHistory",
+        "en": "Products with Sales History",
+        "sv": "Produkter med försäljningshistorik"
+    },
+    {
+        "tkey": "fetchInfo",
+        "en": "Fetch info",
+        "sv": "Hämta info"
+    },
+    {
+        "tkey": "reports",
+        "en": "Reports",
+        "sv": "Rapporter"
+    },
+    {
+        "tkey": "success",
+        "en": "Success",
+        "sv": "Lyckades"
+    },
+    {
+        "tkey": "operationSuccessful",
+        "en": "Operation completed successfully",
+        "sv": "Åtgärden lyckades"
+    },
+    {
+        "tkey": "irreversibleAction",
+        "en": "Please confirm all values. This action cannot be undone after creation.",
+        "sv": "Vänligen bekräfta alla värden. Denna åtgärd kan inte ångras efter att den har skapats"
+    },
+    {
+        "tkey": "confirmation",
+        "en": "Confirmation",
+        "sv": "Bekräftelse"
+    },
+    {
+        "tkey": "createSupplier",
+        "en": "Create Supplier",
+        "sv": "Skapa Leverantör"
+    },
+    {
+        "tkey": "supplierName",
+        "en": "Supplier Name",
+        "sv": "Leverantörnamn"
+    },
+    {
+        "tkey": "extraInfo",
+        "en": "Extra information",
+        "sv": "Extra information"
+    },
+    {
+        "tkey": "editSupplier",
+        "en": "Edit Supplier",
+        "sv": "Redigera leverantör"
+    },
+    {
+        "tkey": "editWorkorder",
+        "en": "Edit Workorder",
+        "sv": "Redigera arbetsorder "
+    },
+    {
+        "tkey": "stockProducts",
+        "en": "Stock products",
+        "sv": "Lagerprodukter"
+    },
+    {
+        "tkey": "chooseCategory",
+        "en": "Choose Category",
+        "sv": "Välj kategori"
+    },
+    {
+        "tkey": "status",
+        "en": "Status",
+        "sv": "Status"
+    },
+    {
+        "tkey": "type",
+        "en": "Type",
+        "sv": "Typ"
+    },
+    {
+        "tkey": "activity",
+        "en": "Activity",
+        "sv": "Verksamhet"
+    },
+    {
+        "tkey": "person",
+        "en": "Person",
+        "sv": "Person"
+    },
+    {
+        "tkey": "intervalId",
+        "en": "Interval ID",
+        "sv": "Intervall-ID"
+    },
+    {
+        "tkey": "startTime",
+        "en": "Start time",
+        "sv": "Starttid"
+    },
+    {
+        "tkey": "endTime",
+        "en": "End time",
+        "sv": "Sluttid"
+    },
+    {
+        "tkey": "comments",
+        "en": "Comments",
+        "sv": "Kommentar"
+    },
+    {
+        "tkey": "registerTime",
+        "en": "Register time",
+        "sv": "Registreringstid"
+    },
+    {
+        "tkey": "saveTime",
+        "en": "Save time",
+        "sv": "Sparad tid"
+    },
+    {
+        "tkey": "timeIn",
+        "en": "Time in",
+        "sv": "Tid in"
+    },
+    {
+        "tkey": "timeOut",
+        "en": "Time out",
+        "sv": "Tid ut"
+    },
+    {
+        "tkey": "workplaceName",
+        "en": "Workplace name",
+        "sv": "Arbetsplatsens namn"
+    },
+    {
+        "tkey": "totalPersonnelRegisters",
+        "en": "Total personnel registers",
+        "sv": "Totalt antal personalliggare"
+    },
+    {
+        "tkey": "employeeName",
+        "en": "Employee name",
+        "sv": "Anställds namn"
+    }
+]

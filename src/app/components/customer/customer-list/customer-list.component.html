@@ -1,0 +1,168 @@
+<!-- header start -->
+  <app-generic-loader *ngIf="isLoading"></app-generic-loader>
+<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
+  <div class="">
+    <p class="font-normal text-2xl">{{ this.sharedService.T('customers') }}</p>
+  </div>
+  <div class="flex gap-2">
+    <span class="my-auto">{{ this.sharedService.workshopName}}</span>
+    <div
+      class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
+      <p>AS</p>
+    </div>
+  </div>
+</header>
+<!-- header end -->
+<!-- <main class="flex-1 overflow-x-hidden overflow-y-auto bg-bgColor">
+  <div class="container px-4 mx-auto"> -->
+
+    <section class="p-6 pb-12 bg-bgColor">
+      <form [formGroup]="filters">
+        <!-- Filter Section -->
+        <div class="mb-6 mt-10 text-sm font-medium shadow-sm bg-white rounded-md p-5">
+          <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
+            <!-- Left Section: Buttons and Filters -->
+            <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
+              <!-- Create Customer Button -->
+              <p-button [raised]="true" label="{{ this.sharedService.T('createCustomer') }}" size="large" icon="pi pi-plus"
+                (click)="redirectToCustomerCrudComponent()"></p-button>
+
+              <!-- Filters -->
+              <p-select [options]="customerTypes" formControlName="customerType" optionLabel="customerTypeName"
+                optionValue="customerTypeId" (onChange)="onChangeCustomerType($event)" 
+                [checkmark]="true" [showClear]="true" [placeholder]="this.sharedService.T('choose') + ' ' + this.sharedService.T('customerType')"
+                (onClear)="onClearCustomerType()"></p-select>
+              <p-select [options]="customerTags" formControlName="customerTag" optionLabel="customerTagName"
+                optionValue="customerTagId" (onChange)="onChangeCustomerTag($event)" [checkmark]="true"
+                [showClear]="true" [placeholder]="this.sharedService.T('choose') + ' ' + this.sharedService.T('customerTag')"
+                (onClear)="onClearCustomerTag()" ></p-select>
+              <p-select [options]="customerCities" formControlName="customerCity"
+                (onChange)="onChangeCustomerCity($event)" [checkmark]="true" [showClear]="true" [placeholder]="this.sharedService.T('choose') + ' ' + this.sharedService.T('city')"
+                (onClear)="onClearCustomerCity()"></p-select>
+            </div>
+
+            <!-- Right Section: Search -->
+            <div class="rounded-md ml-auto">
+              <div class=" w-full ps-2 h-10 rounded-md ">
+                <p-autoComplete formControlName="customerName"
+                  [placeholder]="this.sharedService.T('search') + ' ' + this.sharedService.T('customer')" [suggestions]="customers"
+                  (onClear)="onClearCustomerName()" (keyup)="keyupCustomerName($event.target)"
+                  (onSelect)="onSelectCustomerName($event)" optionLabel="customerName" optionValue="customerName"
+                  [showClear]="true">
+                  >
+                  <ng-template let-customer pTemplate="item">
+                    <div class="flex items-center gap-2">
+                      <div>{{ customer.customerName }}</div>
+                    </div>
+                  </ng-template>
+                </p-autoComplete>
+              </div>
+            </div>
+          </div>
+
+
+
+
+          <!-- Divider -->
+          <hr class="border-CustomBorder">
+
+          <!-- Export Buttons -->
+          <div class="flex justify-end mt-4">
+            <div class="flex gap-3 px-4 py-2 rounded-md">
+               <p-button size="small" icon="pi pi-file-pdf" label="{{ this.sharedService.T('showPdf') }}" [disabled]="true"></p-button> 
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="mb-12">
+          <p-table 
+          [lazy]="true" 
+          [value]="customers" 
+          [rows]="10"
+          [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
+          [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+          (onLazyLoad)="sortColumn($event)" 
+          sortField="customerId" 
+          responsiveLayout="scroll" 
+          [sortOrder]="-1"
+          data-testid="customer-table">
+            <ng-template #header>
+              <tr>
+                <th class="id-column-header rounded-l-xl" pSortableColumn="customerId">
+                  <p-sortIcon field="customerId" />
+                </th>
+                <th>{{ this.sharedService.T('customerName') }}</th>
+                <th>{{ this.sharedService.T('customerType') }}</th>
+                <th>{{ this.sharedService.T('customerTag') }}</th>
+                <th>{{ this.sharedService.T('creditCustomer') }}</th>
+                <th>{{ this.sharedService.T('city') }}</th>
+                <th>{{ this.sharedService.T('telephone') }}</th>
+                <th class="rounded-r-xl">{{ this.sharedService.T('email') }}</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-customer>
+              <tr data-testid="customer-row">
+                <td class="id-column-cell rounded-l-lg">
+                  <div class="flex items-center gap-2 cursor-pointer"
+                    (click)="redirectToCustomerDetailComponent(customer.customerId)">
+                    <span>{{ customer.customerId }}</span>
+                    <i class="pi pi-external-link icon-primary" ></i>
+                  </div>
+                </td>
+
+                <td title="{{ customer.customerName }}">
+                  <strong> {{ customer.customerName.length > 25 ? (customer.customerName | slice: 0:25) + '...' :
+                    customer.customerName }} </strong>
+                </td>
+                <td>{{ customer.customerTypeName }}</td>
+                <td>{{ customer.customerTagName }}</td>
+                
+                <td>{{customer.isCreditAllowed ? this.sharedService.T('yes') : this.sharedService.T('no') }}
+                </td>
+                <td>{{ customer.customerCity }}</td>
+                <td>{{ customer.telephone }}</td>
+                <td>{{ customer.email }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <!-- Pager Section -->
+          <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
+            <!-- Page Size Dropdown -->
+            <div class="flex items-center">
+              <p-select [options]="[10, 20, 30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}"
+                (onChange)="onPageSizeChange($event)"></p-select>
+            </div>
+
+            <!-- Paginator -->
+            <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
+              (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+              >
+              <ng-template pTemplate="firstpagelinkicon">
+                <img src="assets/icons/paginator/previus.svg" alt="">
+              </ng-template>
+              <ng-template pTemplate="lastpagelinkicon">
+                <img src="assets/icons/paginator/next.svg" alt="">
+              </ng-template>
+              <ng-template pTemplate="previouspagelinkicon">
+                <div class="flex items-center gap-2">
+                  <div>{{ this.sharedService.T('previous') }}</div>
+
+                </div>
+              </ng-template>
+              <ng-template pTemplate="nextpagelinkicon">
+                <div class="flex items-center gap-2">
+                  <div>{{ this.sharedService.T('next') }}</div>
+                </div>
+              </ng-template>
+            </p-paginator>
+          </div>
+        </div>
+
+
+      </form>
+    </section>
+  <!-- </div>
+</main> -->
