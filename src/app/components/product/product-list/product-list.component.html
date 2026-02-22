@@ -2,14 +2,15 @@
     <app-generic-loader *ngIf="isLoading"></app-generic-loader>
 
     <form [formGroup]="filters">
-        <div class="mb-6 mt-10 text-sm font-medium shadow-sm bg-white rounded-md p-5">
-            <div class="flex items-center gap-4 flex-wrap md:flex-nowrap mb-6">
-                <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
-                  <p-button [raised]="true" label="{{this.sharedService.T('createProduct')}}" size="large" icon="pi pi-plus"
-                    (onClick)="productCrud(0)"></p-button>
+        <div class="mb-6 mt-10 bg-white rounded-md p-5">
+            <div class="flex gap-4 mb-6">
+                <div class="flex gap-3 ">
+                    <p-button [raised]="true" label="{{this.sharedService.T('createProduct')}}" size="large"
+                        icon="pi pi-plus" (onClick)="productCrud(0)"></p-button>
 
-                    <p-select [options]="this.sharedService.getEnums('detailCategory')" formControlName="category" optionLabel="text" optionValue="value"
-                        [showClear]="true" placeholder="{{ this.sharedService.T('chooseCategory') }}" styleClass="w-48"
+                    <p-select [options]="this.sharedService.getEnums('detailCategory')" formControlName="category"
+                        optionLabel="text" optionValue="value" [showClear]="true"
+                        placeholder="{{ this.sharedService.T('chooseCategory') }}" styleClass="w-48"
                         (onChange)="onChangeCategory($event)" (onClear)="onClearCategory()">
                     </p-select>
 
@@ -30,28 +31,28 @@
                         <p-checkbox [(ngModel)]="isSelingProductChecked" [binary]="true"
                             [ngModelOptions]="{standalone: true}" (onChange)="onChangeSellingProduct($event)">
                         </p-checkbox>
-                        <label class="ml-2 whitespace-nowrap">{{this.sharedService.T('productsWithSalesHistory')}}</label>
+                        <label
+                            class="ml-2 whitespace-nowrap">{{this.sharedService.T('productsWithSalesHistory')}}</label>
                     </div>
 
                 </div>
-                <div class="rounded-md flex justify-end items-end md:ml-auto">
-                        <div class="ps-2 rounded-md">
-                             <p-iconfield>
-                             <p-inputicon class="pi pi-search" />
+                <div class=" flex justify-end items-end md:ml-auto">
+                    <div class="ps-2">
+                        <p-iconfield>
+                            <p-inputicon class="pi pi-search" />
                             <input type="text" formControlName="productName"
                                 placeholder="{{this.sharedService.T('search') }} {{this.sharedService.T('product') }}"
                                 (input)="onProductKeyup($event)" pInputText />
-                             </p-iconfield>
-                        </div>
+                        </p-iconfield>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="mb-10">
-            <p-table styleClass="text-sm custom-table" [lazy]="true"
-                [value]="products" [rows]="10" [first]="(filters.get('currentPage')?.value - 1) * 10"
-                responsiveLayout="scroll" (onLazyLoad)="sortColumn($event)" [sortOrder]="-1" sortField="productId"
-                data-testid="product-table">
+            <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="products" [rows]="10"
+                [first]="(filters.get('currentPage')?.value - 1) * 10" responsiveLayout="scroll"
+                (onLazyLoad)="sortColumn($event)" [sortOrder]="-1" sortField="productId" data-testid="product-table">
 
                 <ng-template #header>
                     <tr>
@@ -67,7 +68,7 @@
                         <th>{{ this.sharedService.T('vat')}}%</th>
                         <th>{{ this.sharedService.T('remainingQuantity') }}</th>
                         <th class="table-header-cell rounded-r-xl">{{ this.sharedService.T('actions') }}
-                        
+
                         </th>
                     </tr>
                 </ng-template>
@@ -82,7 +83,7 @@
                             <div class="flex items-center gap-2 cursor-pointer"
                                 (click)="redirectToProductDetail(product.productId)">
                                 <span class="id-text">{{ product.productId }}</span>
-                                <i class="pi pi-external-link icon-primary" ></i>
+                                <i class="pi pi-external-link icon-primary"></i>
                             </div>
                         </td>
 
@@ -97,48 +98,49 @@
                         <td>{{ product.inHouseQuantity - product.invoiceQuantity}}</td>
                         <td>
                             <div class="flex gap-2 justify-center">
-                                <p-button size="small" icon="pi pi-pencil" severity="secondary" [disabled]="product.isActive === 0" (onClick)="productCrud(product.productId)">
+                                <p-button size="small" icon="pi pi-pencil" severity="secondary"
+                                    [disabled]="product.isActive === 0" (onClick)="productCrud(product.productId)">
                                 </p-button>
 
-                                <p-button size="small" severity="danger" 
-                                    icon="pi pi-trash" [disabled]="loadingDelete" (onClick)="deleteProduct(product)">
+                                <p-button size="small" severity="danger" icon="pi pi-trash" [disabled]="loadingDelete"
+                                    (onClick)="deleteProduct(product)">
                                 </p-button>
                             </div>
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
-      <!-- Pager Section -->
-      <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
-        <!-- Page Size Dropdown -->
-        <div class="flex items-center">
-          <p-select [options]="[10, 20, 30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}"
-            (onChange)="onPageSizeChange($event)"></p-select>
-        </div>
-        <!-- Paginator -->
-        <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
-              (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}">
-              <ng-template pTemplate="firstpagelinkicon">
-                <img src="assets/icons/paginator/previus.svg" alt="">
-              </ng-template>
-              <ng-template pTemplate="lastpagelinkicon">
-                <img src="assets/icons/paginator/next.svg" alt="">
-              </ng-template>
-              <ng-template pTemplate="previouspagelinkicon">
-                <div class="flex items-center gap-2">
-                  <div>{{ this.sharedService.T('previous') }}</div>
+            <!-- Pager Section -->
+            <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
+                <!-- Page Size Dropdown -->
+                <div class="flex items-center">
+                    <p-select [options]="[10, 20, 30]" [(ngModel)]="pager.pageSize"
+                        [ngModelOptions]="{standalone: true}" (onChange)="onPageSizeChange($event)"></p-select>
+                </div>
+                <!-- Paginator -->
+                <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
+                    (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+                    currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}">
+                    <ng-template pTemplate="firstpagelinkicon">
+                        <img src="assets/icons/paginator/previus.svg" alt="">
+                    </ng-template>
+                    <ng-template pTemplate="lastpagelinkicon">
+                        <img src="assets/icons/paginator/next.svg" alt="">
+                    </ng-template>
+                    <ng-template pTemplate="previouspagelinkicon">
+                        <div class="flex items-center gap-2">
+                            <div>{{ this.sharedService.T('previous') }}</div>
 
-                </div>
-              </ng-template>
-              <ng-template pTemplate="nextpagelinkicon">
-                <div class="flex items-center gap-2">
-                  <div>{{ this.sharedService.T('next') }}</div>
-                </div>
-              </ng-template>
-            </p-paginator>
-      </div>
-            
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="nextpagelinkicon">
+                        <div class="flex items-center gap-2">
+                            <div>{{ this.sharedService.T('next') }}</div>
+                        </div>
+                    </ng-template>
+                </p-paginator>
+            </div>
+
         </div>
     </form>
 
@@ -149,11 +151,11 @@
                 <h2 class="text-xl font-bold text-gray-800">{{ this.sharedService.T('inventory') }}</h2>
             </div>
         </ng-template>
-        <div class="p-3 bg-white rounded-b-lg">
+        <div class="p-3">
             <form [formGroup]="inventoryForm">
                 <div class="mb-6">
                     <div class="text-right space-y-4">
-                        <p class="text-base text-gray-600 right-aligned-label">
+                        <p>
                             {{ this.sharedService.T('totalQuantity') }}:
                             <p-inputnumber [(ngModel)]="selectedPriceIncvat" [ngModelOptions]="{ standalone: true }"
                                 mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="0"
@@ -163,7 +165,7 @@
                     </div>
                 </div>
                 <div class="mb-6">
-                    <p class="text-lg font-semibold text-gray-700">{{ this.sharedService.T('inventoryHistory') }}</p>
+                    <p >{{ this.sharedService.T('inventoryHistory') }}</p>
                     <p-table styleClass="text-sm" [tableStyle]="{ 'min-width': '100%' }" [value]="selectedProducts"
                         responsiveLayout="scroll">
                         <ng-template pTemplate="header">
@@ -190,20 +192,20 @@
                 </div>
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">{{
+                        <label class="block mb-2">{{
                             this.sharedService.T('inventoryDate') }}</label>
                         <p-datepicker formControlName="inventoryDate" dataType="string" class="w-full"
                             styleClass="border border-gray-300 rounded-md" dateFormat="yy-mm-dd"></p-datepicker>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">{{
+                        <label class="block mb-2">{{
                             this.sharedService.T('inventoryQuantity') }}</label>
                         <p-inputnumber formControlName="inventoryQuantity" mode="decimal" class="w-full"
                             [useGrouping]="false"></p-inputnumber>
                     </div>
                 </div>
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ this.sharedService.T('inventoryNote')
+                    <label class="block mb-2">{{ this.sharedService.T('inventoryNote')
                         }}</label>
                     <textarea class="w-full" formControlName="inventoryNote" rows="2" pInputTextarea></textarea>
                 </div>
@@ -216,104 +218,85 @@
         </div>
     </p-dialog>
 
-  <p-dialog 
-    header="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }} #{{product.get('productId')?.value}}" 
-    [(visible)]="showProductDialog" 
-    [modal]="true" 
-    [closable]="false" 
-    [draggable]="false" 
-    [resizable]="false" 
-    styleClass="w-[95vw]">
-    
-    <form [formGroup]="product">
-        <div class="px-2 text-xs mb-3">
-            @if(successProductLabel != '') { 
-                <p-message severity="success"> {{this.successProductLabel}} </p-message> 
-            }
-            @else if (failProductLabel != '') { 
-                <p-message severity="error"> {{this.failProductLabel}} </p-message> 
-            }
-        </div>
+    <p-dialog
+        header="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }} #{{product.get('productId')?.value}}"
+        [(visible)]="showProductDialog" [modal]="true" [closable]="false" [draggable]="false" [resizable]="false"
+        styleClass="w-[95vw]">
 
-        <div class="flex gap-2 mb-2 text-sm font-semibold px-4 text-gray-600">
-            <div class="w-[12%]">{{ this.sharedService.T('category') }} <span class="text-red-500">*</span></div>
-            <div class="w-[15%]">{{ this.sharedService.T('produktService') }} <span class="text-red-500">*</span></div>
-            <div class="w-[15%]">Fritext</div>
-            <div class="w-[10%]">{{ this.sharedService.T('quantity') }}</div>
-            <div class="w-[10%]">{{ this.sharedService.T('unit') }}</div>
-            <div class="w-[12%]">{{ this.sharedService.T('pricewithoutvat') }} <span class="text-red-500">*</span></div>
-            <div class="w-[12%]">{{ this.sharedService.T('vat') }}</div>
-            <div class="w-[12%]">{{ this.sharedService.T('pricewithvat') }}</div>
-        </div>
-
-        <div class="flex gap-2 p-5 bg-white rounded-xl shadow-md border border-gray-100 items-center mb-5">
-            
-            <div class="w-[12%]">
-                <p-select [options]="sharedService.getEnums('detailCategory')" 
-                          formControlName="category"
-                          optionLabel="text" 
-                          optionValue="value" 
-                          styleClass="w-full bg-white"></p-select>
+        <form [formGroup]="product">
+            <div class="px-2 text-xs mb-3">
+                @if(successProductLabel != '') {
+                <p-message severity="success"> {{this.successProductLabel}} </p-message>
+                }
+                @else if (failProductLabel != '') {
+                <p-message severity="error"> {{this.failProductLabel}} </p-message>
+                }
             </div>
 
-            <div class="w-[15%]">
-                <input type="text" formControlName="productName" 
-                       class="w-full p-inputtext bg-white"
-                       [ngClass]="{'border-red-500': getf('productName')?.invalid && getf('productName')?.touched}" />
+            <div class="flex gap-2 mb-2 text-sm font-semibold px-4">
+                <div class="w-[12%]">{{ this.sharedService.T('category') }} <span class="text-red-500">*</span></div>
+                <div class="w-[15%]">{{ this.sharedService.T('produktService') }} <span class="text-red-500">*</span>
+                </div>
+                <div class="w-[15%]">Fritext</div>
+                <div class="w-[10%]">{{ this.sharedService.T('quantity') }}</div>
+                <div class="w-[10%]">{{ this.sharedService.T('unit') }}</div>
+                <div class="w-[12%]">{{ this.sharedService.T('pricewithoutvat') }} <span class="text-red-500">*</span>
+                </div>
+                <div class="w-[12%]">{{ this.sharedService.T('vat') }}</div>
+                <div class="w-[12%]">{{ this.sharedService.T('pricewithvat') }}</div>
             </div>
 
-            <div class="w-[15%]">
-                <input type="text" formControlName="productDescription" 
-                       class="w-full p-inputtext bg-white" />
+            <div class="flex gap-2 p-5  rounded-xl shadow-md border border-gray-100 mb-5">
+
+                <div class="w-[12%]">
+                    <p-select [options]="sharedService.getEnums('detailCategory')" formControlName="category"
+                        optionLabel="text" optionValue="value" styleClass="w-full bg-white"></p-select>
+                </div>
+
+                <div class="w-[15%]">
+                    <input type="text" formControlName="productName" class="w-full p-inputtext bg-white"
+                        [ngClass]="{'border-red-500': getf('productName')?.invalid && getf('productName')?.touched}" />
+                </div>
+
+                <div class="w-[15%]">
+                    <input type="text" formControlName="productDescription" class="w-full p-inputtext bg-white" />
+                </div>
+
+                <div class="w-[10%]">
+                    <input type="number" formControlName="quantity" min="0" class="w-full p-inputtext bg-white"
+                        (change)="onChangeProductQuantity($event)" />
+                </div>
+
+                <div class="w-[10%]">
+                    <p-select [options]="sharedService.getEnums('productUnit')" formControlName="unit"
+                        optionLabel="text" optionValue="value" styleClass="w-full bg-white"></p-select>
+                </div>
+
+                <div class="w-[12%]">
+                    <input type="number" formControlName="unitPrice" class="w-full p-inputtext bg-white"
+                        (input)="onChangeUnitPrice($event)" />
+                </div>
+
+                <div class="w-[12%]">
+                    <p-select [options]="sharedService.getEnums('vatPercentage')" formControlName="vat"
+                        optionLabel="text" optionValue="value" styleClass="w-full bg-white"></p-select>
+                </div>
+
+                <div class="w-[12%]">
+                    <input type="text" formControlName="priceIncVat" class="w-full p-inputtext bg-white" />
+                </div>
             </div>
 
-            <div class="w-[10%]">
-                <input type="number" formControlName="quantity" min="0" 
-                       class="w-full p-inputtext bg-white"
-                       (change)="onChangeProductQuantity($event)" />
-            </div>
+            <div class="flex justify-end items-center gap-3 mt-4">
+                <p-button type="submit" size="large" icon="pi pi-plus"
+                    label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }}"
+                    (click)="onFormSubmit()"></p-button>
+                <p-button size="large"  severity="secondary"
+                    label="{{ this.sharedService.T('cancel') }}" (onClick)="closeProductDialog()"></p-button>
 
-            <div class="w-[10%]">
-                <p-select [options]="sharedService.getEnums('productUnit')" 
-                          formControlName="unit"
-                          optionLabel="text" 
-                          optionValue="value" 
-                          styleClass="w-full bg-white"></p-select>
             </div>
-
-            <div class="w-[12%]">
-                <input type="number" formControlName="unitPrice" 
-                       class="w-full p-inputtext bg-white"
-                       (input)="onChangeUnitPrice($event)" />
-            </div>
-
-            <div class="w-[12%]">
-                <p-select [options]="sharedService.getEnums('vatPercentage')" 
-                          formControlName="vat"
-                          optionLabel="text" 
-                          optionValue="value" 
-                          styleClass="w-full bg-white"></p-select>
-            </div>
-
-            <div class="w-[12%]">
-                <input type="text" formControlName="priceIncVat" 
-                       class="w-full p-inputtext bg-white" />
-            </div>
-        </div>
-
-        <div class="flex justify-end items-center gap-3 mt-4">
-            <p-button size="large"
-                      styleClass="whitespace-nowrap px-5 !bg-darkSky !border-BorderColor !text-lightBlue"
-                      label="{{ this.sharedService.T('cancel') }}" 
-                      (onClick)="closeProductDialog()"></p-button>
-            
-            <p-button type="submit" size="large" 
-                      styleClass="whitespace-nowrap px-5"
-                      label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }}"
-                      (click)="onFormSubmit()"></p-button>
-        </div>
-    </form>
-</p-dialog>
+        </form>
+    </p-dialog>
 
     <p-toast></p-toast>
     <p-confirmDialog></p-confirmDialog>

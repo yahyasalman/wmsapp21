@@ -44,26 +44,26 @@
                 <div class="mt-6">
                   <div class="company-row">
                     <div class="settings-field">
-                      <label class="mb-1 text-Darkgray font-medium" for="workshopName">{{ this.sharedService.T('companyName') }}
+                      <label class="block mb-2" for="workshopName">{{ this.sharedService.T('companyName') }}
                         </label>
                       <input type="text" formControlName="workshopName" placeholder="" class="settings-input"
                         pInputText />
                     </div>
                     <div class="settings-field">
-                      <label class="mb-1 text-Darkgray font-medium" for="registrationId">{{ this.sharedService.T('organizationNumber') }}
+                      <label class="block mb-2" for="registrationId">{{ this.sharedService.T('organizationNumber') }}
                         </label>
                       <input type="text" formControlName="registrationId" placeholder="" class="settings-input"
                         pInputText />
                     </div>
                     <div class="settings-field">
-                      <label class="mb-1 text-Darkgray font-medium" for="vatId">{{ this.sharedService.T('vatRegistrationNumber') }}
+                      <label class="block mb-2" for="vatId">{{ this.sharedService.T('vatRegistrationNumber') }}
                         </label>
                       <input type="text" formControlName="vatId" placeholder="" class="settings-input" pInputText />
                     </div>
                   </div>
                   <div class="mt-7 form-toggle-row">
                     <div class="settings-field form-toggle-block">
-                      <label class="text-Darkgray font-medium">
+                      <label class="block mb-2">
                         {{ this.sharedService.T('approvedForFTax') }}
                       </label>
                       <p-selectButton
@@ -74,7 +74,7 @@
                         formControlName="isFskat"></p-selectButton>
                     </div>
                     <div class="settings-field form-toggle-block">
-                      <label class="text-Darkgray font-medium">{{this.sharedService.T('priceMode')}} [{{this.sharedService.T('priceModeText')}}]</label>
+                      <label class="block mb-2">{{this.sharedService.T('priceMode')}} [{{this.sharedService.T('priceModeText')}}]</label>
                       <p-selectButton
                         class="settings-selectbutton"
                         [options]="priceModeOptions"
@@ -101,22 +101,22 @@
               <div class="settings-card address-card">
                 <h5 class="settings-title mb-5">{{ this.sharedService.T('address') }}</h5>
                 <div class="settings-field mb-7">
-                  <label class="mb-1 text-Darkgray font-medium" for="street">{{ this.sharedService.T('address') }}</label>
+                  <label class="block mb-2" for="street">{{ this.sharedService.T('address') }}</label>
                   <input type="text" formControlName="workshopStreet" placeholder="" class="settings-input settings-input-wide" pInputText />
                 </div>
                 <div class="grid grid-cols-12 gap-5 settings-card-grid">
                   <div class="col-span-12 md:col-span-4 settings-field">
-                    <label class="mb-1 text-Darkgray font-medium" for="postNo">{{ this.sharedService.T('postalCode') }}</label>
+                    <label class="block mb-2" for="postNo">{{ this.sharedService.T('postalCode') }}</label>
                     <input type="text" formControlName="workshopPostNo" placeholder="" class="settings-input settings-input-wide"
                       pInputText />
                   </div>
                   <div class="col-span-12 md:col-span-4 settings-field">
-                    <label class="mb-1 text-Darkgray font-medium" for="city">{{ this.sharedService.T('city') }}</label>
+                    <label class="block mb-2" for="city">{{ this.sharedService.T('city') }}</label>
                     <input type="text" formControlName="workshopCity" placeholder="" class="settings-input settings-input-wide"
                       pInputText />
                   </div>
                   <div class="col-span-12 md:col-span-4 settings-field">
-                    <label class="mb-1 text-Darkgray font-medium" for="country">Country</label>
+                    <label class="block mb-2" for="country">Country</label>
                     <input type="text" formControlName="workshopCountry" placeholder="Sweden" class="settings-input settings-input-wide"
                       readonly pInputText />
                   </div>
@@ -127,13 +127,13 @@
                 <h5 class="settings-title mb-5">Kontaktuppgifter</h5>
                 <div class="contact-row">
                   <div class="settings-field">
-                    <label class="mb-1 text-Darkgray font-medium" for="email">{{ this.sharedService.T('companyEmail') }}</label>
+                    <label class="block mb-2" for="email">{{ this.sharedService.T('companyEmail') }}</label>
                     <input type="email" formControlName="email" placeholder="" class="settings-input" [ngClass]="{
                         'border-red-500': workshop.get('email')?.touched && workshop.get('email')?.invalid
                       }" pInputText />
                   </div>
                   <div class="settings-field">
-                    <label class="mb-1 text-Darkgray font-medium" for="telephone">{{ this.sharedService.T('phone') }}</label>
+                    <label class="block mb-2" for="telephone">{{ this.sharedService.T('phone') }}</label>
                     <input type="tel" formControlName="telephone" placeholder="" class="settings-input" pInputText />
                   </div>
                 </div>
@@ -143,22 +143,22 @@
                 <h5 class="settings-title mb-5">{{ this.sharedService.T('customerPaymentMethod') }}</h5>
                 <div class="payment-row">
                   <div class="payment-field settings-field">
-                    <label class="mb-2 text-Darkgray font-medium" for="bankgiro">Bankgiro</label>
+                    <label class="block mb-2" for="bankgiro">Bankgiro</label>
                     <input type="text" class="my-auto" formControlName="bankgiro" placeholder="" style="width: 100%;"
                       pInputText />
                   </div>
                   <div class="payment-field settings-field">
-                    <label class="mb-2 text-Darkgray font-medium" for="swish">Swish</label>
+                    <label class="block mb-2" for="swish">Swish</label>
                     <input type="number" class="my-auto" formControlName="swish" placeholder="" style="width: 100%;"
                       pInputText />
                   </div>
                   <div class="payment-field settings-field">
-                    <label class="mb-2 text-Darkgray font-medium" for="bic">BIC/Swift</label>
+                    <label class="block mb-2" for="bic">BIC/Swift</label>
                     <input type="text" class="my-auto" formControlName="bic" placeholder="" style="width: 100%;"
                       pInputText />
                   </div>
                   <div class="payment-field settings-field">
-                    <label class="mb-2 text-Darkgray font-medium" for="iban">IBAN</label>
+                    <label class="block mb-2" for="iban">IBAN</label>
                     <input type="text" class="my-auto" formControlName="iban" placeholder="" style="width: 100%;"
                       pInputText />
                   </div>
@@ -181,7 +181,7 @@
                 <img src="assets/images/pdf-img/invoice-pdf.jpg" class="shadow-md" alt="">
                 <div class="flex gap-2 justify-center mt-3">
                   <input type="radio" name="pdfTemp" id="pdf">
-                  <label for="pdf" class="my-auto text-Darkgray font-medium">Urban</label>
+                  <label for="pdf" class="block mb-2">Urban</label>
                   <img src="assets/icons/offers/help.svg" pTooltip="Enter your username" tooltipPosition="top"
                     placeholder="Top" alt="" class="w-4 h-4 my-auto">
                 </div>
@@ -190,7 +190,7 @@
                 <img src="assets/images/pdf-img/invoice-pdf.jpg" class="shadow-md" alt="">
                 <div class="flex gap-2 justify-center mt-3">
                   <input type="radio" name="pdfTemp" id="pdf">
-                  <label for="pdf" class="my-auto text-Darkgray font-medium">Clean</label>
+                  <label for="pdf" class="block mb-2">Clean</label>
                   <img src="assets/icons/offers/help.svg" pTooltip="Enter your username" tooltipPosition="top"
                     placeholder="Top" alt="" class="w-4 h-4 my-auto">
                 </div>
@@ -203,7 +203,7 @@
                 <img src="assets/images/pdf-img/invoice-pdf.jpg" class="shadow-md" alt="">
                 <div class="flex gap-2 justify-center mt-3">
                   <input type="radio" name="pdfTemp" id="pdf">
-                  <label for="pdf" class="my-auto text-Darkgray font-medium">Urban</label>
+                  <label for="pdf" class="block mb-2">Urban</label>
                   <img src="assets/icons/offers/help.svg" pTooltip="Enter your username" tooltipPosition="top"
                     placeholder="Top" alt="" class="w-4 h-4 my-auto">
                 </div>
@@ -212,7 +212,7 @@
                 <img src="assets/images/pdf-img/invoice-pdf.jpg" class="shadow-md" alt="">
                 <div class="flex gap-2 justify-center mt-3">
                   <input type="radio" name="pdfTemp" id="pdf">
-                  <label for="pdf" class="my-auto text-Darkgray font-medium">Clean</label>
+                  <label for="pdf" class="block mb-2">Clean</label>
                   <img src="assets/icons/offers/help.svg" pTooltip="Enter your username" tooltipPosition="top"
                     placeholder="Top" alt="" class="w-4 h-4 my-auto">
                 </div>
@@ -228,24 +228,24 @@
               <div class="bg-White p-5 mb-5 rounded-xl shadow-md">
                 <div class="grid grid-cols-12 gap-3 text-sm">
                   <div class="col-span-6">
-                    <label class="mb-1 text-Darkgray font-medium" for="serviceName">{{ this.sharedService.T('serviceName') }}
+                    <label class="block mb-2" for="serviceName">{{ this.sharedService.T('serviceName') }}
                       <span class="text-red-500">*</span></label>
                     <input formControlName="serviceName" type="text" placeholder="Enter service name" class="w-full"
                       pInputText />
                   </div>
                   <div class="col-span-4">
-                    <label class="mb-1 text-Darkgray font-medium" for="serviceHours">{{ this.sharedService.T('estimatedWorkingTime') }}
+                    <label class="block mb-2" for="serviceHours">{{ this.sharedService.T('estimatedWorkingTime') }}
                        <span class="text-red-500">*</span></label>
                     <input type="number" formControlName="serviceHours" min="0" placeholder="Enter hours" class="w-full"
                       pInputText />
                   </div>
 
                   <div class="flex gap-3 mt-4 col-span-12">
-                    <p-button type="submit" size="large" styleClass="whitespace-nowrap px-3"
+                    <p-button type="submit" size="large" icon="pi pi-plus"
                       [label]="isCreateMode ? 'Create Service' : 'Update Service'" (click)="onServiceFormSubmit()">
                     </p-button>
                     <p-button size="large"
-                      styleClass="whitespace-nowrap px-3 !bg-darkSky !border-BorderColor !text-lightBlue" label="Cancel"
+                     severity="secondary" label="Cancel"
                       (onClick)="onCancelServiceForm()">
                     </p-button>
                   </div>
@@ -322,7 +322,7 @@
                 <div class="customer-toggle-row">
                   <input type="checkbox" [(ngModel)]="newCustomerTag.isDefault" id="isDefaultTag"
                     class="p-checkbox p-component" />
-                  <label for="isDefaultTag" class="text-gray-700">{{ this.sharedService.T('setAsDefault') }}</label>
+                  <label for="isDefaultTag" class="block mb-2">{{ this.sharedService.T('setAsDefault') }}</label>
                 </div>
               </div>
 
@@ -366,7 +366,7 @@
                 <div class="customer-toggle-row">
                   <input type="checkbox" [(ngModel)]="newCustomerType.isDefault" id="isDefaultType"
                     class="p-checkbox p-component" />
-                  <label for="isDefaultType" class="text-gray-700">{{ this.sharedService.T('setAsDefault') }}</label>
+                  <label for="isDefaultType" class="block mb-2">{{ this.sharedService.T('setAsDefault') }}</label>
                 </div>
               </div>
 
@@ -412,13 +412,13 @@
                 <input type="text" [(ngModel)]="newProductTemplate.productTemplateName"
                   [ngModelOptions]="{standalone: true}" placeholder="Enter product template name"
                   class="p-inputtext p-component rounded-md px-4 py-2 w-full focus:outline-none" />
-                <button pButton type="button" [label]="isTemplateEditing ? this.sharedService.T('updateTemplate') : this.sharedService.T('addTemplate')"
+                <button pButton type="button"icon="pi pi-plus" [label]="isTemplateEditing ? this.sharedService.T('updateTemplate') : this.sharedService.T('addTemplate')"
                   class="p-button p-component whitespace-nowrap border-none"
                   [ngClass]="isTemplateEditing ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'"
                   (click)="saveProductTemplates()"></button>
-                <button *ngIf="isTemplateEditing" pButton type="button" label="Cancel"
-                  class="p-button p-component !bg-darkSky !border-BorderColor !text-lightBlue border  px-4 py-2 rounded-md"
-                  (click)="resetNewTemplate()"></button>
+                <p-button  *ngIf="isTemplateEditing" severity="secondary"  size="large"  label="Cancel"
+                  
+                  (click)="resetNewTemplate()"></p-button >
               </div>
             </div>
             <!-- invoice-detail pricemode 0=inkvat,  1=exvat  -->
@@ -539,7 +539,7 @@
                     </div>
                     <div class="w-[7%]">
                       <p-select [options]="this.sharedService.getEnums('detailCategory')" formControlName="category"
-                        optionLabel="text" optionValue="value" styleClass="w-full bg-white" />
+                        optionLabel="text" optionValue="value" class="w-full bg-white" />
                     </div>
                     <div class="w-[15%]">
                       <p-autoComplete class="white_bg_input" formControlName="product" placeholder="Väjl en produkt"
@@ -572,7 +572,7 @@
                     </div>
                     <div class="w-[10%]">
                       <p-select [options]="this.unitOptions" formControlName="unit" optionLabel="text"
-                        optionValue="value" styleClass="w-full bg-white" />
+                        optionValue="value" class="w-full bg-white" />
                     </div>
                     <div class="w-[10%]">
                       <p-inputnumber formControlName="unitPrice" inputId="minmax" mode="decimal" placeholder="0,00"
@@ -584,7 +584,7 @@
                     </div>
                     <div class="w-[10%]">
                       <p-select [options]="this.sharedService.getEnums('vatPercentage')" formControlName="vatPercentage"
-                        optionLabel="text" optionValue="value" styleClass="w-full bg-white"
+                        optionLabel="text" optionValue="value" class="w-full bg-white"
                         (onChange)="onChangeVat(detail)" />
                     </div>
                     <div class="whitespace-nowrap  w-[10%]">
@@ -625,9 +625,9 @@
 
             </div>
             <div class="flex flex-wrap gap-3 mt-4">
-              <p-button size="large" styleClass=" !border-BorderColor !bg-darkSky !text-lightBlue px-3"
+              <p-button size="large"
                 label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus" (click)="addDetailRow(false)"></p-button>
-              <p-button size="large" styleClass=" !border-BorderColor !bg-darkSky !text-lightBlue px-3"
+              <p-button size="large"
                 label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus" (click)="addDetailRow(true)"></p-button>
 
             </div>

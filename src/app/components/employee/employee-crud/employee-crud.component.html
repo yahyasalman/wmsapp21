@@ -1,8 +1,8 @@
-<section class="mt-5 mb-10 bg-White p-8 gap-3 text-sm font-semibold rounded-lg shadow-lg border border-CustomBorder">
+<section class="p-5 pb-10">
   
   <form [formGroup]="employee" (ngSubmit)="onFormSubmit()">
 
-    <div class="grid grid-cols-2 gap-12">
+    <div class="grid grid-cols-2 mt-5 mb-10 bg-White p-8 gap-3 text-sm font-semibold rounded-lg shadow-lg bg-white">
       <!-- Left Section -->
       <div>
         <p class="text-2xl my-6 text-CustomBlack">General Information</p>
@@ -19,7 +19,7 @@
           </div>
 
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="friendlyName">Friendly Name</label>
+            <label class="block mb-2" for="friendlyName">Friendly Name</label>
             <input formControlName="friendlyName" type="text" placeholder="Enter friendly name" class="w-full"
               pInputText />
           </div>
@@ -28,7 +28,7 @@
         <!-- Person Number and Job Title -->
         <div class="grid grid-cols-2 gap-6">
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="personNumber">Person Number <span
+            <label class="block mb-2" for="personNumber">Person Number <span
                 class="text-red-500">*</span></label>
             <input type="text" formControlName="personNumber" inputmode="numeric" pattern="\d{12}" maxlength="12"
               placeholder="input 12 digits" class="w-full" pInputText (input)="onPersonNumberInput($event)"
@@ -36,7 +36,7 @@
           </div>
 
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="jobTitle">Job Title <span class="text-red-500">*</span></label>
+            <label class="block mb-2" for="jobTitle">Job Title <span class="text-red-500">*</span></label>
             <input formControlName="jobTitle" type="text" placeholder="Job title" class="w-full" pInputText />
           </div>
         </div>
@@ -44,13 +44,13 @@
         <!-- Hire Date and Termination Date -->
         <div class="grid grid-cols-2 gap-6">
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="hireDate">Hire Date <span class="text-red-500">*</span></label>
+            <label class="block mb-2" for="hireDate">Hire Date <span class="text-red-500">*</span></label>
             <p-calendar formControlName="hireDate" dataType="string" dateFormat="yy-mm-dd" icon="pi pi-calendar"
               styleClass="w-full" />
           </div>
 
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="terminationDate">Termination Date</label>
+            <label class="block mb-2" for="terminationDate">Termination Date</label>
             <p-calendar formControlName="terminationDate" dataType="string" dateFormat="yy-mm-dd" icon="pi pi-calendar"
               styleClass="w-full" [disabled]="isNewObject" />
           </div>
@@ -59,11 +59,11 @@
         <!-- Monthly Salary and Calendar Color -->
         <div class="grid grid-cols-2 gap-6">
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="monthlySalary">Monthly Salary</label>
+            <label class="block mb-2" for="monthlySalary">Monthly Salary</label>
             <input formControlName="monthlySalary" type="number" placeholder="0" class="w-full" pInputText />
           </div>
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="calendarColor">Calendar Color</label>
+            <label class="block mb-2" for="calendarColor">Calendar Color</label>
             <p-select [options]="calendarColorOptions" optionLabel="text" optionValue="value"
               formControlName="calendarColor" styleClass="w-full" placeholder="Select calendar color" />
           </div>
@@ -71,7 +71,7 @@
 
         @if(!isNewObject) {
         <div class="mb-6">
-          <label class="mb-2 text-Darkgray block" for="isActive">Active Status</label>
+          <label class="block mb-2" for="isActive">Active Status</label>
           <p-select [options]="activeOptions" optionLabel="text" optionValue="value" formControlName="isActive"
             styleClass="w-full" />
         </div>
@@ -79,7 +79,7 @@
 
         <!-- Skills -->
         <div class="mb-6">
-          <label class="mb-2 text-Darkgray block" for="skills">Skills</label>
+          <label class="block mb-2" for="skills">Skills</label>
           <textarea formControlName="skills" maxlength="200" placeholder="Enter skills (max 200 characters)"
             class="w-full p-3 border rounded-md resize-none focus:outline-none focus:border-blue-500"
             rows="3"></textarea>
@@ -88,7 +88,7 @@
 
         <!-- Certifications -->
         <div class="mb-6">
-          <label class="mb-2 text-Darkgray block" for="certifications">Certifications</label>
+          <label class="block mb-2" for="certifications">Certifications</label>
           <textarea formControlName="certifications" maxlength="200"
             placeholder="Enter certifications (max 200 characters)"
             class="w-full p-3 border rounded-md resize-none focus:outline-none focus:border-blue-500"
@@ -105,12 +105,12 @@
         <!-- Telephone and Email -->
         <div class="grid grid-cols-2 gap-6">
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="telephone">Telephone</label>
+            <label class="block mb-2" for="telephone">Telephone</label>
             <input formControlName="telephone" type="tel" inputmode="numeric" pattern="[0-9]*" class="w-full" pInputText
               (input)="onTelephoneInput($event)" (keypress)="onTelephoneKeyPress($event)" />
           </div>
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="email">Email</label>
+            <label class="block mb-2" for="email">Email</label>
             <input formControlName="email" type="email" class="w-full" pInputText />
           </div>
         </div>
@@ -118,11 +118,11 @@
         <!-- Street and Post No -->
         <div class="grid grid-cols-2 gap-6">
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="street">Street</label>
+            <label class="block mb-2" for="street">Street</label>
             <input formControlName="street" type="text" class="w-full" pInputText />
           </div>
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="postNo">Post No</label>
+            <label class="block mb-2" for="postNo">Post No</label>
             <input formControlName="postNo" type="text" class="w-full" pInputText />
           </div>
         </div>
@@ -130,17 +130,17 @@
         <!-- City and Country -->
         <div class="grid grid-cols-2 gap-6">
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="city">City</label>
+            <label class="block mb-2" for="city">City</label>
             <input formControlName="city" type="text" class="w-full" pInputText />
           </div>
           <div class="mb-6">
-            <label class="mb-2 text-Darkgray block" for="country">Country</label>
+            <label class="block mb-2" for="country">Country</label>
             <input formControlName="country" type="text" class="w-full" pInputText />
           </div>
         </div>
 
         <div class="mb-6">
-          <label class="mb-2 text-Darkgray block" for="country">Employee Country</label>
+          <label class="block mb-2" for="country">Employee Country</label>
           <input formControlName="country" type="text" class="w-full" pInputText />
         </div>
       </div>
