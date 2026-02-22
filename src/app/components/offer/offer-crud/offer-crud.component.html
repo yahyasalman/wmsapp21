@@ -16,13 +16,13 @@
 
 <section class="px-5 pb-10 mb-5">
     <form [formGroup]="offer" (keydown.enter)="onEnter($event)">  
-        <div class="grid grid-cols-12 gap-5 mb-6 mt-10 text-sm font-semibold shadow-sm bg-white rounded-md p-5">
+        <div class="grid grid-cols-12 gap-5 mb-6 mt-10 text-sm font-semibold  bg-white rounded-md p-5">
             <div class="md:col-span-6 mb-2">
-                <label class="mb-1" for="customerId">{{ this.sharedService.T('customerName') }}</label>
+                <label class="block mb-2" for="customerId">{{ this.sharedService.T('customerName') }}</label>
                <app-customer-input [customerId]="defaultCustomerId" [customerName]="defaultCustomerName" [showFooter]=false (customerIdChange)="onChangeCustomer($event)"></app-customer-input>
             </div> 
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="offerDate">{{ this.sharedService.T('validFrom') }}</label>
+                <label class="block mb-2" for="offerDate">{{ this.sharedService.T('validFrom') }}</label>
                 <p-date-picker 
                 formControlName= "validFrom" 
                 dataType= "string"
@@ -32,7 +32,7 @@
                  />
             </div>
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="validDays">{{ this.sharedService.T('offer validity(days)') }}</label>
+                <label class="block mb-2" for="validDays">{{ this.sharedService.T('offer validity(days)') }}</label>
                 <input type="number"
                 formControlName= "validDays" 
                 style="width: 100%;"
@@ -42,7 +42,7 @@
                  />
             </div> 
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="dueDate">{{ this.sharedService.T('validTo') }}</label>
+                <label class="block mb-2" for="dueDate">{{ this.sharedService.T('validTo') }}</label>
                 <input type="text"
                 formControlName="validTill"
                 style="width: 100%;"
@@ -50,7 +50,7 @@
                  />
             </div>
             <div class="col-span-3">
-                <label class="block mb-1" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
+                <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
                 <div class="relative">
                   <input
                     pInputText
@@ -69,7 +69,7 @@
                 </div>
               </div> 
             <div class="md:col-span-3 mb-2">
-                <label for="vehicleManufacturer" class="mb-1">{{ this.sharedService.T('vehicleMake') }}</label>
+                <label for="vehicleManufacturer" class="block mb-2">{{ this.sharedService.T('vehicleMake') }}</label>
                  <p-autoComplete 
                     formControlName="vehicleManufacturer"
                     placeholder="" 
@@ -85,7 +85,7 @@
                 </p-autoComplete> 
             </div>
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}
+                <label class="block mb-2" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}
                 </label>
                 <p-autoComplete
                 formControlName="vehicleModel"
@@ -97,43 +97,43 @@
             ></p-autoComplete>
             </div>
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>
+                <label class="block mb-2" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>
                  <p-inputnumber 
                  formControlName="vehicleYear" 
                  inputId="minmax" 
                  mode="decimal" 
                  [min]="1960" 
                  [max]="2040"
+                 class="w-full"
                  [useGrouping]="false"
-                 [inputStyle]="{ 'width': '100%', 'display': 'block' }"
                   />                 
             </div>
-            <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="vehicleMileage">{{ this.sharedService.T('vehicleMileage') }}</label>
+            <div class="md:col-span-2 mb-2 ms-4">
+                <label class="block mb-2" for="vehicleMileage">{{ this.sharedService.T('vehicleMileage') }}</label>
                 <input type="number"
                 formControlName="vehicleMileage"
-                style="width: 100%;"
+                class="w-full"
                 pInputText 
                  />
             </div>
             <div class="md:col-span-3 mb-2">
-                <label class="mb-1" for="paymentType">{{ this.sharedService.T('paymentType') }}</label>
+                <label class="block mb-2" for="paymentType">{{ this.sharedService.T('paymentType') }}</label>
                 <p-select 
                 [options] = "this.sharedService.getEnums('paymentType')"
                 formControlName="paymentType"
                 optionLabel="text"
                 optionValue="value"
+                class="w-full"
                 editable=true
-                styleClass="w-full"
                 
                 />
             </div>
             <div class="md:col-span-3 mb-3">
-                <label class="mb-1" for="yourRef">{{ this.sharedService.T('yourRef') }}</label>
+                <label class="block mb-2" for="yourRef">{{ this.sharedService.T('yourRef') }}</label>
                 <input type="text"
                 formControlName="yourRef"
-                style="width: 100%;"
                 maxlength="50"
+                class="w-full"
                 pInputText 
                  />
             </div>
@@ -247,7 +247,8 @@
                                 formControlName="category"
                                 optionLabel="text"
                                 optionValue="value"
-                                styleClass="w-full bg-white" /> 
+                                  class="w-full" 
+                                 /> 
                         </div> 
                         <div class="w-[15%]">
                             <p-autoComplete 
@@ -308,7 +309,6 @@
                              [maxFractionDigits]="2" 
                              [min]="0"
                              [locale]="this.sharedService.currentLocale"
-                             class="'input-error'"
                              [ngClass]="{'ng-invalid ng-dirty': detail.get('isUnitPriceValid')?.value}"
                              [inputStyle]="{'background-color': 'white', 'width': '100%', 'display': 'block'}"
                              (onInput)="updateDetailRow(detail)"
@@ -373,10 +373,10 @@
         <div class="grid grid-cols-12 w-full mx-auto my-5">
             <div class="md:col-span-8">
                 <div class="flex flex-wrap gap-3 mt-4">
-                    <p-button size="large" styleClass=" !border-BorderColor !bg-darkSky !text-lightBlue px-3" label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus" (click) ="addDetailRow(false)"></p-button>
-                    <p-button size="large" styleClass=" !border-BorderColor !bg-darkSky !text-lightBlue px-3" label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus" (click) =
+                    <p-button size="large" label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus" (click) ="addDetailRow(false)"></p-button>
+                    <p-button size="large" label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus" (click) =
                     "addDetailRow(true)"></p-button>
-                    <p-splitbutton [style]="{'background-color': 'red'}"  text size="large" styleClass="border !border-BorderColor !bg-darkSky hover:!bg-darkSky !text-lightBlue " label="{{ this.sharedService.T('addTemplate') }}" [model]="templates" />
+                    <p-splitbutton [style]="{'background-color': 'red'}"  text size="large" label="{{ this.sharedService.T('addTemplate') }}" [model]="templates" />
                 </div>
             </div>
             <div class="md:col-span-4">
@@ -459,12 +459,12 @@
             <div class="flex mb-5 gap-3">
                 @if(createOffer)
                 {
-                    <p-button type="submit" size="large"  styleClass="border-0 px-5" label="{{ this.sharedService.T('createOffer') }}"  (click)="onFormSubmit()" ></p-button>
+                    <p-button type="submit" size="large"  icon="pi pi-plus" label="{{ this.sharedService.T('createOffer') }}"  (click)="onFormSubmit()" ></p-button>
                 }
                 @else {
-                    <p-button type="submit" size="large" styleClass="border-0 px-5" label="{{ this.sharedService.T('updateOffer') }} "  (click)="onFormSubmit()" ></p-button>
+                    <p-button type="submit" size="large" icon="pi pi-plus" label="{{ this.sharedService.T('updateOffer') }} "  (click)="onFormSubmit()" ></p-button>
                 }
-                    <p-button size="large" styleClass=" !border-sky !bg-darkSky !text-lightBlue px-5" label="{{ this.sharedService.T('cancel') }}" (onClick)="onCancelForm()"></p-button>                
+                    <p-button size="large"   severity="secondary" label="{{ this.sharedService.T('cancel') }}" (onClick)="onCancelForm()"></p-button>                
                 
             </div>
         </div>
