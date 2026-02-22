@@ -6,8 +6,8 @@
       <div class="hidden md:flex items-center gap-8">
         <a href="#funktioner" class="nav-link">Funktioner</a>
         <a href="#priser" class="nav-link">Priser</a>
-        <a href="#omoss" class="nav-link">Om Oss</a>
         <a href="#faq" class="nav-link">FAQ</a>
+        <a href="#contact-form" class="nav-link">Sign up</a>
         <button class="btn-primary" (click)="openDialog()">Logga in</button>
       </div>
 
@@ -72,8 +72,7 @@
     <div class="feature-grid">
       <div class="card fade-in" *ngFor="let feature of features">
         <div class="icon-wrapper">
-          <svg class="w-7 h-7 text-custom-blue-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 10-4 0 2 2 0 004 0z"></path></svg>
+        <span class="material-symbols-outlined text-[var(--color-primary)]">{{ feature.icon }}</span>
         </div>
         <h3 class="card-title">{{ feature.title }}</h3>
         <p class="card-text">{{ feature.description }}</p>
@@ -81,6 +80,377 @@
     </div>
   </div>
 </section>
+
+<!-- Price Section -->
+
+<section id="priser" class="py-20 sm:py-28 bg-custom-bg-light">
+  <div class="container-section">
+
+    <h2 class="section-title text-custom-gray-header fade-in">
+      Enkelt prissystem. Allt ingår.
+    </h2>
+
+    <p class="section-subtitle text-custom-gray-dark fade-in">
+      Inga dolda avgifter, inga tilläggspaket. Alla funktioner inklusive AI Assistant och Digital Servicebok för en fast månadskostnad.
+    </p>
+
+    <div class="price-card fade-in">
+
+      <h3 class="text-2xl font-bold text-custom-gray-header mb-4">
+        Digital Workshop
+      </h3>
+
+      <div class="mb-6">
+        <span class="text-5xl font-extrabold text-custom-blue-primary">499</span>
+        <span class="text-lg text-custom-gray-dark ml-2">kr/användare/månad</span>
+      </div>
+
+      <p class="text-custom-gray-dark mb-8">
+        Perfekt för alla verkstäder - små som stora
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-8 text-left">
+
+        <div>
+          <h4 class="font-semibold text-custom-gray-header mb-3">
+            Alla funktioner ingår
+          </h4>
+
+          <ul class="check-list">
+            <li class="check-item bg-white">
+              <!-- <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg> -->
+              <span class="material-symbols-outlined">group</span>
+              <span>Kundregister2</span>
+            </li>
+
+            <li class="check-item bg-white">
+              <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="bg-white">Offert- & orderhantering</span>
+            </li>
+
+            <li class="check-item bg-white">
+              <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>Digital Servicebok</span>
+            </li>
+
+            <li class="check-item bg-white">
+              <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>AI Assistant</span>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-custom-gray-header mb-3">
+            Fördelar
+          </h4>
+
+          <ul class="check-list">
+            <li class="check-item bg-white">
+              <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>Obegränsade arbetsorder</span>
+            </li>
+
+            <li class="check-item bg-white">
+              <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>Support ingår</span>
+            </li>
+
+            <li class="check-item bg-white">
+              <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>AI-stöd ingår</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <button class="primary-btn">
+        Kom igång idag
+      </button>
+
+      <p class="binding-text mt-2">
+        3 månaders bindningstid gäller
+      </p>
+
+    </div>
+
+    <div class="mt-12 text-center fade-in">
+      <p class="text-lg text-custom-gray-dark max-w-2xl mx-auto">
+        <strong>Inga överraskningar.</strong> Alla priser är per användare och månad exkl. moms.
+      </p>
+
+      <p class="binding-text mt-2">
+        Bindningstid på 3 månader gäller för alla abonnemang
+      </p>
+    </div>
+
+  </div>
+</section>
+   
+
+<section class="py-20 sm:py-24 bg-primary">
+  <div class="container-section text-center fade-in">
+
+    <h2 class="section-title text-white">
+      Redo att ta din verkstad till nästa nivå?
+    </h2>
+
+    <p class="text-xl text-white/90 mb-2">
+      Alla funktioner ingår för endast <span class="font-bold">499 kr/användare/månad</span>
+    </p>
+
+    <p class="text-lg text-white/80 mb-8 font-light">
+      Upptäck hur vår AI Assistant och Digital Servicebok kan effektivisera ditt arbete – boka en kostnadsfri demonstration.
+    </p>
+
+    <button id="open-demo-modal-mid" class="cta-btn btn-white" (click)="openDemo()">
+      Boka en personlig demo
+    </button>
+
+    <p class="binding-text mt-4 text-white/70">
+      3 månaders bindningstid gäller
+    </p>
+
+  </div>
+</section>
+
+
+<!-- Frequently asked questions-->
+
+<section id="faq" class="py-20 sm:py-28 bg-white">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-[var(--color-gray-header)] text-center mb-16 fade-in">
+      Vanliga Frågor
+    </h2>
+
+    <div class="space-y-4">
+
+      <!-- FAQ Items -->
+      <div *ngFor="let faq of faqItems; let i = index" class="rounded-xl p-4 fade-in">
+
+        <button
+          type="button"
+          class="w-full flex items-center justify-between text-left font-bold text-lg text-[var(--color-gray-header)]"
+          [attr.aria-expanded]="faq.expanded"
+          (click)="toggleFaq(i)"
+        >
+          {{ faq.question }}
+
+          <svg
+            class="w-5 h-5 text-[var(--color-primary)] transition-transform duration-300"
+            [class.rotate-180]="faq.expanded"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div *ngIf="faq.expanded" class="pt-4 mt-4 border-t border-gray-100 text-[var(--color-gray-dark)]">
+          {{ faq.answer }}
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="contact-form" class="py-20 sm:py-28 bg-custom-bg-light">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-custom-gray-header text-center mb-12">Sign up </h2>
+        
+        <!-- Success Message -->
+        <div *ngIf="signupSuccess" class="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
+            <div class="mb-4">
+                <svg class="w-16 h-16 mx-auto text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-green-800 mb-2">Registrering Genomförd!</h3>
+            <p class="text-green-700 text-lg">Din ansökan har mottagits. Ditt konto aktiveras snart.</p>
+            <p class="text-green-600 text-sm mt-4">Vi kontaktar dig på den e-postadress du angav.</p>
+        </div>
+        
+        <!-- Sign Up Form -->
+        <form *ngIf="!signupSuccess" [formGroup]="signupForm" (ngSubmit)="onSignupSubmit()" class="bg-white p-8 rounded-2xl shadow-xl">
+            <!-- Company Information Section -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-custom-gray-header mb-6">Företagsinformation</h3>
+                <div class="space-y-4">
+                    <input 
+                        type="text" 
+                        formControlName="companyName"
+                        placeholder="Företagsnamn" 
+                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                        required
+                    >
+                    <input 
+                        type="text" 
+                        formControlName="organizationNumber"
+                        placeholder="Organisationsnummer" 
+                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                        required
+                    >
+                    <input 
+                        type="tel" 
+                        formControlName="phoneNumber"
+                        placeholder="Telefonnummer" 
+                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Divider Gap -->
+            <div class="h-px bg-gray-200 my-8"></div>
+
+            <!-- Login Information Section -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-custom-gray-header mb-6">Loginuppgifter</h3>
+                <div class="space-y-4">
+                    <input 
+                        type="email" 
+                        formControlName="email"
+                        placeholder="E-post" 
+                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                        required
+                    >
+                    <input 
+                        type="password" 
+                        formControlName="password"
+                        placeholder="Lösenord" 
+                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                [disabled]="isSigningUp"
+                class="w-full py-3 rounded-xl bg-[var(--color-primary)] text-white font-extrabold hover:bg-opacity-90 transition duration-150 shadow-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                <span *ngIf="!isSigningUp">Registrera</span>
+                <span *ngIf="isSigningUp" class="flex items-center gap-2">
+                    <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    Registrerar...
+                </span>
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- Demo Modal -->
+<div *ngIf="isDemoModalVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-100 p-4">
+    <div class="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-2xl">
+        <!-- Close Button -->
+        <button 
+            type="button"
+            (click)="closeDemo()" 
+            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label="Stäng demo-fönster"
+        >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+
+        <!-- Success Message -->
+        <div *ngIf="demoSuccess" class="text-center">
+            <div class="mb-4">
+                <svg class="w-16 h-16 mx-auto text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Tack för din intresse!</h3>
+            <p class="text-gray-600 text-lg mb-2">Din demo-förfrågan har mottagits.</p>
+            <p class="text-gray-500 text-sm">Vi kontaktar dig snart på <strong>{{ demoForm.get('email')?.value }}</strong> för att boka in en tid för demo.</p>
+        </div>
+
+        <!-- Demo Form -->
+        <div *ngIf="!demoSuccess">
+            <!-- Modal Content -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold text-custom-gray-header mb-2">Boka din personliga demo!</h3>
+                <p class="text-sm text-custom-gray-dark">Fyll i dina uppgifter så kontaktar vi dig för att boka in en tid som passar dig.</p>
+            </div>
+
+            <!-- Demo Form -->
+            <form [formGroup]="demoForm" (ngSubmit)="onDemoSubmit()" class="space-y-4">
+                <input 
+                    type="text" 
+                    formControlName="name"
+                    placeholder="Ditt Namn" 
+                    class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                    required
+                >
+                <input 
+                    type="text" 
+                    formControlName="companyName"
+                    placeholder="Företagsnamn" 
+                    class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                    required
+                >
+                <input 
+                    type="email" 
+                    formControlName="email"
+                    placeholder="Företags-email" 
+                    class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                    required
+                >
+                <input 
+                    type="tel" 
+                    formControlName="phoneNumber"
+                    placeholder="Telefonnummer" 
+                    class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                    required
+                >
+                <button 
+                    type="submit"
+                    [disabled]="isDemoSubmitting"
+                    class="w-full py-3 rounded-xl bg-custom-blue-primary text-white font-extrabold hover:bg-opacity-90 transition duration-150 shadow-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <span *ngIf="!isDemoSubmitting">Boka demo</span>
+                    <span *ngIf="isDemoSubmitting" class="flex items-center gap-2">
+                        <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a8 8 0 018-8v8H4z"></path>
+                        </svg>
+                        Bokar demo...
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Backdrop Click Handler -->
+<div 
+    *ngIf="isDemoModalVisible" 
+    class="fixed inset-0 z-99" 
+    (click)="closeDemo()"
+></div>
 
 
 
@@ -136,7 +506,7 @@
                   </div>
                   <p-button type="submit" [raised]="true" label="Logga in" size="large"
                     styleClass="flex px-7 mt-5 !border-0" />
-                </div>
+                </div> 
               </form>
             </div>
           </div>
