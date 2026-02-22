@@ -9,7 +9,7 @@
 }
 ::ng-deep.p-autocomplete.p-component.p-inputwrapper input {
     width: 100% !important;
-    padding: .5rem!important;
+    /* padding: .5rem!important; */
   }
   ::ng-deep .white_bg_input .p-inputtext {
     background-color: white !important;
@@ -36,7 +36,6 @@
 }
 
 
-/* input field style */
 .p-autocomplete {
     display: grid !important;
 

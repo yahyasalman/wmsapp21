@@ -1,4 +1,4 @@
-::ng-deep.rounded-pill{
+/* ::ng-deep.rounded-pill{
     border: unset !important;
     padding: 0 !important;
     margin-right: 3px;
@@ -19,7 +19,7 @@
 ::ng-deep .p-autocomplete.p-component.p-inputwrapper input:active {
     outline: none !important;
     box-shadow: none !important;
-}
+} */
 
 /* .cdk-drag-preview {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
