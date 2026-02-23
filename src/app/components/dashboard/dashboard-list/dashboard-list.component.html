@@ -12,23 +12,23 @@
     </div> 
   </div>
 </header>
-    <section class="p-6 pb-12 bg-bgColor">
+    <section class="p-6 pb-12">
       <form [formGroup]="filters">
-
+      <div class="p-8 rounded-lg shadow-lg bg-white ">
 <!-- <section class="px-5 mb-10 pb-10"> -->
     <div class="container mx-auto px-4 py-6">
         <!-- Header with Create Buttons -->
         <div class="flex justify-between items-center mb-6">
         <div class="flex gap-3">
-          <p-button label="{{this.sharedService.T('createWorkorder')}}" size="large" (click)="redirectToOrderCrudComponent()" icon="pi pi-plus"></p-button>
-          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createCustomer')}}" size="large" (click)="redirectToCustomerCrudComponent()"></p-button>
-          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createOffer')}} " size="large" (click)="redirectToOfferCrudComponent()" ></p-button>
-          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createInvoice')}}" size="large" (click)="redirectToInvoiceCrudComponent()" ></p-button>
-          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createProduct')}}" size="large" (click)="redirectToProductCrudComponent()" ></p-button>
+          <p-button label="{{this.sharedService.T('createWorkorder')}}" (click)="redirectToOrderCrudComponent()" icon="pi pi-plus"></p-button>
+          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createCustomer')}}"  (click)="redirectToCustomerCrudComponent()"></p-button>
+          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createOffer')}} "  (click)="redirectToOfferCrudComponent()" ></p-button>
+          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createInvoice')}}"  (click)="redirectToInvoiceCrudComponent()" ></p-button>
+          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createProduct')}}"  (click)="redirectToProductCrudComponent()" ></p-button>
          </div>
         </div>
-        <div class="grid grid-cols-4 gap-4 mb-6">
-            <div *ngIf="outStandingOffers" class="stat-card bg-white rounded-xl p-4 card-shadow">
+        <div class="grid grid-cols-4 gap-4 mb-6 mt-2">
+            <div *ngIf="outStandingOffers" class="stat-card bg-white rounded-xl p-4 card-shadow border-t border-gray-200">
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-500 text-sm">{{this.sharedService.T('unansweredOffers')}}</p>
@@ -41,7 +41,7 @@
                 </div>
             </div>
             
-            <div *ngIf="outStandingInvoices" class="stat-card bg-white rounded-xl p-4 card-shadow">
+            <div *ngIf="outStandingInvoices" class="stat-card bg-white rounded-xl p-4 card-shadow border-t border-gray-200">
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-500 text-sm">{{this.sharedService.T('unpaidInvoices')}}</p>
@@ -54,7 +54,7 @@
                 </div>
             </div>
             
-            <div *ngIf="topManufacturers && topManufacturers.length > 0" class="stat-card bg-white rounded-xl p-4 card-shadow">
+            <div *ngIf="topManufacturers && topManufacturers.length > 0" class="stat-card bg-white rounded-xl p-4 card-shadow border-t border-gray-200">
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-500 text-sm">{{this.sharedService.T('topMake')}}</p>
@@ -67,7 +67,7 @@
                 </div>
             </div>
             
-            <div *ngIf="topCustomers && topCustomers.length > 0" class="stat-card bg-white rounded-xl p-4 card-shadow">
+            <div *ngIf="topCustomers && topCustomers.length > 0" class="stat-card bg-white rounded-xl p-4 card-shadow border-t border-gray-200">
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-500 text-sm">{{this.sharedService.T('topCustomer')}}</p>
@@ -82,7 +82,7 @@
         </div>
 
        <!-- Unified Revenue & Performance Section -->
-<div class="bg-white rounded-xl p-6 card-shadow mb-6">
+<div class="bg-white rounded-xl p-6 card-shadow mb-6 border-t border-gray-200">
   <!-- Header -->
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-xl font-semibold">{{this.sharedService.T('salePerformance')}}</h1>
@@ -192,14 +192,10 @@
 
 
 
-
-
-
-
         <!-- Tables Section -->
-        <div class="grid grid-cols-12 gap-6 mb-6">
+        <div class="grid grid-cols-12 gap-6 mb-6 ">
             <!-- Invoices Table -->
-            <div class="col-span-9 bg-white rounded-xl p-4 card-shadow">
+            <div class="col-span-9 bg-white rounded-xl p-4 card-shadow border-t border-gray-200">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold">{{this.sharedService.T('unpaidInvoicesByCustomers')}}</h3>
                 </div>
@@ -285,7 +281,7 @@
        </div>
             </div>
             <!-- News -->
-                <div class="col-span-3 bg-white rounded-xl p-4 card-shadow">
+                <div class="col-span-3 bg-white rounded-xl p-4 card-shadow border-t border-gray-200">
                 <h3 class="text-lg font-semibold mb-4">News & Updates</h3>
                 <div class="space-y-1">
                     <div class="flex gap-3 p-2 hover:bg-gray-50 rounded-lg transition">
@@ -312,6 +308,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     </form>
 </section>

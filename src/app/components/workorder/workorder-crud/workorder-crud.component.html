@@ -17,28 +17,22 @@
 </header>
 <!-- header end -->
 
-<!-- <section class="px-5 pb-10"> -->
+<section class="px-5 pb-10">
 
 <form [formGroup]="workOrder">
   <p-toast />
-
-  <!-- Portion 1: Grundinformation -->
-  <p class="mt-1 font-semibold text-lg">Grundinformation</p>
-
-
-  <div class="mt-0 mb-5 p-4 rounded-lg shadow-lg border border-CustomBorder">
-    <div class="grid grid-cols-12 gap-5 text-sm font-medium  bg-white rounded-md p-5">
-      <!-- LINE 1: Vehicle plate with EU icon, manufacturer, model, year, mileage -->
-
-      <!-- Vehicle Plate with EU Icon -->
+<!-- <p class="mt-1 font-semibold text-lg">Grundinformation</p> -->
+  <div class="mt-5 mb-10 bg-White p-8 gap-3 rounded-lg shadow-lg bg-white">
+    <div class="grid grid-cols-12 gap-5">
       <div class="col-span-3">
         <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
         <div class="relative">
+             <p-iconfield>
+             <p-inputicon class=" icon-primary pi pi-car" />
           <input pInputText type="text" formControlName="vehiclePlate" maxlength="10" placeholder="ABC123"
             (input)="onInputChange($event)"
-            class="uppercase p-2 border border-gray-300 rounded-md focus:outline-none w-full pl-12 " />
-          <img src="assets/images/eu-flag.png" alt="EU Flag"
-            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-6 w-auto" />
+            class="uppercase p-2 w-full pl-12 " />
+            </p-iconfield>
         </div>
       </div>
 
@@ -53,15 +47,8 @@
       <!-- Vehicle Model -->
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }}</label>
-        <!-- <input
-          type="text"
-          pInputText
-          formControlName="vehicleModel"
-          class="w-full border border-gray-300 rounded-md p-2 focus:outline-none"
-        /> -->
         <p-autoComplete formControlName="vehicleModel" [suggestions]="models" (completeMethod)="filterModels($event)"
           forceSelection="true" [showClear]="true" class="w-full"></p-autoComplete>
-
       </div>
 
       <!-- Gap Between First 3 and Last 2 -->
@@ -83,25 +70,27 @@
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('customerName') }}</label>
         <div class="col-span-3">
+                    <p-iconfield>
+                    <p-inputicon class=" icon-primary pi pi-users" />
 
           <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
             [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
             (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()" [showClear]="true"
             [placeholder]="sharedService.T('chooseCustomer')" styleClass="w-full" class="w-full">
-
             <ng-template let-customer #item>
               <div class="flex items-center gap-2">
                 <div>{{ customer.customerName }}</div>
               </div>
             </ng-template>
-
           </p-autocomplete>
+          </p-iconfield>
         </div>
         <!-- 👇 Add Customer Order Button placed right below customer -->
         <div class="flex items-center gap-4 mt-3">
-          <p-button (click)="openCustomerDialog($event)" [raised]="true"
-            label="{{ this.sharedService.T('createNewCustomer') }}" size="small" icon="pi pi-plus" class="w-full">
+          <p-button (click)="openCustomerDialog($event)" 
+            label="{{ this.sharedService.T('createNewCustomer') }}" variant="outlined" icon="pi pi-plus" class="w-full">
           </p-button>
+
           <p-popover #customerPopup>
             <ng-template pTemplate="content">
               <form [formGroup]="customer">
@@ -193,11 +182,17 @@
       </div>
       <div class="col-span-2">
         <label class="block mb-2">{{ this.sharedService.T('customerTelephone') }}</label>
+        <p-iconfield>
+        <p-inputicon class=" icon-primary pi pi-phone" />
         <input type="text" pInputText formControlName="customerTelephone" class="w-full">
+        </p-iconfield>
       </div>
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('customerEmail') }}</label>
+        <p-iconfield>
+        <p-inputicon class=" icon-primary pi pi-envelope" />
         <input type="email" pInputText formControlName="customerEmail" class="w-full">
+        </p-iconfield>
       </div>
 
       <div class="col-span-2">
@@ -227,9 +222,6 @@
         <p-inputnumber formControlName="serviceDuration" inputId="minmaxfraction" [minFractionDigits]="1"
           [maxFractionDigits]="1" mode="decimal" [min]="0" [max]="125" class="w-full text-black"
           [locale]="this.sharedService.currentLocale"></p-inputnumber>
-
-
-
       </div>
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('mechanic') }}</label>
@@ -247,14 +239,7 @@
           [maxFractionDigits]="1" suffix=" litre" mode="decimal" [min]="0" [max]="25" class="w-full text-black"
           [locale]="this.sharedService.currentLocale"></p-inputnumber>
       </div>
-
-
-    </div>
-  </div>
-  <!-- Portion 2: Bokningsinformation -->
-  <p class="font-semibold text-lg mt-0">{{ this.sharedService.T('bookingInformation') }}</p>
-  <div class="mt-0 mb-5 bg-White p-4 gap-0 font-semibold rounded-lg border border-CustomBorder">
-    <div class="grid grid-cols-12 gap-5 text-sm font-medium bg-white rounded-md p-5">
+      <!-- Booking Line -->
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('bookingDate') }}</label>
         <p-date-picker formControlName="bookingDate" dataType="string" dateFormat="yy-mm-dd" icon="pi pi-calendar"
@@ -278,19 +263,12 @@
           </ng-template>
         </p-select>
       </div>
-    </div>
-  </div>
-
-  <p class="font-semibold text-lg mt-0">
-    {{ this.sharedService.T('purchaseorder') }}
-    <button pButton type="button" class="ml-2 p-button-rounded p-button-text" icon="pi pi-plus"
-      (click)="op.toggle($event)"></button>
-  </p>
-
-  <div class="mt-0 mb-5 bg-white font-semibold rounded-lg border border-CustomBorder">
-    <!-- <div class="grid grid-cols-12 text-sm font-medium shadow-sm bg-white rounded-md p-5"> -->
-    <div class="text-sm font-medium shadow-sm bg-white rounded-md p-5">
-      <p-popover #op>
+      <div class="col-span-7"></div>
+      
+      <!-- Add Purchaseorder Line -->
+      <div class="col-span-1">
+        <p-button label="{{ this.sharedService.T('purchaseorder') }}" variant="outlined" icon="pi pi-plus" (click)="op.toggle($event)" />
+        <p-popover #op>
         <div class="flex flex-col gap-4 w-[25rem]">
           <label class="block mb-2">{{ this.sharedService.T('supplier') }}</label>
           <p-autoComplete [(ngModel)]="newWOPurchase.supplierName" [ngModelOptions]="{ standalone: true }"
@@ -313,8 +291,11 @@
             (click)="saveWOPurchase()"></p-button>
         </div>
       </p-popover>
-
-      <!-- Purchase List -->
+      </div>
+      <div class="col-span-11"></div>
+      <!-- Show Purchaseorder Line -->
+      <div class="col-span-12">
+      <!-- <div class="bg-white rounded-md p-5"> -->
       <div class="flex flex-wrap gap-4 p-0 m-0 w-full">
         <div *ngFor="let purchase of woPurchases; let i = index"
           class="flex items-center bg-white text-gray-800 px-4 py-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200"
@@ -328,26 +309,24 @@
             (click)="removeWOPurchase(purchase)"></button>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Portion 4: TextArea -->
-  <p class="mt-1 font-semibold text-lg">{{ this.sharedService.T('description') }}</p>
-  <div class="bg-White p-4 gap-0 font-semibold rounded-lg shadow-lg border border-CustomBorder">
-    <div class="grid grid-cols-12 gap-5 text-sm font-medium shadow-sm bg-white rounded-md p-5">
+      <!-- </div>         -->
+      </div>
       <div class="col-span-12">
+        <label class="block mb-2">{{ this.sharedService.T('description') }}</label>
         <textarea class="w-full shadow-sm" formControlName="description" rows="5" cols="30" pTextarea
           [autoResize]="true">
         </textarea>
       </div>
+
     </div>
-<div class="mt-4">
-    <p-button [raised]="true"
-      label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }} {{ this.sharedService.T('workorder') }}"
-      icon="pi pi-plus" size="large" (click)="onFormSubmit()"></p-button>
-    <p-button size="large" severity="secondary" class="ms-4" label="{{ this.sharedService.T('cancel') }}"
-      (click)="onCancelForm()"></p-button>
-      </div>
+  
+    <div class="mt-4">
+      <p-button [raised]="true"
+        label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }} {{ this.sharedService.T('workorder') }}"
+        icon="pi pi-plus" size="large" (click)="onFormSubmit()"></p-button>
+      <p-button size="large" severity="secondary" class="ms-4" label="{{ this.sharedService.T('cancel') }}"
+        (click)="onCancelForm()"></p-button>
+    </div>
   </div>
 </form>
-<!-- </section> -->
+</section>

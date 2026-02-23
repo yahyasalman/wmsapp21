@@ -210,109 +210,17 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* =========================
    PrimeNG CUSTOMIZATION
 ========================= */
-
-
-.icon-primary { color: var(--p-primary-600)},
+.icon-primary { color: var(--p-primary-600) !important;},
 
 /* =========================
-   DATATABLE CUSTOMIZATION
+Final revision done We only need following 2 properties to change for tables
 ========================= */
-.p-datatable {
-  min-width: 50rem; /* Ensures the table has a minimum width of 50rem (800px) */
-  font-size: 14px; /* Sets the font size for the entire table */
-  border-collapse: separate; /* Ensures table cells are visually separated */
-  border-spacing: 0px 3px; /* Adds vertical spacing of 3px between rows */
-}
+.p-datatable { border-spacing: 0px 2px; }
+.p-datatable .p-datatable-tbody > tr:hover,.p-selectable-row:hover {  background-color: var(--p-primary-100) !important; } 
 
-.p-datatable .p-datatable-thead > tr,
-.table-header-row {
-  background-color: var(--table-header-bg);
-  border-bottom: 2px solid var(--table-border-color);
-}
-.p-datatable .p-datatable-thead > tr > th,
-.table-header-cell {
-  color: var(--table-text-color);
-  font-weight: 600;
-  text-align: left;
-  padding: 12px 16px;
-  font-size: 14px;
-}
-.p-datatable .p-datatable-tbody > tr,
-.p-selectable-row {
-  background-color: var(--p-surface-0) !important;
-  color: var(--table-text-color);
-  transition: background-color .2s ease-in-out, color .2s ease-in-out;
-}
-.p-datatable .p-datatable-tbody > tr:hover,
-.p-selectable-row:hover {
-  background-color: var(--p-primary-100) !important;
-} 
-.p-datatable .p-datatable-tbody > tr.p-highlight,
-.p-selectable-row.p-highlight {
-  background-color: var(--table-selected-bg) !important;
-  color: var(--table-accent-contrast) !important;
-}
-.p-datatable .p-datatable-tbody > tr > td,
-.p-selectable-row > td {
-  background: transparent !important;
-  border: none !important;
-}
-.p-datatable .p-datatable-tbody > tr:not(:last-child) > td {
-  border-bottom: 1px solid var(--table-border-color) !important;
-}
-.p-datatable .p-datatable-thead > tr > th.id-column-header,
-.id-column-header {
-  font-weight: 700;
-  font-size: 16px;
-  text-align: center;
-  background-color: var( --p-primary-400);
-}
-.p-datatable .p-datatable-tbody > tr > td.id-column-cell,
-.id-column-cell {
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--table-accent);
-  text-align: center;
-  cursor: pointer;
-  transition: background-color .2s ease-in-out;
-}
-.p-datatable .p-datatable-tbody > tr > td.id-column-cell:hover,
-.id-column-cell:hover {
-  background-color: var(--table-selected-bg);
-  border-radius: 4px;
-}
-.id-text {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-weight: 700;
-}
-/* End */ 
-
-.p-paginator {
-  background-color: transparent !important; /* Set background as transparent */
-  box-shadow: none !important; /* Remove any shadow if present */
-  border: none !important; /* Remove any border if present */
-}
 
 
 /* This fix is for select option when it is selected with check mark then this will work */

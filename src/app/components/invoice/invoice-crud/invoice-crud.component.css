@@ -1,97 +1,83 @@
-/* ::ng-deep.rounded-pill{
-    border: unset !important;
-    padding: 0 !important;
-    margin-right: 3px;
-}
-
-::ng-deep.p-autocomplete.p-component.p-inputwrapper {
-    width: 100% !important;
-}
-::ng-deep.p-autocomplete.p-component.p-inputwrapper input {
-    width: 100% !important;
-    padding: .5rem!important;
-  }
-  ::ng-deep .white_bg_input .p-inputtext {
-    background-color: white !important;
-  }
-
-::ng-deep .p-autocomplete.p-component.p-inputwrapper input:focus,
-::ng-deep .p-autocomplete.p-component.p-inputwrapper input:active {
-    outline: none !important;
-    box-shadow: none !important;
-} */
-
-/* .cdk-drag-preview {
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    border: 1px solid #ccc;
-    background-color: grey;
-}
-
-.cdk-drag-placeholder {
-    opacity: 0.5;
-}
-
-.cdk-drag-animating {
-    transition: transform 250ms ease;
-} */
-
+/* Highlight the row while dragging - PREVIEW */
 .cdk-drag-preview {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    border: 2px solid #4F39F6; /* Custom blue border */
-    background: linear-gradient(135deg, #F3F8FF, #CCE0FF); /* Light gradient */
-    border-radius: 8px;
-    transform: scale(1.05); /* Slightly enlarge the preview */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border: 2px dotted #9CA3AF;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  transform: scale(1.02) rotate(2deg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.95;
 }
 
+/* Placeholder (Space where the dragged item will drop) */
 .cdk-drag-placeholder {
-    opacity: 0.8;
-    border: 2px dashed #4F39F6; /* Dashed border for placeholder */
-    background-color: #F3F8FF; /* Light blue background */
-    border-radius: 8px;
-    transition: opacity 0.2s ease, background-color 0.2s ease;
+  border: 2px dotted #9CA3AF;
+  background-color: #F3F4F6;
+  border-radius: 8px;
+  opacity: 0.6;
+  min-height: 72px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Animating State (Smooth transition for dropped items) */
 .cdk-drag-animating {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              border 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Drag Handle (Cursor for draggable items) */
 .cdk-drag-handle {
-    cursor: grab;
+  cursor: grab;
+  transition: color 0.2s ease;
 }
 
 .cdk-drag-handle:active {
-    cursor: grabbing;
+  cursor: grabbing;
+}
+
+/* Highlight the entire row while dragging */
+.invoice-detail-row.dragging-active {
+  border: 2px dotted #9CA3AF !important;
+  background-color: #F9FAFB !important;
+  box-shadow: 0 8px 16px rgba(79, 57, 246, 0.12) !important;
+}
+
+/* Smooth hover effect */
+.invoice-detail-row:hover {
+  border-color: #E5E7EB !important;
+}
+
+/* Focus state for accessibility */
+.invoice-detail-row:focus-within {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Fix for p-autocomplete display issue */
+.p-autocomplete { 
+  display: grid !important;
+}
+.cdk-drag-animating {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Drag Handle (Cursor for draggable items) */
+.cdk-drag-handle {
+  cursor: grab; /* Hand icon to indicate draggable */
+}
+
+.cdk-drag-handle:active {
+  cursor: grabbing; /* Grabbing icon when dragging */
+}
+
+/* Highlight the entire row while dragging */
+.cdk-drag.dragging {
+  border: 2px dotted #B0B0B0 !important; /* Grey dotted border */
+  background-color: #F9F9F9 !important; /* Light grey background */
 }
 
 
-
-/* input field style */
-.p-autocomplete {
-    display: grid !important;
-
-}
-
-.error_border{
-    border: 1px solid red;
-    border-radius: 5px solid red;
-}
-
-  
-::ng-deep .with-out-border .p-inputnumber-input {
-    border: none !important; /* Completely remove borders */
-    box-shadow: none !important; /* Remove any focus shadow */
-    background-color: transparent !important; /* Ensure transparent background */
-    color: #1f2937 !important; /* Ensure consistent text color */
-    padding: 0px !important; /* Remove padding */
-    outline: none !important; /* Remove outline */
-  }
-  
-  ::ng-deep .with-out-border.p-inputwrapper.p-inputnumber.p-component  {
-    border: none !important; /* Remove the wrapper border */
-    box-shadow: none !important; /* Remove any shadow */
-    background-color: transparent !important; /* Ensure transparent background */
-    padding: 0px !important; /* Remove any padding */
-  }
+/* Actually,col-span-6 is not applying on customerName field. After adding this css.it is working fine. I am not sure why it is not working without this css. */
+.p-autocomplete { display: grid !important;}
 
   

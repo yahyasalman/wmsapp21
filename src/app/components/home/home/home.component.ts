@@ -43,6 +43,9 @@ export class HomeComponent {
   invalidMessage: string = '';
   isDialogVisible: boolean = false;
   isLoading: boolean = false; // Loader control variable
+
+  
+  
   mobileMenuOpen = false;
   isSigningUp: boolean = false;
   signupSuccess: boolean = false;

@@ -1,49 +1,83 @@
-::ng-deep.rounded-pill{
-    border: unset !important;
-    padding: 0 !important;
-    margin-right: 3px;
-}
-
-::ng-deep.p-autocomplete.p-component.p-inputwrapper {
-    width: 100% !important;
-}
-::ng-deep.p-autocomplete.p-component.p-inputwrapper input {
-    width: 100% !important;
-    /* padding: .5rem!important; */
-  }
-  ::ng-deep .white_bg_input .p-inputtext {
-    background-color: white !important;
-  }
-
-::ng-deep .p-autocomplete.p-component.p-inputwrapper input:focus,
-::ng-deep .p-autocomplete.p-component.p-inputwrapper input:active {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
+/* Highlight the row while dragging - PREVIEW */
 .cdk-drag-preview {
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    border: 1px solid #ccc;
-    background-color: white;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border: 2px dotted #9CA3AF;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  transform: scale(1.02) rotate(2deg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.95;
 }
 
+/* Placeholder (Space where the dragged item will drop) */
 .cdk-drag-placeholder {
-    opacity: 0.5;
+  border: 2px dotted #9CA3AF;
+  background-color: #F3F4F6;
+  border-radius: 8px;
+  opacity: 0.6;
+  min-height: 72px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Animating State (Smooth transition for dropped items) */
 .cdk-drag-animating {
-    transition: transform 250ms ease;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              border 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Drag Handle (Cursor for draggable items) */
+.cdk-drag-handle {
+  cursor: grab;
+  transition: color 0.2s ease;
+}
+
+.cdk-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Highlight the entire row while dragging */
+.invoice-detail-row.dragging-active {
+  border: 2px dotted #9CA3AF !important;
+  background-color: #F9FAFB !important;
+  box-shadow: 0 8px 16px rgba(79, 57, 246, 0.12) !important;
+}
+
+/* Smooth hover effect */
+.invoice-detail-row:hover {
+  border-color: #E5E7EB !important;
+}
+
+/* Focus state for accessibility */
+.invoice-detail-row:focus-within {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Fix for p-autocomplete display issue */
+.p-autocomplete { 
+  display: grid !important;
+}
+.cdk-drag-animating {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Drag Handle (Cursor for draggable items) */
+.cdk-drag-handle {
+  cursor: grab; /* Hand icon to indicate draggable */
+}
+
+.cdk-drag-handle:active {
+  cursor: grabbing; /* Grabbing icon when dragging */
+}
+
+/* Highlight the entire row while dragging */
+.cdk-drag.dragging {
+  border: 2px dotted #B0B0B0 !important; /* Grey dotted border */
+  background-color: #F9F9F9 !important; /* Light grey background */
 }
 
 
-.p-autocomplete {
-    display: grid !important;
-
-}
-
-.error_border{
-    border: 1px solid red;
-    border-radius: 5px solid red;
-}
+/* Actually,col-span-6 is not applying on customerName field. After adding this css.it is working fine. I am not sure why it is not working without this css. */
+.p-autocomplete { display: grid !important;}
 
   

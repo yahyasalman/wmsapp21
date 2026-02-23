@@ -20,6 +20,8 @@ import { RemovePlaceholderOnFocusDirective } from 'app/directives/remove-placeho
 import { CustomerService } from 'app/services/customer.service';
 import { Popover } from 'primeng/popover';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-order-crud',
@@ -28,7 +30,7 @@ import { GenericLoaderComponent } from 'app/components/shared/generic-loader/gen
   imports: [
     ...SHARED_IMPORTS,
     RemovePlaceholderOnFocusDirective,
-    GenericLoaderComponent
+    GenericLoaderComponent,IconFieldModule,InputIconModule  
   ],
   templateUrl: './workorder-crud.component.html',
   styleUrls: ['./workorder-crud.component.css'],
