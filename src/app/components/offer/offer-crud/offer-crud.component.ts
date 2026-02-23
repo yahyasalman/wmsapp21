@@ -16,6 +16,8 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { catchError } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 
 @Component({
@@ -24,7 +26,7 @@ import { GenericLoaderComponent } from 'app/components/shared/generic-loader/gen
 imports: [
     ...SHARED_IMPORTS,GenericLoaderComponent,
     DragDropModule,
-    CustomerInputComponent
+    CustomerInputComponent,IconFieldModule,InputIconModule
   ],  templateUrl: './offer-crud.component.html',
   styleUrl: './offer-crud.component.css',
   providers: [MessageService]

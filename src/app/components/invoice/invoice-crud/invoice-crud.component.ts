@@ -17,6 +17,9 @@ import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { AiService } from 'app/services/ai.service';
 import { CustomerService } from 'app/services';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+
 
 @Component({
   selector: 'app-create-invoice',
@@ -25,7 +28,7 @@ import { CustomerService } from 'app/services';
     ...SHARED_IMPORTS,
     DragDropModule,
     // CustomerInputComponent,
-    GenericLoaderComponent,
+    GenericLoaderComponent,IconFieldModule,InputIconModule 
   ],
   templateUrl: './invoice-crud.component.html',
   styleUrl: './invoice-crud.component.css',

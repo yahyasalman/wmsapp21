@@ -12,6 +12,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { TimelineModule } from 'primeng/timeline';
 interface WorkshopService { name: string };
 
 @Component({
@@ -19,7 +20,7 @@ interface WorkshopService { name: string };
   standalone: true,
   imports: [
     ...SHARED_IMPORTS,
-    PdfViewerModule, GenericLoaderComponent
+    PdfViewerModule, GenericLoaderComponent,TimelineModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './invoice-detail.component.html'

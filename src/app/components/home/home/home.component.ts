@@ -12,8 +12,15 @@ import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 
 interface Feature {
+  icon: string;
   title: string;
   description: string;
+}
+
+interface FaqItem {
+  question: string;
+  answer: string;
+  expanded: boolean;
 }
 
 @Component({
@@ -31,35 +38,76 @@ interface Feature {
 export class HomeComponent {
   private baseUrl: string = environment.BASE_URL;
   loginForm!: FormGroup;
+  signupForm!: FormGroup;
+  demoForm!: FormGroup;
   invalidMessage: string = '';
   isDialogVisible: boolean = false;
   isLoading: boolean = false; // Loader control variable
   mobileMenuOpen = false;
+  isSigningUp: boolean = false;
+  signupSuccess: boolean = false;
+  isDemoModalVisible: boolean = false;
+  isDemoSubmitting: boolean = false;
+  demoSuccess: boolean = false;
 
   features: Feature[] = [
     {
+      icon: 'group',
       title: 'Kundregister',
-      description: 'Samla all kundinformation på ett ställe.'
+      description: 'Samla all kundinformation på ett ställe med kundspecifika inställningar. Tagga dina kunder, skapa smart segmentering och få full kontroll över din kundöversikt.'
     },
     {
+      icon: 'assignment_turned_in',
       title: 'Skapa Offerter',
-      description: 'Skapa och skicka offerter på minuter.'
+      description: 'Skapa en offert på några minuter och skicka den smidigt via e-post eller WhatsApp med ett klick! När kunden godkänner kan du enkelt konvertera offerten till en arbetsorder eller faktura.'
     },
     {
+      icon: 'engineering',
       title: 'Arbetsorder',
-      description: 'Hantera jobb och resurser effektivt.'
+      description: 'Skapa och följ upp arbetsorder på sekunder – smidigt, snabbt och anpassat för din verkstad! Effektivisera din arbetsdag med smarta funktioner som gör det enkelt att hantera jobb, resurser och uppföljning i realtid.'
     },
     {
+      icon: 'request_quote',
       title: 'Fakturering',
-      description: 'Skapa professionella fakturor direkt.'
+      description: 'Skapa professionella fakturor direkt från arbetsorder eller offerter. Integrering med ekonomisystem gör fakturering enkel och effektiv. Automatiska påminnelser hjälper dig att få betalt i tid.'
     },
     {
+      icon: 'calendar_today',
       title: 'Schemaläggning',
-      description: 'Planera arbetsdagen utan stress.'
+      description: 'Hantera bokningar och resurser smidigt i kalendern. Se direkt när bilar, verktyg och personal är tillgängliga och planera arbetsdagen utan stress.'
     },
     {
+      icon: 'book',
       title: 'Digital Servicebok',
-      description: 'Full servicehistorik för varje fordon.'
+      description: 'Ge dina kunder full transparens med en digital servicebok för varje fordon. All servicehistorik, utförda arbeten och bilder samlas på ett ställe och är lättåtkomlig för både dig och kunden.'
+    }
+  ];
+
+  faqItems: FaqItem[] = [
+    {
+      question: 'Vad ingår i priset på 499 kr/månad?',
+      answer: 'För 499 kr per användare och månad får du tillgång till alla funktioner i Digital Workshop - kundregister, offerthantering, arbetsorder, digital servicebok, schemaläggning, rapporter, statistik och vår AI Assistant.',
+      expanded: false
+    },
+    {
+      question: 'Hur fungerar AI Assistant för vår verkstad?',
+      answer: 'Vår AI Assistant hjälper med diagnostikstöd, prisberäkning, dokumentationshjälp och kundkommunikation.',
+      expanded: false
+    },
+    {
+      question: 'Vad är Digital Servicebok?',
+      answer: 'Digital Servicebok sparar hela servicehistoriken för varje fordon i kundregistret.',
+      expanded: false
+    },
+    {
+      question: 'Hur fungerar kundkommunikationen i systemet?',
+      answer: 'Systemet erbjuder offerter via e-post, WhatsApp och automatiska påminnelser.',
+      expanded: false
+    },
+    {
+      question: 'Kan systemet integreras med mitt bokföringsprogram?',
+      answer: 'Ja, vi har färdiga integrationer mot Fortnox, Visma m.fl.',
+      expanded: false
     }
   ];
 
@@ -79,7 +127,34 @@ export class HomeComponent {
       "email": ['', [Validators.required, Validators.email]],
       "password": ['', Validators.required]
     });
+
+    this.signupForm = this.formBuilder.group({
+      "companyName": ['', Validators.required],
+      "organizationNumber": ['', Validators.required],
+      "phoneNumber": ['', Validators.required],
+      "email": ['', [Validators.required, Validators.email]],
+      "password": ['', [Validators.required, Validators.minLength(6)]]
+    });
+
+    this.demoForm = this.formBuilder.group({
+      "name": ['', Validators.required],
+      "companyName": ['', Validators.required],
+      "email": ['', [Validators.required, Validators.email]],
+      "phoneNumber": ['', Validators.required]
+    });
     
+  }
+
+  toggleFaq(index: number): void {
+    // Close all other FAQs
+    this.faqItems.forEach((item, i) => {
+      if (i !== index) {
+        item.expanded = false;
+      }
+    });
+
+    // Toggle current FAQ
+    this.faqItems[index].expanded = !this.faqItems[index].expanded;
   }
   show() {
     this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Message Content', life: 3000 });
@@ -156,12 +231,102 @@ export class HomeComponent {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 
+  onSignupSubmit(): void {
+    // Mark form as touched to show validation errors
+    this.signupForm.markAllAsTouched();
+
+    // Check if form is valid
+    if (this.signupForm.invalid) {
+      this.messageService.add({ severity: 'error', summary: 'Fel', detail: 'Vänligen fyll alla obligatoriska fält korrekt.' });
+      return;
+    }
+
+    // Show loader
+    this.isSigningUp = true;
+
+    // Call the signup API
+    this.sharedService
+      .signup(this.signupForm.value)
+      .pipe(
+        catchError((error) => {
+          this.logger.error('Signup error:', error);
+          const errorMessage = error?.error?.message || 'Ett oväntat fel uppstod under registreringen.';
+          this.messageService.add({ severity: 'error', summary: 'Registreringsfel', detail: errorMessage });
+          return of(null);
+        }),
+        finalize(() => {
+          this.isSigningUp = false;
+        })
+      )
+      .subscribe((response: any) => {
+        if (response) {
+          this.logger.info('Signup successful:', response);
+          this.signupSuccess = true;
+          this.messageService.add({ severity: 'success', summary: 'Framgång', detail: 'Din registrering är genomförd. Ditt konto aktiveras snart.' });
+          
+          // Optional: Reset form after 5 seconds
+          setTimeout(() => {
+            this.signupSuccess = false;
+            this.signupForm.reset();
+          }, 5000);
+        }
+      });
+  }
+
   openLogin(): void {
     console.log('Open login modal');
   }
 
   openDemo(): void {
-    console.log('Open demo modal');
+    this.isDemoModalVisible = true;
+  }
+
+  closeDemo(): void {
+    this.isDemoModalVisible = false;
+    // Reset demo form when closing modal
+    this.demoForm.reset();
+    this.demoSuccess = false;
+  }
+
+  onDemoSubmit(): void {
+    // Mark form as touched to show validation errors
+    this.demoForm.markAllAsTouched();
+
+    // Check if form is valid
+    if (this.demoForm.invalid) {
+      this.messageService.add({ severity: 'error', summary: 'Fel', detail: 'Vänligen fyll alla obligatoriska fält korrekt.' });
+      return;
+    }
+
+    // Show loader
+    this.isDemoSubmitting = true;
+
+    // Call the bookDemo API
+    this.sharedService
+      .bookDemo(this.demoForm.value)
+      .pipe(
+        catchError((error) => {
+          this.logger.error('Demo booking error:', error);
+          const errorMessage = error?.error?.message || 'Ett oväntat fel uppstod vid bokning av demo.';
+          this.messageService.add({ severity: 'error', summary: 'Bokningsfel', detail: errorMessage });
+          return of(null);
+        }),
+        finalize(() => {
+          this.isDemoSubmitting = false;
+        })
+      )
+      .subscribe((response: any) => {
+        if (response) {
+          this.logger.info('Demo booking successful:', response);
+          this.demoSuccess = true;
+          this.messageService.add({ severity: 'success', summary: 'Framgång', detail: 'Vi kontaktar dig snart på e-postadressen du angav för att boka in tid för demo.' });
+          
+          // Optional: Close modal after 5 seconds
+          setTimeout(() => {
+            this.closeDemo();
+          }, 5000);
+        }
+      });
   }
 
   @HostListener('window:scroll')

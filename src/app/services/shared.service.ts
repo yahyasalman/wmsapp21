@@ -266,6 +266,16 @@ get lang(): 'en' | 'sv' {
     return this.http.post<WmsUser>(`${this.authUrl}/login`, login, {headers});
   }   
 
+  signup(signupData: any){
+    const headers = new HttpHeaders({'Content-Type': 'application/json',});
+    return this.http.post<any>(`${this.authUrl}/signup`, signupData, {headers});
+  }
+
+  bookDemo(demoData: any){
+    const headers = new HttpHeaders({'Content-Type': 'application/json',});
+    return this.http.post<any>(`${this.baseUrl}/api/Demo/bookdemo`, demoData, {headers});
+  }
+
   logout(){
       let userName = sessionStorage.getItem('userName') == null ? '':sessionStorage.getItem('userName');
       const queryParams = new URLSearchParams();

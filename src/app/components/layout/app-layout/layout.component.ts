@@ -89,13 +89,13 @@ export class LayoutComponent implements OnInit {
                         label: this.sharedService.T('dashboard'),
                         materialIcon: 'dashboard',
                         routerLink: '/sv/dashboard',
-                        styleClass: this.selectedRoute === '/sv/dashboard' ? 'active-menu-item' : ''
+                        styleClass: this.selectedRoute.startsWith('/sv/dashboard') ? 'active-menu-item' : ''
                     },
                     {
                         label: this.sharedService.T('customers'),
                         materialIcon: 'group',
                         routerLink:'/sv/customer',
-                        styleClass: this.selectedRoute === '/sv/customer' ? 'active-menu-item' : ''
+                        styleClass: this.selectedRoute.startsWith('/sv/customer') ? 'active-menu-item' : ''
 
                     },
                     {
@@ -139,32 +139,32 @@ export class LayoutComponent implements OnInit {
                         label: this.sharedService.T('suppliers'),
                         materialIcon: 'storefront',
                         routerLink: '/sv/supplier',
-                        styleClass: this.selectedRoute === '/sv/supplier' ? 'active-menu-item' : ''
+                        styleClass: this.selectedRoute.startsWith('/sv/supplier') ? 'active-menu-item' : ''
                     },
 
                    {
                         label: this.sharedService.T('employees'),
                         materialIcon: 'id_card',
                         routerLink: '/sv/employee',
-                        styleClass: this.selectedRoute === '/sv/employee' ? 'active-menu-item' : ''
+                        styleClass: this.selectedRoute.startsWith('/sv/employee') ? 'active-menu-item' : ''
                     },
       {
                         label: this.sharedService.T('attendanceRegister'),
                         materialIcon: 'calendar_today',
                         routerLink: '/sv/employment',
-                        styleClass: this.selectedRoute === '/sv/employment' ? 'active-menu-item' : ''
+                        styleClass: this.selectedRoute.startsWith('/sv/employment') ? 'active-menu-item' : ''
                     },
                   {
                        label: this.sharedService.T('settings'),
                         materialIcon: 'calendar_today',
                         routerLink: '/sv/setting',
-                        styleClass: this.selectedRoute === '/sv/employment' ? 'active-menu-item' : ''
+                        styleClass: this.selectedRoute.startsWith('/sv/employment') ? 'active-menu-item' : ''
                     },
                     {
                        label: this.sharedService.T('logout'),
                         materialIcon: 'calendar_today',
                         routerLink: '/sv/setting',
-                        styleClass: this.selectedRoute === '/sv/employment' ? 'active-menu-item' : ''
+                        styleClass: this.selectedRoute.startsWith('/sv/employment') ? 'active-menu-item' : ''
                     }
 
 

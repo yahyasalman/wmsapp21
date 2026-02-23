@@ -17,26 +17,19 @@
 </header>
 <!-- header end -->
 
-<section class="px-5 pb-10 mb-5">
+<section class="p-5 pb-10">
     <form [formGroup]="invoice" (keydown.enter)="onEnter($event)">
-
-        <div class="grid grid-cols-12 gap-5 mb-6 mt-10 text-sm font-semibold shadow-sm bg-white rounded-md p-5">
+        <div class="mt-5 mb-10 bg-White p-8 gap-3 rounded-lg shadow-lg bg-white">
+        <div class="grid grid-cols-12 gap-5 mb-6 mt-10 p-5">
             <div class="md:col-span-6 mb-2">
-                <label class="mb-1" for="customerId">{{ this.sharedService.T('customerName') }}</label>
-                <!-- <div [ngClass]="{'border border-red-500 rounded-md': errorOnCustomer}">
-                    <app-customer-input [customerId]="defaultCustomerId" [customerName]="defaultCustomerName"
-                        [showFooter]="false" (customerIdChange)="onChangeCustomer($event)">
-                    </app-customer-input>
-                </div> -->
-
-
-                <div class="p-autocomplete p-component p-inputwrapper w-full"
-                    [ngClass]="{'border border-red-500 rounded-md': errorOnCustomer}">
-
+                <label class="mb-2 block" for="customerId">{{ this.sharedService.T('customerName') }}</label>
+                <div>
+                    <p-iconfield>
+                    <p-inputicon class=" icon-primary pi pi-users" />
                     <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
                         [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
                         (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()" [showClear]="true"
-                        [placeholder]="sharedService.T('chooseCustomer')" styleClass="w-full" class="w-full">
+                        [placeholder]="sharedService.T('chooseCustomer')" class="w-full">
 
                         <ng-template let-customer #item>
                             <div class="flex items-center gap-2">
@@ -45,6 +38,7 @@
                         </ng-template>
 
                     </p-autocomplete>
+                    </p-iconfield>
                 </div>
 
 
@@ -54,65 +48,64 @@
 
             </div>
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="invoiceDate">{{ this.sharedService.T('invoiceDate') }}</label>
+                <label class="mb-2 block" for="invoiceDate">{{ this.sharedService.T('invoiceDate') }}</label>
                 <p-date-picker formControlName="invoiceDate" dataType="string" dateFormat="yy-mm-dd"
                     icon="pi pi-calendar" (onSelect)="onSelectInvoiceDate($event)" />
             </div>
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="creditDays">{{ this.sharedService.T('paymentTerms') }} (dagar) </label>
+                <label class="mb-2 block" for="creditDays">{{ this.sharedService.T('paymentTerms') }} (dagar) </label>
                 <input type="number" formControlName="creditDays" style="width: 100%;"
                     (keydown.enter)="$event.preventDefault()" (change)="onChangeCreditDays($event)" pInputText />
             </div>
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="dueDate">{{ this.sharedService.T('dueDate') }}</label>
+                <label class="mb-2 block" for="dueDate">{{ this.sharedService.T('dueDate') }}</label>
                 <input type="text" formControlName="dueDate" style="width: 100%;" pInputText />
             </div>
             <div class="col-span-3">
-                <label class="block mb-1" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
+                <label class="mb-2 block" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
                 <div class="relative">
+                    <p-iconfield>
+                    <p-inputicon class=" icon-primary pi pi-car" />
                     <input pInputText type="text" formControlName="vehiclePlate" maxlength="10" placeholder="ABC123"
                         (input)="onInputChange($event)"
-                        class="uppercase p-2 border border-gray-300 rounded-md focus:outline-none w-full pl-12 " />
-                    <img src="assets/images/eu-flag.png" alt="EU Flag"
-                        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-6 w-auto" />
-                </div>
+                        class="uppercase w-full p-2 pl-12 " />
+                    </p-iconfield>
             </div>
-            <div class="md:col-span-3 mb-2">
-                <label for="vehicleManufacturer" class="mb-1">{{ this.sharedService.T('vehicleMake') }}</label>
+            </div>
+            <div class="col-span-3">
+                <label for="vehicleManufacturer" class="mb-2 block">{{ this.sharedService.T('vehicleMake') }}</label>
                 <p-autoComplete formControlName="vehicleManufacturer" placeholder="" [maxlength]="50"
                     [suggestions]="manufacturers" (completeMethod)="filterManufacturers($event)" [minLength]="1"
                     placeholder="Ange söktext " class="w-full" forceSelection="true" optionLabel="" [showClear]="true">
                 </p-autoComplete>
             </div>
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="vehicleModel">{{ this.sharedService.T('vehicleModel')}}
+                <label class="mb-2 block" for="vehicleModel">{{ this.sharedService.T('vehicleModel')}}
                 </label>
                 <p-autoComplete formControlName="vehicleModel" [suggestions]="models"
                     (completeMethod)="filterModels($event)" forceSelection="true" [showClear]="true"
                     class="w-full"></p-autoComplete>
             </div>
-            <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>
+            <div class="md:col-span-2 mb-2 me-4">
+                <label class="mb-2 block" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>
                 <p-inputnumber formControlName="vehicleYear" inputId="minmax" mode="decimal" [min]="1960" [max]="2040"
                     [useGrouping]="false" [inputStyle]="{ 'width': '100%', 'display': 'block' }" />
             </div>
             <div class="md:col-span-2 mb-2">
-                <label class="mb-1" for="vehicleMileage">{{ this.sharedService.T('vehicleMileage') }}</label>
+                <label class="mb-2 block" for="vehicleMileage">{{ this.sharedService.T('vehicleMileage') }}</label>
                 <input type="number" formControlName="vehicleMileage" style="width: 100%;" pInputText />
             </div>
             <div class="md:col-span-3 mb-2">
-                <label class="mb-1" for="paymentType">{{ this.sharedService.T('paymentType') }}</label>
+                <label class="mb-2 block" for="paymentType">{{ this.sharedService.T('paymentType') }}</label>
                 <p-select [options]="this.sharedService.getEnums('paymentType')" formControlName="paymentType"
                     optionLabel="text" optionValue="value" editable=true styleClass="w-full" />
             </div>
             <div class="md:col-span-3 mb-3">
-                <label class="mb-1" for="yourRef">{{ this.sharedService.T('yourRef') }}</label>
+                <label class="mb-2 block" for="yourRef">{{ this.sharedService.T('yourRef') }}</label>
                 <input type="text" formControlName="yourRef" style="width: 100%;" maxlength="50" pInputText />
             </div>
         </div>
-
         <!-- invoice-detail pricemode 0=inkvat,  1=exvat  -->
-
         <div class="">
             <ng-template #tooltipContent>
                 <div class="flex items-center text-xs">
@@ -215,7 +208,7 @@
                                 class="w-full bg-white border border-gray-300 rounded-md p-2" pTextarea>
   </textarea>
                             <div class="flex flex-col gap-1">
-                                <label class="ml-0" style="font-size: 11px; white-space: nowrap;">
+                                <label class="mb-2 block" style="font-size: 11px; white-space: nowrap;">
                                     {{this.sharedService.T('autoGenerateText')}}: </label>
                                 <div *ngFor="let category of this.sharedService.getEnums('invoicePromptContext')"
                                     class="flex">
@@ -223,7 +216,7 @@
                                         [(ngModel)]="selectedContext" [ngModelOptions]="{standalone: true}"
                                         (onChange)="GenerateInvoiceDescription($event, category, detail.get('rowIndex')?.value)">
                                     </p-checkbox>
-                                    <label [for]="category.key" class="ml-2"
+                                    <label [for]="category.key" class="mb-2 block"
                                         style="font-size: 11px; white-space: nowrap;"> {{ category.text }} </label>
                                 </div>
                             </div>
@@ -346,18 +339,14 @@
 
 
 
-        <div class="grid grid-cols-12 w-full mx-auto my-5">
+        <div class="grid grid-cols-12 w-full mx-auto my-5 ">
             <div class="md:col-span-8">
                 <div class="flex flex-wrap gap-3 mt-4">
-                    <p-button size="large" styleClass=" !border-BorderColor !bg-darkSky !text-lightBlue px-3"
-                        label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus"
+                    <p-button label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus"
                         (click)="addDetailRow(false)"></p-button>
-                    <p-button size="large" styleClass=" !border-BorderColor !bg-darkSky !text-lightBlue px-3"
-                        label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus"
+                    <p-button label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus"
                         (click)="addDetailRow(true)"></p-button>
-                    <p-splitbutton [style]="{'background-color': 'red'}" text size="large"
-                        styleClass="border !border-BorderColor !bg-darkSky hover:!bg-darkSky !text-lightBlue "
-                        label="{{ this.sharedService.T('addTemplate') }}" [model]="templates" />
+                    <p-splitbutton label="{{ this.sharedService.T('addTemplate') }}" [model]="templates" />
                 </div>
             </div>
             <div class="md:col-span-4">
@@ -408,6 +397,7 @@
                 </table>
             </div>
         </div>
+        
         <div class="">
             <!-- end invoice detail     -->
             <div class="border-t-2 border-Thead px-3 my-3">
@@ -416,18 +406,19 @@
             <div class="flex mb-5 gap-3">
                 @if(createInvoice)
                 {
-                <p-button type="submit" size="large" styleClass="border-0 px-5"
+                <p-button type="submit" icon="pi pi-plus" size="large"
                     label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('invoice') }}"
                     (click)="onFormSubmit()"></p-button>
                 }
                 @else {
-                <p-button type="submit" size="large" styleClass="border-0 px-5"
+                <p-button type="submit" icon="pi pi-pencil" size="large"
                     label="{{ this.sharedService.T('update') }} {{ this.sharedService.T('invoice') }}"
                     (click)="onFormSubmit()"></p-button>
                 }
-                <p-button size="large" styleClass=" !border-sky !bg-darkSky !text-lightBlue px-5"
-                    label="{{ this.sharedService.T('cancel') }}" (onClick)="onCancelForm()"></p-button>
+                <p-button size="large" class="me-4"
+                     severity="secondary" label="{{ this.sharedService.T('cancel') }}" (onClick)="onCancelForm()"></p-button>
             </div>
         </div>
+    </div>
     </form>
 </section>

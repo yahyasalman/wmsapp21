@@ -12,14 +12,12 @@
     </div>
   </div>
 </header>
-<!-- header end -->
-<!-- <main class="flex-1 overflow-x-hidden overflow-y-auto bg-bgColor">
-  <div class="container px-4 mx-auto"> -->
-
-    <section class="p-6 pb-12 bg-bgColor">
+    <section class="p-6 pb-10">
       <form [formGroup]="filters">
+      <div class="p-8 rounded-lg shadow-lg bg-white ">
+        
         <!-- Filter Section -->
-        <div class="mb-6 mt-10 text-sm font-medium shadow-sm bg-white rounded-md p-5">
+        <div class="mb-6 mt-1 text-sm font-medium shadow-sm rounded-md p-5">
           <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
             <!-- Left Section: Buttons and Filters -->
             <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
@@ -82,6 +80,7 @@
           <p-table 
           [lazy]="true" 
           [value]="customers" 
+          [showGridlines]="false"  
           [rows]="10"
           [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
           (onLazyLoad)="sortColumn($event)" 
@@ -91,7 +90,7 @@
           data-testid="customer-table">
             <ng-template #header>
               <tr>
-                <th class="id-column-header rounded-l-xl" pSortableColumn="customerId">
+                <th class="rounded-l-xl" pSortableColumn="customerId">
                   <p-sortIcon field="customerId" />
                 </th>
                 <th>{{ this.sharedService.T('customerName') }}</th>
@@ -105,7 +104,7 @@
             </ng-template>
             <ng-template #body let-customer>
               <tr data-testid="customer-row">
-                <td class="id-column-cell rounded-l-lg">
+                <td class="rounded-l-lg">
                   <div class="flex items-center gap-2 cursor-pointer"
                     (click)="redirectToCustomerDetailComponent(customer.customerId)">
                     <span>{{ customer.customerId }}</span>
@@ -114,8 +113,8 @@
                 </td>
 
                 <td title="{{ customer.customerName }}">
-                  <strong> {{ customer.customerName.length > 25 ? (customer.customerName | slice: 0:25) + '...' :
-                    customer.customerName }} </strong>
+                   {{ customer.customerName.length > 25 ? (customer.customerName | slice: 0:25) + '...' :
+                    customer.customerName }} 
                 </td>
                 <td>{{ customer.customerTypeName }}</td>
                 <td>{{ customer.customerTagName }}</td>
@@ -163,7 +162,7 @@
           </div>
         </div>
 
-
+      </div>        
       </form>
     </section>
   <!-- </div>
