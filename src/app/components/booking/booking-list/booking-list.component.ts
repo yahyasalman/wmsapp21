@@ -11,6 +11,7 @@ import { SelectChangeEvent } from 'primeng/select';
 import { catchError, firstValueFrom } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-booking-list',
@@ -18,7 +19,7 @@ import { GenericLoaderComponent } from 'app/components/shared/generic-loader/gen
   imports: [
     ...SHARED_IMPORTS, GenericLoaderComponent
   ], templateUrl: './booking-list.component.html',
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService, MessageService, ConfirmDialogModule],
   styleUrls: ['./booking-list.component.css', './booking-list.colors.css']
 })
 export class BookingListComponent {
@@ -549,4 +550,10 @@ onChangeEmployee() {
     return `py-1 px-2 mb-1 rounded-sm w-fit text-xs font-bold text-[${color}] bg-[#FF1A001A]`
   }
 
+  onCancel(){
+    this.isDialogVisible = false;
+  }
+
 }
+
+

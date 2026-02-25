@@ -1,346 +1,283 @@
-        <!-- header start -->
-        <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
-            <div class="">
-                <p class="font-normal text-2xl">{{ this.sharedService.T('customer') }} #{{this.customer.customerId}} - {{this.customer.customerName}} </p>
-            </div>
-            <div class="flex gap-2">
-                <span class="my-auto">{{ this.sharedService.workshopName}}</span>
-                <div class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
-                   <p>AS</p>
-                </div>
-            </div>
-        </header>
-        <!-- header end -->
-        <!-- <main class="flex-1 overflow-x-hidden overflow-y-auto bg-bgColor">
+<!-- header start -->
+<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
+  <div class="">
+    <p class="font-normal text-2xl">{{ this.sharedService.T('customer') }} #{{this.customer.customerId}} -
+      {{this.customer.customerName}} </p>
+  </div>
+  <div class="flex gap-2">
+    <span class="my-auto">{{ this.sharedService.workshopName}}</span>
+    <div
+      class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
+      <p>AS</p>
+    </div>
+  </div>
+</header>
+<!-- header end -->
+<!-- <main class="flex-1 overflow-x-hidden overflow-y-auto bg-bgColor">
             <div class="container px-4 mx-auto"> -->
 <section class="px-5 pb-10">
-    <!-- Customer Information Section -->
-    <div class="grid grid-cols-12 gap-9 mt-10">
-      <!-- Customer Card -->
-      <div class="col-span-4 bg-white p-5 text-center rounded-xl shadow space-y-3">
-        <div class="h-[70px] w-[70px] rounded-full mx-auto border border-CustomBorder flex items-center justify-center font-medium text-2xl">
-          <p>UM</p>
-        </div>
-        <p class="mx-auto px-3 py-1 rounded-full text-[10px] bg-[#F3F8FF] text-[#0052CC] w-fit">
-          {{ customer.customerTypeName }}
-        </p>
-        <p class="text-2xl font-semibold">{{ customer.customerName }}</p>
-        <p class="text-xs text-Darkgray">
-          Tag: <span class="font-bold">{{ customer.customerTagName }}</span>
-        </p>
-        <p-button 
-          size="small"
-          icon="pi pi-pencil"
-          [label]="this.sharedService.T('editCustomer')"
-          (onClick)="redirectToCustomerCrudComponent()"
-        ></p-button>
-
-
+  <!-- Customer Information Section -->
+  <div class="grid grid-cols-12 gap-9 mt-10">
+    <!-- Customer Card -->
+    <div class="col-span-4 bg-white p-5 text-center rounded-xl shadow space-y-3">
+      <div
+        class="h-[70px] w-[70px] rounded-full mx-auto border border-CustomBorder flex items-center justify-center font-medium text-2xl">
+        <p>UM</p>
       </div>
-  
-      <!-- Customer Details -->
-      <div class="col-span-8 bg-white p-5 rounded-xl shadow">
-        <div class="grid grid-cols-12 gap-4">
-          <div class="lg:col-span-4 md:col-span-6 mb-4">
-            <p class="font-bold text-sm">{{ this.sharedService.T('organizationNumber') }}</p>
-            <p class="text-sm">{{ customer.organizationNo }}</p>
-          </div>
-          <div class="lg:col-span-4 md:col-span-6 mb-4">
-            <p class="font-bold text-sm">{{ this.sharedService.T('careof') }}</p>
-            <p class="text-sm">{{ customer.careOf }}</p>
-          </div>
-          <div class="lg:col-span-4 md:col-span-6 mb-4">
-            <p class="font-bold text-sm">{{ this.sharedService.T('telephone') }}</p>
-            <p class="text-sm">{{ customer.telephone }}</p>
-          </div>
-          <div class="lg:col-span-4 md:col-span-6 mb-4">
-            <p class="font-bold text-sm">{{ this.sharedService.T('email') }}</p>
-            <p class="text-sm">{{ customer.email }}</p>
-          </div>
-          <div class="lg:col-span-4 md:col-span-6 mb-4">
-            <p class="font-bold text-sm">{{ this.sharedService.T('digitalWorkshopId') }}</p>
-            <p class="text-sm">{{ customer.digitalServiceId }}</p>
-          </div>
-          <div class="lg:col-span-4 md:col-span-6 mb-4">
-            <p class="font-bold text-sm">{{ this.sharedService.T('paymentsTerms') }}</p>
-            <p class="text-sm">{{ customer.invoiceCreditDays }} dagar</p>
-          </div>
-          <div class="lg:col-span-4 md:col-span-6 mb-4">
-            <p class="font-bold text-sm">{{ this.sharedService.T('address') }}</p>
-            <p class="text-sm">
-              {{ customer.customerAddress }} {{ customer.customerPostNo }}
-              {{ customer.customerCity }}
-            </p>
-          </div>
-          <div class="lg:col-span-4 md:col-span-6">
-            <p class="font-bold text-sm">{{ this.sharedService.T('creditCustomer') }}</p>
-            <p class="text-sm">{{customer.isCreditAllowed ? this.sharedService.T('yes') : this.sharedService.T('no')}}</p>
-          </div>
+      <p class="mx-auto px-3 py-1 rounded-full text-[10px] bg-[#F3F8FF] text-[#0052CC] w-fit">
+        {{ customer.customerTypeName }}
+      </p>
+      <p class="text-2xl font-semibold">{{ customer.customerName }}</p>
+      <p class="text-xs text-Darkgray">
+        Tag: <span class="font-bold">{{ customer.customerTagName }}</span>
+      </p>
+      <p-button size="small" icon="pi pi-pencil" [label]="this.sharedService.T('editCustomer')"
+        (onClick)="redirectToCustomerCrudComponent()"></p-button>
+
+
+    </div>
+
+    <!-- Customer Details -->
+    <div class="col-span-8 bg-white p-5 rounded-xl shadow">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="lg:col-span-4 md:col-span-6 mb-4">
+          <p class="font-bold text-sm">{{ this.sharedService.T('organizationNumber') }}</p>
+          <p class="text-sm">{{ customer.organizationNo }}</p>
+        </div>
+        <div class="lg:col-span-4 md:col-span-6 mb-4">
+          <p class="font-bold text-sm">{{ this.sharedService.T('careof') }}</p>
+          <p class="text-sm">{{ customer.careOf }}</p>
+        </div>
+        <div class="lg:col-span-4 md:col-span-6 mb-4">
+          <p class="font-bold text-sm">{{ this.sharedService.T('telephone') }}</p>
+          <p class="text-sm">{{ customer.telephone }}</p>
+        </div>
+        <div class="lg:col-span-4 md:col-span-6 mb-4">
+          <p class="font-bold text-sm">{{ this.sharedService.T('email') }}</p>
+          <p class="text-sm">{{ customer.email }}</p>
+        </div>
+        <div class="lg:col-span-4 md:col-span-6 mb-4">
+          <p class="font-bold text-sm">{{ this.sharedService.T('digitalWorkshopId') }}</p>
+          <p class="text-sm">{{ customer.digitalServiceId }}</p>
+        </div>
+        <div class="lg:col-span-4 md:col-span-6 mb-4">
+          <p class="font-bold text-sm">{{ this.sharedService.T('paymentsTerms') }}</p>
+          <p class="text-sm">{{ customer.invoiceCreditDays }} dagar</p>
+        </div>
+        <div class="lg:col-span-4 md:col-span-6 mb-4">
+          <p class="font-bold text-sm">{{ this.sharedService.T('address') }}</p>
+          <p class="text-sm">
+            {{ customer.customerAddress }} {{ customer.customerPostNo }}
+            {{ customer.customerCity }}
+          </p>
+        </div>
+        <div class="lg:col-span-4 md:col-span-6">
+          <p class="font-bold text-sm">{{ this.sharedService.T('creditCustomer') }}</p>
+          <p class="text-sm">{{customer.isCreditAllowed ? this.sharedService.T('yes') : this.sharedService.T('no')}}</p>
         </div>
       </div>
     </div>
-  
-    <!-- Tabs Section -->
-    <div class="mt-10">
-      <p-tabs value="0">
-        <p-tablist>
-          <p-tab value="0">{{ this.sharedService.T('workorders') }}</p-tab>
-          <p-tab value="1">{{ this.sharedService.T('offers') }}</p-tab>
-          <p-tab value="2">{{ this.sharedService.T('invoices') }}</p-tab>
-        </p-tablist>
-        <p-tabpanels>
-          <!-- Offers Tab -->
-          <p-tabpanel value="0">
-            <div class="bg-white p-3 rounded-md mt-3 flex justify-between items-center">
-               <div class="flex gap-5">
-                <div class="flex gap-1 my-auto">
-                  <!-- <span class="text-sm">{{ "p2.totaloffer" | translate }}:</span>
-                  <span class="text-sm font-bold">{{ offerTotal }}</span> -->
-                </div>
-                <div class="flex gap-1 my-auto">
-                  <!-- <span class="text-sm">{{ "p2.accepted" | translate }}:</span>
-                  <span class="text-sm font-bold">{{ offerAccepted }}</span> -->
-                </div>
-                <div class="flex gap-1 my-auto">
-                  <!-- <span class="text-sm">{{ "p2.rejected" | translate }}:</span>
-                  <span class="text-sm font-bold">{{ offerRejected }}</span> -->
-                </div>
-              </div> 
-              <p-button
-                [raised]="true"
-                label="{{this.sharedService.T('createWorkorder')}}"
-                icon="pi pi-plus"
-                size="small"
-                (click)="redirectToWorkOrderCrudComponent()"
-                styleClass="!border-0"
-              ></p-button>
+  </div>
+
+  <!-- Tabs Section -->
+  <div class="mt-10">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0">{{ this.sharedService.T('workorders') }}</p-tab>
+        <p-tab value="1">{{ this.sharedService.T('offers') }}</p-tab>
+        <p-tab value="2">{{ this.sharedService.T('invoices') }}</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <!-- Offers Tab -->
+        <p-tabpanel value="0">
+          <div class="bg-white p-3 rounded-md mt-3 flex justify-between items-center">
+            <div class="flex gap-5">
+              <div class="flex gap-1 my-auto">
+              </div>
+              <div class="flex gap-1 my-auto">
+              </div>
+              <div class="flex gap-1 my-auto">
+              </div>
             </div>
-  
-            <!-- workorder Table -->
-           <div class="">
-            <p-table 
-            [lazy]="true" 
-            [value]="orders" 
-            [rows]="10"
-            [tableStyle]="{'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px',}"
-            (onLazyLoad)="sortWorkOrderTable($event)" 
-            sortField="workOrderId" 
-            responsiveLayout="scroll" 
-            [sortOrder]="-1">
-                <ng-template pTemplate="header">
-                    <tr class="">
-                        <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="workOrderId">
-                            <p-sortIcon field="workOrderId" />
-                          </th>
-                        <th class="table-header-cell">{{ this.sharedService.T('date') }}</th>
-                        <th class="table-header-cell">{{ this.sharedService.T('vehiclePlate') }}</th>
-                        <th class="table-header-cell">{{ this.sharedService.T('vehicleInfo') }}</th>
-                        <th class="table-header-cell">{{ this.sharedService.T('customer') }}</th>                            
-                        <th class="table-header-cell">{{ this.sharedService.T('puchaseorderCount') }}</th>
-                        <th class="table-header-cell">{{ this.sharedService.T('paymentType') }}</th>
-                        <th class="table-header-cell">Status</th>                            
-                        <th class="table-header-cell rounded-r-xl"></th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-order>
-                    <tr class="p-selectable-row">
-                        <td class="id-column-cell rounded-l-lg">
-                            <div
-                              class="flex items-center gap-2 cursor-pointer"
-                              (click)="redirectToWorkOrderDetailComponent(order.workOrderId)"
-                            >
-                              <span class="id-text">{{ order.workOrderId }}</span>
-                              <span class="material-icons text-blue-500 hover:text-blue-700">open_in_new</span>
-                            </div>
-                          </td>
-                          <td>{{ order.workOrderDate }}</td>
-                          <td>
-                            <strong>{{ order.vehiclePlate }} </strong> 
-                           </td>            
-                           <td> {{order?.vehicleManufacturer}} {{order?.vehicleModel}} {{order?.vehicleYear}} </td>
+            <p-button [raised]="true" label="{{this.sharedService.T('createWorkorder')}}" icon="pi pi-plus" size="small"
+              (click)="redirectToWorkOrderCrudComponent()" styleClass="!border-0"></p-button>
+          </div>
 
-                        <td title="{{ order.customerName }}"
-                        (click)="redirectToWorkOrderDetailComponent(order.workOrderId)">
-                        {{ order.customerName.length > 25 ? (order.customerName | slice:0:25) +
-                        '...' : order.customerName }}
-                        </td>
-                        <td >{{ order.poCount }}</td>
-                        <td >{{this.sharedService.getEnumByValue('paymentType',order.paymentType).text}}</td>
-                        <td class="id-column-cell rounded-l-lg">
-                            
-                                <p-select
-                                    [options]="getFilteredEnums(order.workOrderStatus)" 
-                                    [(ngModel)]="order.workOrderStatus" 
-                                    [ngModelOptions]="{ standalone: true }"
-                                    [style]="{ width: '190px' }" 
-                                    [optionLabel]="'text'" 
-                                    [optionValue]="'value'"
-                                    appendTo="body"
-                                    (onChange)="onStatusChange(order.workOrderId, $event.value)" 
-                                  >
-                                  <ng-template let-option pTemplate="item">
-                                    <p-tag [value]="option.text" [severity]="getSeverityWorkOrder(option.value)"></p-tag>
-                                  </ng-template>
-                            
-                                  <!-- Custom Template for Selected Option -->
-                                  <ng-template let-option pTemplate="selectedItem">
-                                        <!-- <span class="id-column-cell id-text">{{ option.text }}</span> -->
-                                         <p-tag [value]="option.text" [severity]="getSeverityWorkOrder(option.value)"></p-tag>
-                                  </ng-template>                                
-                                </p-select>
+          <!-- workorder Table -->
+          <div class="">
+            <p-table [lazy]="true" [value]="orders" [rows]="10"
+              [tableStyle]="{'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px',}"
+              (onLazyLoad)="sortWorkOrderTable($event)" sortField="workOrderId" responsiveLayout="scroll"
+              [sortOrder]="-1">
+              <ng-template pTemplate="header">
+                <tr class="">
+                  <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="workOrderId">
+                    <p-sortIcon field="workOrderId" />
+                  </th>
+                  <th class="table-header-cell">{{ this.sharedService.T('date') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('vehiclePlate') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('vehicleInfo') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('customer') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('puchaseorderCount') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('paymentType') }}</th>
+                  <th class="table-header-cell">Status</th>
+                  <th class="table-header-cell rounded-r-xl"></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-order>
+                <tr class="p-selectable-row">
+                  <td class="id-column-cell rounded-l-lg">
+                    <div class="flex items-center gap-2 cursor-pointer"
+                      (click)="redirectToWorkOrderDetailComponent(order.workOrderId)">
+                      <span class="material-icons text-blue-500 hover:text-blue-700">{{ order.workOrderId }}</span>
 
-                            
-                        </td>
-                        <td>
-                            @if(order.workOrderStatus == 'booking')
-                            {
-                                <p-button
-                                    severity="danger"
-                                    size="small"
-                                    styleClass="icon-only-button !border-0"
-                                    pTooltip="Ta bort bokning"
-                                    tooltipPosition="top"
-                                    (onClick)="deleteBooking(order.workOrderId, $event)"
-                                    icon="pi pi-trash"
-                                    ></p-button>
-                            }
-                        </td>
-                    </tr>
-                </ng-template>
+                    </div>
+                  </td>
+                  <td>{{ order.workOrderDate }}</td>
+                  <td>
+                    <strong>{{ order.vehiclePlate }} </strong>
+                  </td>
+                  <td> {{order?.vehicleManufacturer}} {{order?.vehicleModel}} {{order?.vehicleYear}} </td>
+
+                  <td title="{{ order.customerName }}" (click)="redirectToWorkOrderDetailComponent(order.workOrderId)">
+                    {{ order.customerName.length > 25 ? (order.customerName | slice:0:25) +
+                    '...' : order.customerName }}
+                  </td>
+                  <td>{{ order.poCount }}</td>
+                  <td>{{this.sharedService.getEnumByValue('paymentType',order.paymentType).text}}</td>
+                  <td class="id-column-cell rounded-l-lg">
+
+                    <p-select [options]="getFilteredEnums(order.workOrderStatus)" [(ngModel)]="order.workOrderStatus"
+                      [ngModelOptions]="{ standalone: true }" [style]="{ width: '190px' }" [optionLabel]="'text'"
+                      [optionValue]="'value'" appendTo="body"
+                      (onChange)="onStatusChange(order.workOrderId, $event.value)">
+                      <ng-template let-option pTemplate="item">
+                        <p-tag [value]="option.text" [severity]="getSeverityWorkOrder(option.value)"></p-tag>
+                      </ng-template>
+
+                      <!-- Custom Template for Selected Option -->
+                      <ng-template let-option pTemplate="selectedItem">
+                        <!-- <span class="id-column-cell id-text">{{ option.text }}</span> -->
+                        <p-tag [value]="option.text" [severity]="getSeverityWorkOrder(option.value)"></p-tag>
+                      </ng-template>
+                    </p-select>
+
+
+                  </td>
+                  <td>
+                    @if(order.workOrderStatus == 'booking')
+                    {
+                    <p-button severity="danger" size="small" styleClass="icon-only-button !border-0"
+                      pTooltip="Ta bort bokning" tooltipPosition="top"
+                      (onClick)="deleteBooking(order.workOrderId, $event)" icon="pi pi-trash"></p-button>
+                    }
+                  </td>
+                </tr>
+              </ng-template>
             </p-table>
             <div *ngIf="workOrderPager.totalRecords > 10" class="flex items-center justify-between py-6">
-                <!-- Page Size Dropdown -->
-                <div class="flex items-center">
-                  <p-select
-                    [options]="[10, 20, 30]"
-                    formControlName="pageSize"
-                    styleClass="bg-white border border-CustomBorder rounded-md"
-                    (onChange)="onPageSizeChangeWorkOrder($event)"
-                  ></p-select>
-                </div>
-            
-                <!-- Paginator -->
-                <p-paginator
-                  [first]="workOrderPager.firstPage"
-                  [rows]="workOrderPager.pageSize"
-                  [totalRecords]="workOrderPager.totalRecords"
-                  (onPageChange)="onPageChangeWorkOrder($event)"
-                  [showCurrentPageReport]="true"
-                  [showFirstLastIcon]="true"
-                  currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-                  styleClass="!bg-transparent"
-                >
-                  <ng-template pTemplate="firstpagelinkicon">
-                    <img src="assets/icons/paginator/previus.svg" alt="">
-                  </ng-template>
-                  <ng-template pTemplate="lastpagelinkicon">
-                    <img src="assets/icons/paginator/next.svg" alt="">
-                  </ng-template>
-                  <ng-template pTemplate="previouspagelinkicon">
-                    <div class="flex items-center gap-2">
-                      <div>{{ this.sharedService.T('previous') }}</div>
-                    </div>
-                  </ng-template>
-                  <ng-template pTemplate="nextpagelinkicon">
-                    <div class="flex items-center gap-2">
-                      <div>{{ this.sharedService.T('next') }}</div>
-                    </div>
-                  </ng-template>
-                </p-paginator>
+              <!-- Page Size Dropdown -->
+              <div class="flex items-center">
+                <p-select [options]="[10, 20, 30]" formControlName="pageSize"
+                  styleClass="bg-white border border-CustomBorder rounded-md"
+                  (onChange)="onPageSizeChangeWorkOrder($event)"></p-select>
               </div>
-        </div>
-          </p-tabpanel>
-          
-          <!-- workorder Tab Finish -->
 
-
-          <!-- Offers Tab -->
-          <p-tabpanel value="1">
-            <div class="bg-white p-3 rounded-md mt-3 flex justify-between items-center">
-              <div class="flex gap-5">
-                <div class="flex gap-1 my-auto">
-                  <span class="text-sm">{{ this.sharedService.T('totalSum') }}:</span>
-                  <span class="text-sm font-bold">{{ offerTotal }} SEK</span>
-                </div>
-                <div class="flex gap-1 my-auto">
-                  <span class="text-sm">{{ this.sharedService.T('approved') }}:</span>
-                  <span class="text-sm font-bold">{{ offerAccepted }} SEK </span>
-                </div>
-                <div class="flex gap-1 my-auto">
-                  <span class="text-sm">{{ this.sharedService.T('rejected') }}:</span>
-                  <span class="text-sm font-bold">{{ offerRejected }} SEK</span>
-                </div>
-              </div>
-              <p-button
-                [raised]="true"
-                label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('offer') }}"
-                icon="pi pi-plus"
-                size="small"
-                (click)="redirectToOfferCrudComponent()"
-                styleClass="!border-0"
-              ></p-button>
+              <!-- Paginator -->
+              <p-paginator [first]="workOrderPager.firstPage" [rows]="workOrderPager.pageSize"
+                [totalRecords]="workOrderPager.totalRecords" (onPageChange)="onPageChangeWorkOrder($event)"
+                [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+                styleClass="!bg-transparent">
+                <ng-template pTemplate="firstpagelinkicon">
+                  <img src="assets/icons/paginator/previus.svg" alt="">
+                </ng-template>
+                <ng-template pTemplate="lastpagelinkicon">
+                  <img src="assets/icons/paginator/next.svg" alt="">
+                </ng-template>
+                <ng-template pTemplate="previouspagelinkicon">
+                  <div class="flex items-center gap-2">
+                    <div>{{ this.sharedService.T('previous') }}</div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="nextpagelinkicon">
+                  <div class="flex items-center gap-2">
+                    <div>{{ this.sharedService.T('next') }}</div>
+                  </div>
+                </ng-template>
+              </p-paginator>
             </div>
-  
-            <!-- Offers Table -->
-            <div class="mt-2">
-              <p-table
-                styleClass="text-sm custom-table"
-                [lazy]="true"
-                [value]="offers"
-                [rows]="10"
-                [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
-                (onLazyLoad)="sortOfferTable($event)"
-                sortField="offerId"
-                responsiveLayout="scroll"
-                [sortOrder]="-1"
-              >
-                    <ng-template pTemplate="header" styleClass="">
-                        <tr class="table-header-row">
-                            <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="offerId"><p-sortIcon field="offerId" /></th>
-                            <th class="table-header-cell">{{ this.sharedService.T('vehiclePlate') }}</th>
-                            <th class="table-header-cell">{{ this.sharedService.T('customer') }}</th>
-                            <th class="table-header-cell">{{ this.sharedService.T('amount') }}</th>
-                            <th class="table-header-cell">{{ this.sharedService.T('offerDate') }}</th>
-                            <th class="table-header-cell">{{ this.sharedService.T('validFrom') }}</th>
-                            <th class="table-header-cell">{{ this.sharedService.T('validTo') }}</th>
-                            <th class="table-header-cell">{{ this.sharedService.T('deliveryStatus') }}</th>
-                            <th class="table-header-cell">Status</th>
-                            <th class="table-header-cell rounded-r-xl"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-offer>
-                    <tr class="p-selectable-row">
-                        <td class="id-column-cell rounded-l-lg">
-                            <div
-                            class="flex items-center gap-2 cursor-pointer"
-                            (click)="redirectToOfferDetailComponent(offer.offerId,offer.isSent,offer.isAccepted,offer.isRejected,offer.customerId,offer.customerEmail)"
-                            >
-                            <span class="id-text">{{ offer.offerId }}</span>
-                            <span class="material-icons text-blue-500 hover:text-blue-700">open_in_new</span>
-                            </div>
-                        </td>
-                        <td> <strong>{{ offer.vehiclePlate }}</strong></td>
-                        <td title="{{ offer.customerName }}">
-                            {{ offer.customerName.length > 18 ? (offer.customerName | slice: 0:18) + '...' : offer.customerName }}
-                        </td>
-                        <td >
-                            <p-inputnumber  
-                            [(ngModel)]="offer.priceIncVat" [ngModelOptions]="{standalone: true}"
-                            inputId="minmax" 
-                            mode="currency"
-                            currency="SEK"
-                            [minFractionDigits]="0" 
-                            [maxFractionDigits]="0" 
-                            [locale]="this.sharedService.currentLocale" 
-                            [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
-                            readonly="true"
-                            class="with-out-border"
-                            ></p-inputnumber>
-                        </td>
-                        <td>{{ offer.offerDate }}</td>
-                        <td >{{ offer.validFrom }}</td>
-                        <td >{{ offer.validTill }}</td>
-                        <!-- <td >
+          </div>
+        </p-tabpanel>
+
+        <!-- workorder Tab Finish -->
+
+
+        <!-- Offers Tab -->
+        <p-tabpanel value="1">
+          <div class="bg-white p-3 rounded-md mt-3 flex justify-between items-center">
+            <div class="flex gap-5">
+              <div class="flex gap-1 my-auto">
+                <span class="text-sm">{{ this.sharedService.T('totalSum') }}:</span>
+                <span class="text-sm font-bold">{{ offerTotal }} SEK</span>
+              </div>
+              <div class="flex gap-1 my-auto">
+                <span class="text-sm">{{ this.sharedService.T('approved') }}:</span>
+                <span class="text-sm font-bold">{{ offerAccepted }} SEK </span>
+              </div>
+              <div class="flex gap-1 my-auto">
+                <span class="text-sm">{{ this.sharedService.T('rejected') }}:</span>
+                <span class="text-sm font-bold">{{ offerRejected }} SEK</span>
+              </div>
+            </div>
+            <p-button [raised]="true" label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('offer') }}"
+              icon="pi pi-plus" size="small" (click)="redirectToOfferCrudComponent()" styleClass="!border-0"></p-button>
+          </div>
+
+          <!-- Offers Table -->
+          <div class="mt-2">
+            <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="offers" [rows]="10"
+              [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+              (onLazyLoad)="sortOfferTable($event)" sortField="offerId" responsiveLayout="scroll" [sortOrder]="-1">
+              <ng-template pTemplate="header" styleClass="">
+                <tr class="table-header-row">
+                  <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="offerId"><p-sortIcon
+                      field="offerId" /></th>
+                  <th class="table-header-cell">{{ this.sharedService.T('vehiclePlate') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('customer') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('amount') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('offerDate') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('validFrom') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('validTo') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('deliveryStatus') }}</th>
+                  <th class="table-header-cell">Status</th>
+                  <th class="table-header-cell rounded-r-xl"></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-offer>
+                <tr class="p-selectable-row">
+                  <td class="id-column-cell rounded-l-lg">
+                    <div class="flex items-center gap-2 cursor-pointer"
+                      (click)="redirectToOfferDetailComponent(offer.offerId,offer.isSent,offer.isAccepted,offer.isRejected,offer.customerId,offer.customerEmail)">
+                      <span class="material-icons text-blue-500 hover:text-blue-700">{{ offer.offerId }}</span>
+                    </div>
+                  </td>
+                  <td> <strong>{{ offer.vehiclePlate }}</strong></td>
+                  <td title="{{ offer.customerName }}">
+                    {{ offer.customerName.length > 18 ? (offer.customerName | slice: 0:18) + '...' : offer.customerName
+                    }}
+                  </td>
+                  <td>
+                    <p-inputnumber [(ngModel)]="offer.priceIncVat" [ngModelOptions]="{standalone: true}"
+                      inputId="minmax" mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
+                      [locale]="this.sharedService.currentLocale"
+                      [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
+                      readonly="true" class="with-out-border"></p-inputnumber>
+                  </td>
+                  <td>{{ offer.offerDate }}</td>
+                  <td>{{ offer.validFrom }}</td>
+                  <td>{{ offer.validTill }}</td>
+                  <!-- <td >
                             <div class="form-check form-switch">
                                 <div class="card flex justify-left" >
                                     <p-togglebutton [disabled]="offer.isSent" (onChange)="confirmMarkAsSent($event, offer)" [(ngModel)]="offer.isSent" [ngModelOptions]="{standalone: true}" [onLabel]="this.sharedService.T('sent')" [offLabel]="this.sharedService.T('notsent')" onIcon="pi pi-check" offIcon="pi pi-times" onIcon="pi pi-lock" offIcon="pi pi-lock-open" size="small" styleClass="h-9 w-28 !bg-sky border-0 rounded-md"  />
@@ -348,532 +285,362 @@
 
                             </div>
                         </td> -->
-                        <td>
-                            <p-togglebutton
-                            [disabled]="offer.isSent"
-                            (onChange)="confirmMarkAsSent($event, offer)"
-                            [(ngModel)]="offer.isSent"
-                            [ngModelOptions]="{ standalone: true }"
-                            [onLabel]="this.sharedService.T('sent')"
-                            [offLabel]="this.sharedService.T('notSent')"
-                            onIcon="pi pi-check"
-                            offIcon="pi pi-times"
-                            size="small"
-                            styleClass="h-9 w-28 !bg-sky border-0 rounded-md"
-                            ></p-togglebutton>
-                        </td>
-                        <!-- <td>
-                                    @if(offer.isAccepted)
-                                    {
-                                        <p-message severity="success" styleClass="h-9">{{this.sharedService.getEnumByValue('offerType','accepted').text}}</p-message>
-                                    }
-                                    @else if(offer.isRejected)
-                                    {
-                                        <p-message severity="error" styleClass="h-9">{{this.sharedService.getEnumByValue('offerType','rejected').text}}</p-message>
-                                    }
-                                    @else if(!offer.isAccepted && !offer.isRejected)
-                                    {
-                                        <p-message severity="warn" styleClass="h-9">{{this.sharedService.getEnumByValue('offerType','pending').text}}</p-message>
-                                    }
-                                    @else {
-                                        <p-message severity="info" styleClass="h-9">{{this.sharedService.getEnumByValue('offerType','pending').text}}</p-message>
-                                    }
-                            </td> -->
-                         <td class="id-column-cell rounded-l-lg">
-                            <p-select
-                                [options]="this.sharedService.getEnums('offerType')" 
-                                [(ngModel)]="offer.selectedOfferType" 
-                                [ngModelOptions]="{ standalone: true }"
-                                [style]="{ width: '190px' }" 
-                                [optionLabel]="'text'" 
-                                [optionValue]="'value'"
-                                appendTo="body"
-                                (onChange)="onOfferTypeChange(offer, $event.value)" 
-                                >
-                          <ng-template let-option pTemplate="item">
-                                <p-tag [value]="option.text" [severity]="getSeverityOffer(option.value)"></p-tag>
-                                </ng-template>
-                                <ng-template let-option pTemplate="selectedItem">
-                                        <p-tag [value]="option.text" [severity]="getSeverityOffer(option.value)"></p-tag>
-                                </ng-template>                                 
-                            </p-select>
-                        </td>
+                  <td>
+                    <p-togglebutton [disabled]="offer.isSent" (onChange)="confirmMarkAsSent($event, offer)"
+                      [(ngModel)]="offer.isSent" [ngModelOptions]="{ standalone: true }"
+                      [onLabel]="this.sharedService.T('sent')" [offLabel]="this.sharedService.T('notSent')"
+                      onIcon="pi pi-check" offIcon="pi pi-times" size="small"
+                      styleClass="h-9 w-28 !bg-sky border-0 rounded-md"></p-togglebutton>
+                  </td>
+                  <td class="id-column-cell rounded-l-lg">
+                    <p-select [options]="this.sharedService.getEnums('offerType')" [(ngModel)]="offer.selectedOfferType"
+                      [ngModelOptions]="{ standalone: true }" [style]="{ width: '190px' }" [optionLabel]="'text'"
+                      [optionValue]="'value'" appendTo="body" (onChange)="onOfferTypeChange(offer, $event.value)">
+                      <ng-template let-option pTemplate="item">
+                        <p-tag [value]="option.text" [severity]="getSeverityOffer(option.value)"></p-tag>
+                      </ng-template>
+                      <ng-template let-option pTemplate="selectedItem">
+                        <p-tag [value]="option.text" [severity]="getSeverityOffer(option.value)"></p-tag>
+                      </ng-template>
+                    </p-select>
+                  </td>
 
 
 
 
-                            <td class="!border-0 bg-White">
-                                <svg (click)="generatePdfOffer(offer)" [pTooltip]="this.sharedService.T('tppdf')" tooltipPosition="top" tooltipStyleClass="custom-tooltip" width="24" height="24" viewBox="0 0 24 24" class="my-auto" xmlns="http://www.w3.org/2000/svg">
-                                    <mask id="mask0_2741_3320" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                                    <rect width="24" height="24" fill="#0052CC"/>
-                                    </mask>
-                                    <g mask="url(#mask0_2741_3320)">
-                                    <path d="M9.7115 10.4423H10.827C11.0775 10.4423 11.2876 10.3575 11.4573 10.188C11.6268 10.0185 11.7115 9.80842 11.7115 9.55775V8.44225C11.7115 8.19158 11.6268 7.9815 11.4573 7.812C11.2876 7.6425 11.0775 7.55775 10.827 7.55775H9.26925C9.15125 7.55775 9.048 7.602 8.9595 7.6905C8.87117 7.77883 8.827 7.882 8.827 8V12C8.827 12.118 8.87117 12.2212 8.9595 12.3095C9.048 12.398 9.15125 12.4423 9.26925 12.4423C9.38725 12.4423 9.49042 12.398 9.57875 12.3095C9.66725 12.2212 9.7115 12.118 9.7115 12V10.4423ZM9.7115 9.55775V8.44225H10.827V9.55775H9.7115ZM14.6923 12.4423C14.9429 12.4423 15.153 12.3575 15.3225 12.188C15.4922 12.0185 15.577 11.8084 15.577 11.5577V8.44225C15.577 8.19158 15.4922 7.9815 15.3225 7.812C15.153 7.6425 14.9429 7.55775 14.6923 7.55775H13.173C13.0552 7.55775 12.952 7.602 12.8635 7.6905C12.775 7.77883 12.7308 7.882 12.7308 8V12C12.7308 12.118 12.775 12.2212 12.8635 12.3095C12.952 12.398 13.0552 12.4423 13.173 12.4423H14.6923ZM13.6152 11.5577V8.44225H14.6923V11.5577H13.6152ZM17.577 10.4423H18.327C18.4448 10.4423 18.548 10.398 18.6365 10.3095C18.725 10.2212 18.7693 10.118 18.7693 10C18.7693 9.882 18.725 9.77883 18.6365 9.6905C18.548 9.602 18.4448 9.55775 18.327 9.55775H17.577V8.44225H18.327C18.4448 8.44225 18.548 8.398 18.6365 8.3095C18.725 8.22117 18.7693 8.118 18.7693 8C18.7693 7.882 18.725 7.77883 18.6365 7.6905C18.548 7.602 18.4448 7.55775 18.327 7.55775H17.1345C17.0167 7.55775 16.9135 7.602 16.825 7.6905C16.7365 7.77883 16.6923 7.882 16.6923 8V12C16.6923 12.118 16.7365 12.2212 16.825 12.3095C16.9135 12.398 17.0167 12.4423 17.1345 12.4423C17.2525 12.4423 17.3558 12.398 17.4443 12.3095C17.5328 12.2212 17.577 12.118 17.577 12V10.4423ZM8.05775 17.5C7.55258 17.5 7.125 17.325 6.775 16.975C6.425 16.625 6.25 16.1974 6.25 15.6923V4.30775C6.25 3.80258 6.425 3.375 6.775 3.025C7.125 2.675 7.55258 2.5 8.05775 2.5H19.4423C19.9474 2.5 20.375 2.675 20.725 3.025C21.075 3.375 21.25 3.80258 21.25 4.30775V15.6923C21.25 16.1974 21.075 16.625 20.725 16.975C20.375 17.325 19.9474 17.5 19.4423 17.5H8.05775ZM8.05775 16H19.4423C19.5193 16 19.5898 15.9679 19.6538 15.9038C19.7179 15.8398 19.75 15.7692 19.75 15.6923V4.30775C19.75 4.23075 19.7179 4.16025 19.6538 4.09625C19.5898 4.03208 19.5193 4 19.4423 4H8.05775C7.98075 4 7.91025 4.03208 7.84625 4.09625C7.78208 4.16025 7.75 4.23075 7.75 4.30775V15.6923C7.75 15.7692 7.78208 15.8398 7.84625 15.9038C7.91025 15.9679 7.98075 16 8.05775 16ZM4.55775 21C4.05258 21 3.625 20.825 3.275 20.475C2.925 20.125 2.75 19.6974 2.75 19.1923V7.05775C2.75 6.84525 2.82192 6.66708 2.96575 6.52325C3.10958 6.37958 3.28775 6.30775 3.50025 6.30775C3.71292 6.30775 3.89108 6.37958 4.03475 6.52325C4.17825 6.66708 4.25 6.84525 4.25 7.05775V19.1923C4.25 19.2693 4.28208 19.3398 4.34625 19.4038C4.41025 19.4679 4.48075 19.5 4.55775 19.5H16.6923C16.9047 19.5 17.0829 19.5719 17.2268 19.7157C17.3704 19.8596 17.4423 20.0378 17.4423 20.2502C17.4423 20.4629 17.3704 20.641 17.2268 20.7845C17.0829 20.9282 16.9047 21 16.6923 21H4.55775Z" fill="#0052CC"/>
-                                    </g>
-                                </svg>                            
-                            </td>                            
-                        </tr>
-                    </ng-template>
-              </p-table>
-  
-              <!-- Pager for Offers -->
-              <div *ngIf="offerPager.totalRecords > 10" class="flex justify-between py-4">
-                <div class="my-auto">
-                  <p-select
-                    [options]="[10, 20, 30]"
-                    formControlName="pageSize"
-                    styleClass="bg-white border border-CustomBorder rounded-md"
-                    (onChange)="onPageSizeChangeOffer($event)"
-                  ></p-select>
-                </div>
-                <p-paginator
-                  [first]="offerPager.firstPage"
-                  [rows]="offerPager.pageSize"
-                  [totalRecords]="offerPager.totalRecords"
-                  (onPageChange)="onPageChangeOffer($event)"
-                  [showCurrentPageReport]="true"
-                  [showFirstLastIcon]="true"
-                  currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-                  styleClass="!bg-transparent"
-                ></p-paginator>
+                  <td class="!border-0 bg-White">
+                    <svg (click)="generatePdfOffer(offer)" [pTooltip]="this.sharedService.T('tppdf')"
+                      tooltipPosition="top" tooltipStyleClass="custom-tooltip" width="24" height="24"
+                      viewBox="0 0 24 24" class="my-auto" xmlns="http://www.w3.org/2000/svg">
+                      <mask id="mask0_2741_3320" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
+                        width="24" height="24">
+                        <rect width="24" height="24" fill="#0052CC" />
+                      </mask>
+                      <g mask="url(#mask0_2741_3320)">
+                        <path
+                          d="M9.7115 10.4423H10.827C11.0775 10.4423 11.2876 10.3575 11.4573 10.188C11.6268 10.0185 11.7115 9.80842 11.7115 9.55775V8.44225C11.7115 8.19158 11.6268 7.9815 11.4573 7.812C11.2876 7.6425 11.0775 7.55775 10.827 7.55775H9.26925C9.15125 7.55775 9.048 7.602 8.9595 7.6905C8.87117 7.77883 8.827 7.882 8.827 8V12C8.827 12.118 8.87117 12.2212 8.9595 12.3095C9.048 12.398 9.15125 12.4423 9.26925 12.4423C9.38725 12.4423 9.49042 12.398 9.57875 12.3095C9.66725 12.2212 9.7115 12.118 9.7115 12V10.4423ZM9.7115 9.55775V8.44225H10.827V9.55775H9.7115ZM14.6923 12.4423C14.9429 12.4423 15.153 12.3575 15.3225 12.188C15.4922 12.0185 15.577 11.8084 15.577 11.5577V8.44225C15.577 8.19158 15.4922 7.9815 15.3225 7.812C15.153 7.6425 14.9429 7.55775 14.6923 7.55775H13.173C13.0552 7.55775 12.952 7.602 12.8635 7.6905C12.775 7.77883 12.7308 7.882 12.7308 8V12C12.7308 12.118 12.775 12.2212 12.8635 12.3095C12.952 12.398 13.0552 12.4423 13.173 12.4423H14.6923ZM13.6152 11.5577V8.44225H14.6923V11.5577H13.6152ZM17.577 10.4423H18.327C18.4448 10.4423 18.548 10.398 18.6365 10.3095C18.725 10.2212 18.7693 10.118 18.7693 10C18.7693 9.882 18.725 9.77883 18.6365 9.6905C18.548 9.602 18.4448 9.55775 18.327 9.55775H17.577V8.44225H18.327C18.4448 8.44225 18.548 8.398 18.6365 8.3095C18.725 8.22117 18.7693 8.118 18.7693 8C18.7693 7.882 18.725 7.77883 18.6365 7.6905C18.548 7.602 18.4448 7.55775 18.327 7.55775H17.1345C17.0167 7.55775 16.9135 7.602 16.825 7.6905C16.7365 7.77883 16.6923 7.882 16.6923 8V12C16.6923 12.118 16.7365 12.2212 16.825 12.3095C16.9135 12.398 17.0167 12.4423 17.1345 12.4423C17.2525 12.4423 17.3558 12.398 17.4443 12.3095C17.5328 12.2212 17.577 12.118 17.577 12V10.4423ZM8.05775 17.5C7.55258 17.5 7.125 17.325 6.775 16.975C6.425 16.625 6.25 16.1974 6.25 15.6923V4.30775C6.25 3.80258 6.425 3.375 6.775 3.025C7.125 2.675 7.55258 2.5 8.05775 2.5H19.4423C19.9474 2.5 20.375 2.675 20.725 3.025C21.075 3.375 21.25 3.80258 21.25 4.30775V15.6923C21.25 16.1974 21.075 16.625 20.725 16.975C20.375 17.325 19.9474 17.5 19.4423 17.5H8.05775ZM8.05775 16H19.4423C19.5193 16 19.5898 15.9679 19.6538 15.9038C19.7179 15.8398 19.75 15.7692 19.75 15.6923V4.30775C19.75 4.23075 19.7179 4.16025 19.6538 4.09625C19.5898 4.03208 19.5193 4 19.4423 4H8.05775C7.98075 4 7.91025 4.03208 7.84625 4.09625C7.78208 4.16025 7.75 4.23075 7.75 4.30775V15.6923C7.75 15.7692 7.78208 15.8398 7.84625 15.9038C7.91025 15.9679 7.98075 16 8.05775 16ZM4.55775 21C4.05258 21 3.625 20.825 3.275 20.475C2.925 20.125 2.75 19.6974 2.75 19.1923V7.05775C2.75 6.84525 2.82192 6.66708 2.96575 6.52325C3.10958 6.37958 3.28775 6.30775 3.50025 6.30775C3.71292 6.30775 3.89108 6.37958 4.03475 6.52325C4.17825 6.66708 4.25 6.84525 4.25 7.05775V19.1923C4.25 19.2693 4.28208 19.3398 4.34625 19.4038C4.41025 19.4679 4.48075 19.5 4.55775 19.5H16.6923C16.9047 19.5 17.0829 19.5719 17.2268 19.7157C17.3704 19.8596 17.4423 20.0378 17.4423 20.2502C17.4423 20.4629 17.3704 20.641 17.2268 20.7845C17.0829 20.9282 16.9047 21 16.6923 21H4.55775Z"
+                          fill="#0052CC" />
+                      </g>
+                    </svg>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+
+            <!-- Pager for Offers -->
+            <div *ngIf="offerPager.totalRecords > 10" class="flex justify-between py-4">
+              <div class="my-auto">
+                <p-select [options]="[10, 20, 30]" formControlName="pageSize"
+                  (onChange)="onPageSizeChangeOffer($event)"></p-select>
+              </div>
+              <p-paginator [first]="offerPager.firstPage" [rows]="offerPager.pageSize"
+                [totalRecords]="offerPager.totalRecords" (onPageChange)="onPageChangeOffer($event)"
+                [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"></p-paginator>
+            </div>
+          </div>
+        </p-tabpanel>
+
+        <!-- Invoices Tab -->
+        <p-tabpanel value="2">
+          <div class="bg-white p-3 rounded-md mt-3 flex justify-between items-center">
+            <div class="flex gap-5">
+              <div class="flex gap-1 my-auto">
+                <span class="text-sm">{{ this.sharedService.T('totalSum') }}:</span>
+                <span class="text-sm font-bold">{{ invoiceTotal }} SEK</span>
+              </div>
+              <div class="flex gap-1 my-auto">
+                <span class="text-sm">{{ this.sharedService.T('paid') }}:</span>
+                <span class="text-sm font-bold">{{ invoicePaid }} SEK</span>
+              </div>
+              <div class="flex gap-1 my-auto">
+                <span class="text-sm">{{ this.sharedService.T('outstandingBalance') }}:</span>
+                <span class="text-sm font-bold">{{ invoiceBalance }} SEK</span>
               </div>
             </div>
-          </p-tabpanel>
-        
-                   <!-- Invoices Tab -->
-          <p-tabpanel value="2">
-            <div class="bg-white p-3 rounded-md mt-3 flex justify-between items-center">
-              <div class="flex gap-5">
-                <div class="flex gap-1 my-auto">
-                  <span class="text-sm">{{ this.sharedService.T('totalSum') }}:</span>
-                  <span class="text-sm font-bold">{{ invoiceTotal }} SEK</span>
-                </div>
-                <div class="flex gap-1 my-auto">
-                  <span class="text-sm">{{ this.sharedService.T('paid') }}:</span>
-                  <span class="text-sm font-bold">{{ invoicePaid }} SEK</span>
-                </div>
-                <div class="flex gap-1 my-auto">
-                  <span class="text-sm">{{ this.sharedService.T('outstandingBalance') }}:</span>
-                  <span class="text-sm font-bold">{{ invoiceBalance }} SEK</span>
-                </div>
-              </div>
-              <p-button
-                [raised]="true"
-                label="{{ this.sharedService.T('btncreateInvoice') }}"
-                icon="pi pi-plus"
-                size="small"
-                (click)="redirectToInvoiceCrudComponent()"
-                styleClass="!border-0"
-              ></p-button>
-            </div>
-  
-            <!-- Invoices Table -->
-            <div class="mt-2">
-                <p-table
-                styleClass="text-sm custom-table"
-                [lazy]="true"
-                [value]="invoices"
-                [rows]="10"
-                [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
-                (onLazyLoad)="sortInvoiceTable($event)"
-                sortField="invoiceId"
-                responsiveLayout="scroll"
-                [sortOrder]="-1"
-                >
-                <!-- Table Header -->
-                <ng-template #header>
-                    <tr class="table-header-row">
+            <p-button [raised]="true" label="{{ this.sharedService.T('btncreateInvoice') }}" icon="pi pi-plus"
+              size="small" (click)="redirectToInvoiceCrudComponent()" styleClass="!border-0"></p-button>
+          </div>
+
+          <!-- Invoices Table -->
+          <div class="mt-2">
+            <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="invoices" [rows]="10"
+              [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+              (onLazyLoad)="sortInvoiceTable($event)" sortField="invoiceId" responsiveLayout="scroll" [sortOrder]="-1">
+              <!-- Table Header -->
+              <ng-template #header>
+                <tr class="table-header-row">
                   <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="invoiceId">
                     <p-sortIcon field="invoiceId" />
                   </th>
-                    <th class="table-header-cell">{{ this.sharedService.T('customer') }}</th>
-                    <th class="table-header-cell">{{ this.sharedService.T('vehiclePlate') }}</th>
-                    <th class="table-header-cell">{{ this.sharedService.T('amount') }}</th>
-                    <th class="table-header-cell">{{ this.sharedService.T('invoiceDate') }}</th>
-                    <th class="table-header-cell">{{ this.sharedService.T('dueDate') }}</th>
-                    <th class="table-header-cell">{{ this.sharedService.T('paymentType') }}</th>
-                    <th class="table-header-cell">{{ this.sharedService.T('paymentStatus') }}</th>
-                    <th class="table-header-cell">{{ this.sharedService.T('deliveryStatus') }}</th>
-                    <th class="table-header-cell">{{ this.sharedService.T('remarks') }}</th>
-                    <th class="table-header-cell rounded-r-xl"></th>
-                    </tr>
-                </ng-template>
+                  <th class="table-header-cell">{{ this.sharedService.T('customer') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('vehiclePlate') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('amount') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('invoiceDate') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('dueDate') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('paymentType') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('paymentStatus') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('deliveryStatus') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('remarks') }}</th>
+                  <th class="table-header-cell rounded-r-xl"></th>
+                </tr>
+              </ng-template>
 
-                <!-- Table Body -->
-                <ng-template #body let-invoice>
-                    <tr class="p-selectable-row">
-                    <td class="id-column-cell rounded-l-lg">
-                      <div
-                        class="flex items-center gap-2"
-                        (click)="redirectToInvoiceDetailComponent(invoice.isSent, invoice.isPaid, invoice.priceIncVat, invoice.customerId, invoice.customerEmail, invoice.invoiceId)"
-                      >
-                        <span class="id-text">{{ invoice.invoiceId }}</span>
-                        <span class="material-icons text-blue-500 hover:text-blue-700">open_in_new</span>
-                      </div>
-                    </td>
-                    <!-- Vehicle Plate -->
-                    <td>
-                    <strong>{{ invoice.vehiclePlate }} </strong> 
-                    </td>
-         
-                    <!-- Customer Name -->
-                    <td title="{{ invoice.customerName }}">
-                      {{ invoice.customerName.length > 18 ? (invoice.customerName | slice: 0:18) + '...' : invoice.customerName }}
-                    </td>
-
-                    <td>
-                        <p-inputnumber
-                        [(ngModel)]="invoice.priceIncVat"
-                        [ngModelOptions]="{ standalone: true }"
-                        inputId="minmax"
-                        mode="currency"
-                        currency="SEK"
-                        [minFractionDigits]="0"
-                        [maxFractionDigits]="0"
-                        [locale]="this.sharedService.currentLocale"
-                        [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
-                        readonly="true"
-                        class="with-out-border"
-                        ></p-inputnumber>
-                    </td>
-                    <td>{{ invoice.invoiceDate }}</td>
-                    <td>{{ invoice.dueDate }}</td>
-                    <td>{{ this.sharedService.getEnumByValue('paymentType', invoice.paymentType).text }}</td>
-                    <!-- Payment Status -->
+              <!-- Table Body -->
+              <ng-template #body let-invoice>
+                <tr class="p-selectable-row">
+                  <td class="id-column-cell rounded-l-lg">
+                    <div class="flex items-center gap-2"
+                      (click)="redirectToInvoiceDetailComponent(invoice.isSent, invoice.isPaid, invoice.priceIncVat, invoice.customerId, invoice.customerEmail, invoice.invoiceId)">
+                      <span class="material-icons text-blue-500 hover:text-blue-700">{{ invoice.invoiceId }}</span>
+                    </div>
+                  </td>
+                  <!-- Vehicle Plate -->
                   <td>
-                    @if (invoice.priceIncVat < 0)
-                    {
-                      <p-button
-                        [disabled]="true"
-                        label="{{ this.sharedService.getEnumByValue('invoiceType', 'credited').text }}"
-                        variant="outlined"
-                        size="small"
-                        styleClass="text-xs h-9 w-24"
-                        severity="success"
-                        (onClick)="showPaymentDialog(invoice)"
-                        [pTooltip]="this.sharedService.T('tppaymentHistory')"
-                        tooltipStyleClass="custom-tooltip"
-                      ></p-button>
-                    }
-                    @else if (invoice.remainingBalance == 0)
-                    {
-                      <p-button
-                        label="{{ this.sharedService.getEnumByValue('invoiceType', 'paid').text }}"
-                        variant="outlined"
-                        size="small"
-                        styleClass="text-xs h-9 w-24"
-                        severity="success"
-                        (onClick)="showPaymentDialog(invoice)"
-                        [pTooltip]="this.sharedService.T('tppaymentHistory')"
-                        tooltipStyleClass="custom-tooltip"
-                      ></p-button>
-                    }
-                    @else if (invoice.remainingBalance > 0 && invoice.remainingBalance < invoice.priceIncVat)
-                    {
-                      <p-button
-                        label="{{ this.sharedService.getEnumByValue('invoiceType', 'partiallypaid').text }}"
-                        variant="outlined"
-                        size="small"
-                        styleClass="text-xs h-9 w-24"
-                        severity="warn"
-                        (onClick)="showPaymentDialog(invoice)"
-                        [pTooltip]="this.sharedService.T('tppaymentHistory')"
-                        tooltipStyleClass="custom-tooltip"
-                      ></p-button>
-                    }
-                    @else
-                    {
-                      <p-button
-                        label="{{ this.sharedService.getEnumByValue('invoiceType', 'unpaid').text }}"
-                        variant="outlined"
-                        size="small"
-                        styleClass="text-xs h-9 w-24"
-                        severity="danger"
-                        (onClick)="showPaymentDialog(invoice)"
-                        [pTooltip]="this.sharedService.T('tppaymentHistory')"
-                        tooltipStyleClass="custom-tooltip"
-                      ></p-button>
-                    }
+                    <strong>{{ invoice.vehiclePlate }} </strong>
                   </td>
 
-                   <!-- Delivery Status -->
-              <td>
-                <p-togglebutton
-                  [disabled]="invoice.isSent"
-                  (onChange)="confirmMarkAsSent($event, invoice)"
-                  [(ngModel)]="invoice.isSent"
-                  [ngModelOptions]="{ standalone: true }"
-                  [onLabel]="this.sharedService.T('sent')"
-                  [offLabel]="this.sharedService.T('notSent')"
-                  onIcon="pi pi-check"
-                  offIcon="pi pi-times"
-                  size="small"
-                  styleClass="h-9 w-28 !bg-sky border-0 rounded-md"
-                ></p-togglebutton>
-              </td>
-        
-              <!-- Remarks -->
-              <td class="rounded-r-lg">
-                @if(invoice.remainingBalance > 0 && invoice.remainingBalance < invoice.priceIncVat)
-                {
-                    <span>{{ this.sharedService.T('remaining') }} </span>
-                <p-inputnumber  
-                [(ngModel)]="invoice.remainingBalance" [ngModelOptions]="{standalone: true}"
-                inputId="minmax" 
-                mode="currency"
-                currency="SEK"
-                [minFractionDigits]="0" 
-                [maxFractionDigits]="0" 
-                [locale]="this.sharedService.currentLocale" 
-                [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
-                readonly="true"
-                class="with-out-border"
-                ></p-inputnumber>
-                }
-            </td>
-                   
-<td class="!border-0 rounded-r-lg">
-                <svg (click)="generatePdfInvoice(invoice)" [pTooltip]="this.sharedService.T('tppdf')" tooltipPosition="top" tooltipStyleClass="custom-tooltip" width="24" height="24" viewBox="0 0 24 24" class="my-auto" xmlns="http://www.w3.org/2000/svg">
-                    <mask id="mask0_2741_3320" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                    <rect width="24" height="24" fill="#0052CC"/>
-                    </mask>
-                    <g mask="url(#mask0_2741_3320)">
-                    <path d="M9.7115 10.4423H10.827C11.0775 10.4423 11.2876 10.3575 11.4573 10.188C11.6268 10.0185 11.7115 9.80842 11.7115 9.55775V8.44225C11.7115 8.19158 11.6268 7.9815 11.4573 7.812C11.2876 7.6425 11.0775 7.55775 10.827 7.55775H9.26925C9.15125 7.55775 9.048 7.602 8.9595 7.6905C8.87117 7.77883 8.827 7.882 8.827 8V12C8.827 12.118 8.87117 12.2212 8.9595 12.3095C9.048 12.398 9.15125 12.4423 9.26925 12.4423C9.38725 12.4423 9.49042 12.398 9.57875 12.3095C9.66725 12.2212 9.7115 12.118 9.7115 12V10.4423ZM9.7115 9.55775V8.44225H10.827V9.55775H9.7115ZM14.6923 12.4423C14.9429 12.4423 15.153 12.3575 15.3225 12.188C15.4922 12.0185 15.577 11.8084 15.577 11.5577V8.44225C15.577 8.19158 15.4922 7.9815 15.3225 7.812C15.153 7.6425 14.9429 7.55775 14.6923 7.55775H13.173C13.0552 7.55775 12.952 7.602 12.8635 7.6905C12.775 7.77883 12.7308 7.882 12.7308 8V12C12.7308 12.118 12.775 12.2212 12.8635 12.3095C12.952 12.398 13.0552 12.4423 13.173 12.4423H14.6923ZM13.6152 11.5577V8.44225H14.6923V11.5577H13.6152ZM17.577 10.4423H18.327C18.4448 10.4423 18.548 10.398 18.6365 10.3095C18.725 10.2212 18.7693 10.118 18.7693 10C18.7693 9.882 18.725 9.77883 18.6365 9.6905C18.548 9.602 18.4448 9.55775 18.327 9.55775H17.577V8.44225H18.327C18.4448 8.44225 18.548 8.398 18.6365 8.3095C18.725 8.22117 18.7693 8.118 18.7693 8C18.7693 7.882 18.725 7.77883 18.6365 7.6905C18.548 7.602 18.4448 7.55775 18.327 7.55775H17.1345C17.0167 7.55775 16.9135 7.602 16.825 7.6905C16.7365 7.77883 16.6923 7.882 16.6923 8V12C16.6923 12.118 16.7365 12.2212 16.825 12.3095C16.9135 12.398 17.0167 12.4423 17.1345 12.4423C17.2525 12.4423 17.3558 12.398 17.4443 12.3095C17.5328 12.2212 17.577 12.118 17.577 12V10.4423ZM8.05775 17.5C7.55258 17.5 7.125 17.325 6.775 16.975C6.425 16.625 6.25 16.1974 6.25 15.6923V4.30775C6.25 3.80258 6.425 3.375 6.775 3.025C7.125 2.675 7.55258 2.5 8.05775 2.5H19.4423C19.9474 2.5 20.375 2.675 20.725 3.025C21.075 3.375 21.25 3.80258 21.25 4.30775V15.6923C21.25 16.1974 21.075 16.625 20.725 16.975C20.375 17.325 19.9474 17.5 19.4423 17.5H8.05775ZM8.05775 16H19.4423C19.5193 16 19.5898 15.9679 19.6538 15.9038C19.7179 15.8398 19.75 15.7692 19.75 15.6923V4.30775C19.75 4.23075 19.7179 4.16025 19.6538 4.09625C19.5898 4.03208 19.5193 4 19.4423 4H8.05775C7.98075 4 7.91025 4.03208 7.84625 4.09625C7.78208 4.16025 7.75 4.23075 7.75 4.30775V15.6923C7.75 15.7692 7.78208 15.8398 7.84625 15.9038C7.91025 15.9679 7.98075 16 8.05775 16ZM4.55775 21C4.05258 21 3.625 20.825 3.275 20.475C2.925 20.125 2.75 19.6974 2.75 19.1923V7.05775C2.75 6.84525 2.82192 6.66708 2.96575 6.52325C3.10958 6.37958 3.28775 6.30775 3.50025 6.30775C3.71292 6.30775 3.89108 6.37958 4.03475 6.52325C4.17825 6.66708 4.25 6.84525 4.25 7.05775V19.1923C4.25 19.2693 4.28208 19.3398 4.34625 19.4038C4.41025 19.4679 4.48075 19.5 4.55775 19.5H16.6923C16.9047 19.5 17.0829 19.5719 17.2268 19.7157C17.3704 19.8596 17.4423 20.0378 17.4423 20.2502C17.4423 20.4629 17.3704 20.641 17.2268 20.7845C17.0829 20.9282 16.9047 21 16.6923 21H4.55775Z" fill="#0052CC"/>
-                    </g>
-                </svg>                            
-            </td>
-                              </tr>
+                  <!-- Customer Name -->
+                  <td title="{{ invoice.customerName }}">
+                    {{ invoice.customerName.length > 18 ? (invoice.customerName | slice: 0:18) + '...' :
+                    invoice.customerName }}
+                  </td>
+
+                  <td>
+                    <p-inputnumber [(ngModel)]="invoice.priceIncVat" [ngModelOptions]="{ standalone: true }"
+                      inputId="minmax" mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
+                      [locale]="this.sharedService.currentLocale"
+                      [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
+                      readonly="true" class="with-out-border"></p-inputnumber>
+                  </td>
+                  <td>{{ invoice.invoiceDate }}</td>
+                  <td>{{ invoice.dueDate }}</td>
+                  <td>{{ this.sharedService.getEnumByValue('paymentType', invoice.paymentType).text }}</td>
+                  <!-- Payment Status -->
+                  <td>
+                    @if (invoice.priceIncVat < 0) { <p-button [disabled]="true"
+                      label="{{ this.sharedService.getEnumByValue('invoiceType', 'credited').text }}" variant="outlined"
+                      size="small" styleClass="text-xs h-9 w-24" severity="success"
+                      (onClick)="showPaymentDialog(invoice)" [pTooltip]="this.sharedService.T('tppaymentHistory')"
+                      tooltipStyleClass="custom-tooltip"></p-button>
+                      }
+                      @else if (invoice.remainingBalance == 0)
+                      {
+                      <p-button label="{{ this.sharedService.getEnumByValue('invoiceType', 'paid').text }}"
+                        variant="outlined" size="small" styleClass="text-xs h-9 w-24" severity="success"
+                        (onClick)="showPaymentDialog(invoice)" [pTooltip]="this.sharedService.T('tppaymentHistory')"
+                        tooltipStyleClass="custom-tooltip"></p-button>
+                      }
+                      @else if (invoice.remainingBalance > 0 && invoice.remainingBalance < invoice.priceIncVat) {
+                        <p-button label="{{ this.sharedService.getEnumByValue('invoiceType', 'partiallypaid').text }}"
+                        variant="outlined" size="small" styleClass="text-xs h-9 w-24" severity="warn"
+                        (onClick)="showPaymentDialog(invoice)" [pTooltip]="this.sharedService.T('tppaymentHistory')"
+                        tooltipStyleClass="custom-tooltip"></p-button>
+                        }
+                        @else
+                        {
+                        <p-button label="{{ this.sharedService.getEnumByValue('invoiceType', 'unpaid').text }}"
+                          variant="outlined" size="small" styleClass="text-xs h-9 w-24" severity="danger"
+                          (onClick)="showPaymentDialog(invoice)" [pTooltip]="this.sharedService.T('tppaymentHistory')"
+                          tooltipStyleClass="custom-tooltip"></p-button>
+                        }
+                  </td>
+
+                  <!-- Delivery Status -->
+                  <td>
+                    <p-togglebutton [disabled]="invoice.isSent" (onChange)="confirmMarkAsSent($event, invoice)"
+                      [(ngModel)]="invoice.isSent" [ngModelOptions]="{ standalone: true }"
+                      [onLabel]="this.sharedService.T('sent')" [offLabel]="this.sharedService.T('notSent')"
+                      onIcon="pi pi-check" offIcon="pi pi-times" size="small"></p-togglebutton>
+                  </td>
+
+                  <!-- Remarks -->
+                  <td class="rounded-r-lg">
+                    @if(invoice.remainingBalance > 0 && invoice.remainingBalance < invoice.priceIncVat) { <span>{{
+                      this.sharedService.T('remaining') }} </span>
+                      <p-inputnumber [(ngModel)]="invoice.remainingBalance" [ngModelOptions]="{standalone: true}"
+                        inputId="minmax" mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
+                        [locale]="this.sharedService.currentLocale"
+                        [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
+                        readonly="true" class="with-out-border"></p-inputnumber>
+                      }
+                  </td>
+
+                  <td class="!border-0 rounded-r-lg">
+                    <svg (click)="generatePdfInvoice(invoice)" [pTooltip]="this.sharedService.T('tppdf')"
+                      tooltipPosition="top" tooltipStyleClass="custom-tooltip" width="24" height="24"
+                      viewBox="0 0 24 24" class="my-auto" xmlns="http://www.w3.org/2000/svg">
+                      <mask id="mask0_2741_3320" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
+                        width="24" height="24">
+                        <rect width="24" height="24" fill="#0052CC" />
+                      </mask>
+                      <g mask="url(#mask0_2741_3320)">
+                        <path
+                          d="M9.7115 10.4423H10.827C11.0775 10.4423 11.2876 10.3575 11.4573 10.188C11.6268 10.0185 11.7115 9.80842 11.7115 9.55775V8.44225C11.7115 8.19158 11.6268 7.9815 11.4573 7.812C11.2876 7.6425 11.0775 7.55775 10.827 7.55775H9.26925C9.15125 7.55775 9.048 7.602 8.9595 7.6905C8.87117 7.77883 8.827 7.882 8.827 8V12C8.827 12.118 8.87117 12.2212 8.9595 12.3095C9.048 12.398 9.15125 12.4423 9.26925 12.4423C9.38725 12.4423 9.49042 12.398 9.57875 12.3095C9.66725 12.2212 9.7115 12.118 9.7115 12V10.4423ZM9.7115 9.55775V8.44225H10.827V9.55775H9.7115ZM14.6923 12.4423C14.9429 12.4423 15.153 12.3575 15.3225 12.188C15.4922 12.0185 15.577 11.8084 15.577 11.5577V8.44225C15.577 8.19158 15.4922 7.9815 15.3225 7.812C15.153 7.6425 14.9429 7.55775 14.6923 7.55775H13.173C13.0552 7.55775 12.952 7.602 12.8635 7.6905C12.775 7.77883 12.7308 7.882 12.7308 8V12C12.7308 12.118 12.775 12.2212 12.8635 12.3095C12.952 12.398 13.0552 12.4423 13.173 12.4423H14.6923ZM13.6152 11.5577V8.44225H14.6923V11.5577H13.6152ZM17.577 10.4423H18.327C18.4448 10.4423 18.548 10.398 18.6365 10.3095C18.725 10.2212 18.7693 10.118 18.7693 10C18.7693 9.882 18.725 9.77883 18.6365 9.6905C18.548 9.602 18.4448 9.55775 18.327 9.55775H17.577V8.44225H18.327C18.4448 8.44225 18.548 8.398 18.6365 8.3095C18.725 8.22117 18.7693 8.118 18.7693 8C18.7693 7.882 18.725 7.77883 18.6365 7.6905C18.548 7.602 18.4448 7.55775 18.327 7.55775H17.1345C17.0167 7.55775 16.9135 7.602 16.825 7.6905C16.7365 7.77883 16.6923 7.882 16.6923 8V12C16.6923 12.118 16.7365 12.2212 16.825 12.3095C16.9135 12.398 17.0167 12.4423 17.1345 12.4423C17.2525 12.4423 17.3558 12.398 17.4443 12.3095C17.5328 12.2212 17.577 12.118 17.577 12V10.4423ZM8.05775 17.5C7.55258 17.5 7.125 17.325 6.775 16.975C6.425 16.625 6.25 16.1974 6.25 15.6923V4.30775C6.25 3.80258 6.425 3.375 6.775 3.025C7.125 2.675 7.55258 2.5 8.05775 2.5H19.4423C19.9474 2.5 20.375 2.675 20.725 3.025C21.075 3.375 21.25 3.80258 21.25 4.30775V15.6923C21.25 16.1974 21.075 16.625 20.725 16.975C20.375 17.325 19.9474 17.5 19.4423 17.5H8.05775ZM8.05775 16H19.4423C19.5193 16 19.5898 15.9679 19.6538 15.9038C19.7179 15.8398 19.75 15.7692 19.75 15.6923V4.30775C19.75 4.23075 19.7179 4.16025 19.6538 4.09625C19.5898 4.03208 19.5193 4 19.4423 4H8.05775C7.98075 4 7.91025 4.03208 7.84625 4.09625C7.78208 4.16025 7.75 4.23075 7.75 4.30775V15.6923C7.75 15.7692 7.78208 15.8398 7.84625 15.9038C7.91025 15.9679 7.98075 16 8.05775 16ZM4.55775 21C4.05258 21 3.625 20.825 3.275 20.475C2.925 20.125 2.75 19.6974 2.75 19.1923V7.05775C2.75 6.84525 2.82192 6.66708 2.96575 6.52325C3.10958 6.37958 3.28775 6.30775 3.50025 6.30775C3.71292 6.30775 3.89108 6.37958 4.03475 6.52325C4.17825 6.66708 4.25 6.84525 4.25 7.05775V19.1923C4.25 19.2693 4.28208 19.3398 4.34625 19.4038C4.41025 19.4679 4.48075 19.5 4.55775 19.5H16.6923C16.9047 19.5 17.0829 19.5719 17.2268 19.7157C17.3704 19.8596 17.4423 20.0378 17.4423 20.2502C17.4423 20.4629 17.3704 20.641 17.2268 20.7845C17.0829 20.9282 16.9047 21 16.6923 21H4.55775Z"
+                          fill="#0052CC" />
+                      </g>
+                    </svg>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+
+            <!-- Pager -->
+            <div *ngIf="invoicePager.totalRecords > 10" class="flex justify-between py-4">
+              <div class="my-auto">
+                <p-select [options]="[10, 20, 30]" formControlName="pageSize"
+                  (onChange)="onPageSizeChangeInvoice($event)"></p-select>
+              </div>
+              <p-paginator [first]="invoicePager.firstPage" [rows]="invoicePager.pageSize"
+                [totalRecords]="invoicePager.totalRecords" (onPageChange)="onPageChangeInvoice($event)"
+                [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}">
+                <ng-template pTemplate="firstpagelinkicon">
+                  <img src="assets/icons/paginator/previus.svg" alt="" />
                 </ng-template>
-                </p-table>
-
-                <!-- Pager -->
-                <div *ngIf="invoicePager.totalRecords > 10" class="flex justify-between py-4">
-                <div class="my-auto">
-                    <p-select
-                    [options]="[10, 20, 30]"
-                    formControlName="pageSize"
-                    styleClass="bg-white border border-CustomBorder rounded-md"
-                    (onChange)="onPageSizeChangeInvoice($event)"
-                    ></p-select>
-                </div>
-                <p-paginator
-                    [first]="invoicePager.firstPage"
-                    [rows]="invoicePager.pageSize"
-                    [totalRecords]="invoicePager.totalRecords"
-                    (onPageChange)="onPageChangeInvoice($event)"
-                    [showCurrentPageReport]="true"
-                    [showFirstLastIcon]="true"
-                    currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-                    styleClass="!bg-transparent"
-                >
-                    <ng-template pTemplate="firstpagelinkicon">
-                    <img src="assets/icons/paginator/previus.svg" alt="" />
-                    </ng-template>
-                    <ng-template pTemplate="lastpagelinkicon">
-                    <img src="assets/icons/paginator/next.svg" alt="" />
-                    </ng-template>
-                    <ng-template pTemplate="previouspagelinkicon">
-                    <div class="flex align-items-center gap-2">
-                        <div>{{ this.sharedService.T('previous') }}</div>
-                    </div>
-                    </ng-template>
-                    <ng-template pTemplate="nextpagelinkicon">
-                    <div class="flex align-items-center gap-2">
-                        <div>{{ this.sharedService.T('next') }}</div>
-                    </div>
-                    </ng-template>
-                </p-paginator>
-                </div>
-             </div>
-          </p-tabpanel>
-  <p-toast />
-  <p-confirmdialog />
-  <p-dialog
-    [modal]="true"
-    [(visible)]="isDialogVisible"
-    styleClass="rounded-lg shadow-lg"
-    [style]="{ width: '600px' }"
-    (onHide)="onCloseDialog()"
->
-  <!-- Header Template -->
-  <ng-template #header>
-    <div class="flex justify-between items-center">
-      <h2 class="text-xl font-bold text-gray-800">{{ this.sharedService.T('invoice') }} # {{ this.payment.get('invoiceId')?.value }}</h2>
-    </div>
-  </ng-template>
-
-  <!-- Content Section -->
-    <div class="p-3 bg-white rounded-b-lg">
-      <form [formGroup]="payment">
-        <!-- Customer Info -->
-        <div class="mb-6">
-            <p class="text-lg font-semibold text-gray-700">{{ selectedCustomerName }}</p>
-            <div class="text-right space-y-4"> <!-- Add vertical spacing with space-y-4 -->
-              <!-- Total Sum -->
-              <p class="text-base text-gray-600 right-aligned-label">
-                {{ this.sharedService.T('totalSum') }}:
-                <p-inputnumber
-                  [(ngModel)]="selectedPriceIncvat"
-                  [ngModelOptions]="{ standalone: true }"
-                  inputId="minmax"
-                  mode="currency"
-                  currency="SEK"
-                  [minFractionDigits]="0"
-                  [maxFractionDigits]="0"
-                  [locale]="this.sharedService.currentLocale"
-                  readonly="true"
-                  class="with-out-border right-aligned-input" 
-                ></p-inputnumber>
-              </p>
-          
-              <!-- Paid -->
-              <p class="text-base text-gray-600 right-aligned-label">
-                {{ this.sharedService.T('paid') }}:
-                <p-inputnumber
-                  [(ngModel)]="selectedTotalPaid"
-                  [ngModelOptions]="{ standalone: true }"
-                  inputId="minmax"
-                  mode="currency"
-                  currency="SEK"
-                  [minFractionDigits]="0"
-                  [maxFractionDigits]="0"
-                  [locale]="this.sharedService.currentLocale"
-                  readonly="true"
-                  class="with-out-border right-aligned-input" 
-                ></p-inputnumber>
-              </p>
-          
-              <!-- Outstanding Balance -->
-              <p class="text-base text-gray-800 font-semibold right-aligned-label">
-                {{ this.sharedService.T('outstandingBalance') }}:
-                <p-inputnumber
-                  [(ngModel)]="selectedRemainingBalance"
-                  [ngModelOptions]="{ standalone: true }"
-                  inputId="minmax"
-                  mode="currency"
-                  currency="SEK"
-                  [minFractionDigits]="0"
-                  [maxFractionDigits]="0"
-                  [locale]="this.sharedService.currentLocale"
-                  readonly="true"
-                  class="with-out-border right-aligned-input text-red"
-                  
-                ></p-inputnumber>
-              </p>
+                <ng-template pTemplate="lastpagelinkicon">
+                  <img src="assets/icons/paginator/next.svg" alt="" />
+                </ng-template>
+                <ng-template pTemplate="previouspagelinkicon">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ this.sharedService.T('previous') }}</div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="nextpagelinkicon">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ this.sharedService.T('next') }}</div>
+                  </div>
+                </ng-template>
+              </p-paginator>
             </div>
           </div>
-        <!-- Payment History Table -->
-        <div class="mb-6">
-          <p class="text-lg font-semibold text-gray-700">{{ this.sharedService.T('paymentHistory') }}</p>
-          <p-table
-            styleClass="text-sm"
-            [tableStyle]="{ 'min-width': '100%' }"
-            [value]="selectedPayments"
-            responsiveLayout="scroll"
-          >
-            <ng-template pTemplate="header">
-              <tr class="bg-gray-100 text-gray-700">
-                <th class="p-2 text-left">{{ this.sharedService.T('action') }}</th>
-                <th class="p-2 text-left">{{ this.sharedService.T('date') }}</th>
-                <th class="p-2 text-center">{{ this.sharedService.T('amount') }}</th>
-                <th class="p-2 text-center">{{ this.sharedService.T('paymentNote') }}</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-payment>
-              <tr class="hover:bg-gray-50">
-                <td class="p-2">
-                    
-                   <img
-                    src="assets/icons/invoice/cancel1.svg"
-                    alt=""
-                    class="cursor-pointer"
-                    (click)="confirmDeletePayment($event, payment.invoiceId, payment.invoicePaymentId)"
-                  /> 
-                </td>
-                <td class="p-2">{{ payment.paymentDate }}</td>
-                <td class="p-2 text-center">{{ payment.paymentAmount }}</td>
-                <td class="p-2 text-center">
-                  <p-button
-                  [pTooltip]="payment.paymentNote"
-                  tooltipPosition="top"
-                  tooltipStyleClass="custom-tooltip"
-                  label="N"
-                  
-                ></p-button>
+        </p-tabpanel>
+        <p-toast />
+        <p-confirmdialog />
+        <p-dialog [modal]="true" [(visible)]="isDialogVisible" styleClass="rounded-lg shadow-lg"
+          [style]="{ width: '600px' }" (onHide)="onCloseDialog()">
+          <!-- Header Template -->
+          <ng-template #header>
+            <div class="flex justify-between items-center">
+              <h2 class="text-xl font-bold text-gray-800">{{ this.sharedService.T('invoice') }} # {{
+                this.payment.get('invoiceId')?.value }}</h2>
+            </div>
+          </ng-template>
 
-                </td>
-                <td class="p-2 text-center">{{ payment.paymentNote }}</td>
-              </tr>
-            </ng-template>
-          </p-table>
-        </div>
-  
-        <!-- Payment Form -->
-        <div class="grid grid-cols-2 gap-4 mb-6">
-          <!-- Payment Date -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ this.sharedService.T('paymentDate') }}</label>
-            <p-datepicker
-              formControlName="paymentDate"
-              [disabled]="addPaymentBtnDisabled"
-              dataType="string"
-              class="w-full"
-              styleClass="border border-gray-300 rounded-md"
-              iconDisplay="input"
-              [showIcon]="false"
-              dateFormat="yy-mm-dd"
-              (onSelect)="onPaymentDateChange($event)"
-            ></p-datepicker>
+          <!-- Content Section -->
+          <div class="p-3 bg-white rounded-b-lg">
+            <form [formGroup]="payment">
+              <!-- Customer Info -->
+              <div class="mb-6">
+                <p class="text-lg font-semibold text-gray-700">{{ selectedCustomerName }}</p>
+                <div class="text-right space-y-4"> <!-- Add vertical spacing with space-y-4 -->
+                  <!-- Total Sum -->
+                  <p class="text-base text-gray-600 ">
+                    {{ this.sharedService.T('totalSum') }}:
+                    <p-inputnumber [(ngModel)]="selectedPriceIncvat" [ngModelOptions]="{ standalone: true }"
+                      inputId="minmax" mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
+                      [locale]="this.sharedService.currentLocale" readonly="true"
+                      class="with-out-border right-aligned-input"></p-inputnumber>
+                  </p>
+
+                  <!-- Paid -->
+                  <p class="text-base text-gray-600 ">
+                    {{ this.sharedService.T('paid') }}:
+                    <p-inputnumber [(ngModel)]="selectedTotalPaid" [ngModelOptions]="{ standalone: true }"
+                      inputId="minmax" mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
+                      [locale]="this.sharedService.currentLocale" readonly="true"
+                      class="with-out-border right-aligned-input"></p-inputnumber>
+                  </p>
+
+                  <!-- Outstanding Balance -->
+                  <p class="text-base text-gray-800 font-semibold ">
+                    {{ this.sharedService.T('outstandingBalance') }}:
+                    <p-inputnumber [(ngModel)]="selectedRemainingBalance" [ngModelOptions]="{ standalone: true }"
+                      inputId="minmax" mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
+                      [locale]="this.sharedService.currentLocale" readonly="true"
+                      class="with-out-border right-aligned-input text-red"></p-inputnumber>
+                  </p>
+                </div>
+              </div>
+              <!-- Payment History Table -->
+              <div class="mb-6">
+                <p class="text-lg font-semibold text-gray-700">{{ this.sharedService.T('paymentHistory') }}</p>
+                <p-table styleClass="text-sm" [tableStyle]="{ 'min-width': '100%' }" [value]="selectedPayments"
+                  responsiveLayout="scroll">
+                  <ng-template pTemplate="header">
+                    <tr class="bg-gray-100 text-gray-700">
+                      <th class="p-2 text-left">{{ this.sharedService.T('action') }}</th>
+                      <th class="p-2 text-left">{{ this.sharedService.T('date') }}</th>
+                      <th class="p-2 text-center">{{ this.sharedService.T('amount') }}</th>
+                      <th class="p-2 text-center">{{ this.sharedService.T('paymentNote') }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-payment>
+                    <tr class="hover:bg-gray-50">
+                      <td class="p-2">
+
+                        <img src="assets/icons/invoice/cancel1.svg" alt="" class="cursor-pointer"
+                          (click)="confirmDeletePayment($event, payment.invoiceId, payment.invoicePaymentId)" />
+                      </td>
+                      <td class="p-2">{{ payment.paymentDate }}</td>
+                      <td class="p-2 text-center">{{ payment.paymentAmount }}</td>
+                      <td class="p-2 text-center">
+                        <p-button [pTooltip]="payment.paymentNote" tooltipPosition="top"
+                          tooltipStyleClass="custom-tooltip" label="N"></p-button>
+
+                      </td>
+                      <td class="p-2 text-center">{{ payment.paymentNote }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+
+              <!-- Payment Form -->
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <!-- Payment Date -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">{{ this.sharedService.T('paymentDate')
+                    }}</label>
+                  <p-datepicker formControlName="paymentDate" [disabled]="addPaymentBtnDisabled" dataType="string"
+                    class="w-full" iconDisplay="input" [showIcon]="false"
+                    dateFormat="yy-mm-dd" (onSelect)="onPaymentDateChange($event)"></p-datepicker>
+                </div>
+
+                <!-- Paid Amount -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">{{ this.sharedService.T('paidAmount')
+                    }}</label>
+                  <p-inputnumber [disabled]="addPaymentBtnDisabled" formControlName="paymentAmount"
+                    [placeholder]="this.sharedService.T('paidAmount')" inputId="minmax" mode="decimal" [min]="0"
+                    class="w-full" [useGrouping]="false"></p-inputnumber>
+                </div>
+              </div>
+
+              <!-- Payment Note -->
+              <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ this.sharedService.T('paymentNote')
+                  }}</label>
+                <textarea [disabled]="addPaymentBtnDisabled" class="w-full" formContolName="paymentNote" rows="2"
+                  [appRemovePlaceholderOnFocus]="this.sharedService.T('paymentNote')"></textarea>
+              </div>
+
+              <!-- Buttons -->
+              <div class="flex justify-end gap-3">
+                <p-button [disabled]="addPaymentBtnDisabled" label="{{ this.sharedService.T('btnAddPayment') }}"
+                icon="pi pi-plus" (click)="onSave()"></p-button>
+
+                <p-button  severity="secondary" label="{{ this.sharedService.T('cancel') }}"
+                  (click)="onCancel()"></p-button>
+              </div>
+            </form>
           </div>
-  
-          <!-- Paid Amount -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ this.sharedService.T('paidAmount') }}</label>
-            <p-inputnumber
-              [disabled]="addPaymentBtnDisabled"
-              formControlName="paymentAmount"
-              [placeholder]="this.sharedService.T('paidAmount')"
-              inputId="minmax"
-              mode="decimal"
-              [min]="0"
-              class="w-full"
-              [useGrouping]="false"
-            ></p-inputnumber>
-          </div>
-        </div>
-  
-        <!-- Payment Note -->
-        <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-1">{{ this.sharedService.T('paymentNote') }}</label>
-          <textarea
-            [disabled]="addPaymentBtnDisabled"
-            class="w-full"
-            formContolName="paymentNote" rows="2" [appRemovePlaceholderOnFocus]="this.sharedService.T('paymentNote')"></textarea>
-        </div>
-  
-        <!-- Buttons -->
-        <div class="flex justify-end gap-3">
-          <p-button
-            [disabled]="addPaymentBtnDisabled"
-            label="{{ this.sharedService.T('btnAddPayment') }}"
-            (click)="onSave()"
-          ></p-button>
-          
-          <p-button
-            styleClass="p-button cancel-button"
-            label="{{ this.sharedService.T('cancel') }}"
-            (click)="onCancel()"
-          ></p-button>
-        </div>
-      </form>
-    </div>
-  </p-dialog>          
- 
-        
-        
-        </p-tabpanels>
-      </p-tabs>
-    </div>
-  </section>
-  <!-- </div>
+        </p-dialog>
+
+
+
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</section>
+<!-- </div>
   </main> -->

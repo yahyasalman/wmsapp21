@@ -1,273 +1,269 @@
 <app-generic-loader *ngIf="isLoading"></app-generic-loader>
-<section class="px-5 mb-10 pb-10">
+
+
+<!-- header start -->
+<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
+    <div class="">
+        <p class="font-normal text-2xl">{{ this.sharedService.T('registerTime') }}</p>
+    </div>
+</header>
+<section class="p-6 pb-10">
     <form [formGroup]="filters">
-        <div class="mb-6 mt-10 text-sm font-medium shadow-sm bg-white rounded-md p-5">
-            <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
-                <div *ngIf="employeeCount > 0" class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
-                    <p-button [raised]="true" label="Tid in" size="large" icon="pi pi-plus"
-                        (click)="showCheckInDialog()" styleClass="!border-0" />
+        <div class="p-8 rounded-lg shadow-lg bg-white">
+
+            <div class="mb-6 mt-1 text-sm font-medium shadow-sm rounded-md p-5">
+                <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
+
+                    <div *ngIf="employeeCount > 0" class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
+                        <p-button [raised]="true" label="Tid in" size="large" icon="pi pi-plus" [style]="{'white-space': 'nowrap'}"
+                            (click)="showCheckInDialog()" />
+
                         <p-select [options]="employees" formControlName="employeeId" size="large" optionLabel="text"
-                        optionValue="value"
-                        (onChange)="onChangeEmployee($event)" [checkmark]="true"
-                        [showClear]="true" (onClear)="onClearEmployee()" placeholder="Anstalld"
-                        styleClass="custom-select w-48"></p-select>
+                            optionValue="value" (onChange)="onChangeEmployee($event)" [checkmark]="true"
+                            [showClear]="true" (onClear)="onClearEmployee()" placeholder="Anstalld"
+                            class="w-full"></p-select>
 
-                    <p-select [options]="this.sharedService.getEnums('timesheetStatus')" formControlName="isActive"
-                        size="large" optionLabel="text" optionValue="value" (onChange)="onChangeStatus($event)"
-                        [checkmark]="true" [showClear]="true" (onClear)="onClearStatus()" placeholder="Status"
-                        styleClass="custom-select w-36"></p-select>
-                    <p-select [options]="this.sharedService.getEnums('timesheetType')" formControlName="timesheetType"
-                        size="large" optionLabel="text" optionValue="value" (onChange)="onChangeType($event)"
-                        [checkmark]="true" [showClear]="true" (onClear)="onClearType()" placeholder="Typ"
-                        styleClass="custom-select w-36"></p-select>
-                </div>
-                <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap lg:ml-auto">
-                    <div class="flex items-center content-center">
-                        <p-datepicker formControlName="year" size="large" view="year" dateFormat="yy" class="w-16"
+                        <p-select [options]="this.sharedService.getEnums('timesheetStatus')" formControlName="isActive"
+                            size="large" optionLabel="text" optionValue="value" (onChange)="onChangeStatus($event)"
+                            [checkmark]="true" [showClear]="true" (onClear)="onClearStatus()" placeholder="Status"
+                            class="w-full"></p-select>
+
+                        <p-select [options]="this.sharedService.getEnums('timesheetType')"
+                            formControlName="timesheetType" size="large" optionLabel="text" optionValue="value"
+                            (onChange)="onChangeType($event)" [checkmark]="true" [showClear]="true"
+                            (onClear)="onClearType()" placeholder="Typ" class="w-full"></p-select>
+                    </div>
+
+                    <div class="rounded-md ml-auto flex items-center gap-2">
+                        <p-datepicker formControlName="year" size="large" view="year" dateFormat="yy" class="w-19"
                             (onSelect)="onSelectYear($event)" />
+
+                        <div class="ds-date-range flex items-center">
+                            <p-datepicker formControlName="fromDate" dataType="string" dateFormat="yy-mm-dd"
+                                [iconDisplay]="'input'" [showIcon]="false" class="w-30" appendTo="body"
+                                (onSelect)="onSelectFromDate($event)">
+                            </p-datepicker>
+
+                            <span class="ds-date-connector mx-1" aria-hidden="true"></span>
+
+                            <p-datepicker formControlName="toDate" dataType="string" dateFormat="yy-mm-dd"
+                                [iconDisplay]="'input'" [showIcon]="false" class="w-30" appendTo="body"
+                                (onSelect)="onSelectToDate($event)">
+                            </p-datepicker>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-CustomBorder">
+
+                <div class="flex justify-between mt-2">
+                    <div class="flex gap-5">
+                        <div class="flex gap-1 my-auto">
+                            <span class="text-sm">{{this.sharedService.T('workplaceName')}}:</span>
+                            <span class="text-sm font-bold">{{ this.sharedService.workshopName}}</span>
+                        </div>
+                        <div class="flex gap-1 my-auto">
+                            <span class="text-sm">{{this.sharedService.T('totalPersonnelRegisters')}}:</span>
+                            <span class="text-sm font-bold">{{employeeCount}}</span>
+                        </div>
                     </div>
 
-
-                    <div class="my-auto">
-                        <div class="flex align-items-center justify-content-center">
-                            <div class="flex year text-center gap-3">
-                                <p-datepicker formControlName="fromDate" dataType="string"
-                                    class="small-calendar w-[105px]" dateFormat="yy-mm-dd" [iconDisplay]="'input'"
-                                    [showIcon]="false" appendTo="body" panelStyleClass="timesheet-date-panel"
-                                    (onSelect)="onSelectFromDate($event)">
-                                </p-datepicker>
-                            </div>
-                            <span class="my-auto">
-                                <img src="assets/images/line.png" alt="">
-                            </span>
-                            <div class="flex year text-center gap-3">
-                                <p-datepicker formControlName="toDate" class="small-calendar w-[105px]"
-                                    dataType="string" dateFormat="yy-mm-dd" [iconDisplay]="'input'" [showIcon]="false"
-                                    appendTo="body" panelStyleClass="timesheet-date-panel"
-                                    (onSelect)="onSelectToDate($event)">
-                                </p-datepicker>
-                            </div>
-                        </div>
+                    <div class="flex gap-2 px-3 rounded-md bg-darkSky !border border-BorderColor">
+                        <p-button size="large" styleClass=" border-0 !bg-darkSky !text-lightBlue px-0"
+                            label="{{ this.sharedService.T('pdf') }}" pTooltip="{{ this.sharedService.T('pdf') }}"
+                            tooltipPosition="top" tooltipStyleClass="custom-tooltip"></p-button>
+                        <svg width="24" height="24" viewBox="0 0 24 24" class="my-auto"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_2741_3320" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
+                                width="24" height="24">
+                                <rect width="24" height="24" fill="#0052CC" />
+                            </mask>
+                            <g mask="url(#mask0_2741_3320)">
+                                <path
+                                    d="M9.7115 10.4423H10.827C11.0775 10.4423 11.2876 10.3575 11.4573 10.188C11.6268 10.0185 11.7115 9.80842 11.7115 9.55775V8.44225C11.7115 8.19158 11.6268 7.9815 11.4573 7.812C11.2876 7.6425 11.0775 7.55775 10.827 7.55775H9.26925C9.15125 7.55775 9.048 7.602 8.9595 7.6905C8.87117 7.77883 8.827 7.882 8.827 8V12C8.827 12.118 8.87117 12.2212 8.9595 12.3095C9.048 12.398 9.15125 12.4423 9.26925 12.4423C9.38725 12.4423 9.49042 12.398 9.57875 12.3095C9.66725 12.2212 9.7115 12.118 9.7115 12V10.4423ZM9.7115 9.55775V8.44225H10.827V9.55775H9.7115ZM14.6923 12.4423C14.9429 12.4423 15.153 12.3575 15.3225 12.188C15.4922 12.0185 15.577 11.8084 15.577 11.5577V8.44225C15.577 8.19158 15.4922 7.9815 15.3225 7.812C15.153 7.6425 14.9429 7.55775 14.6923 7.55775H13.173C13.0552 7.55775 12.952 7.602 12.8635 7.6905C12.775 7.77883 12.7308 7.882 12.7308 8V12C12.7308 12.118 12.775 12.2212 12.8635 12.3095C12.952 12.398 13.0552 12.4423 13.173 12.4423H14.6923ZM13.6152 11.5577V8.44225H14.6923V11.5577H13.6152ZM17.577 10.4423H18.327C18.4448 10.4423 18.548 10.398 18.6365 10.3095C18.725 10.2212 18.7693 10.118 18.7693 10C18.7693 9.882 18.725 9.77883 18.6365 9.6905C18.548 9.602 18.4448 9.55775 18.327 9.55775H17.577V8.44225H18.327C18.4448 8.44225 18.548 8.398 18.6365 8.3095C18.725 8.22117 18.7693 8.118 18.7693 8C18.7693 7.882 18.725 7.77883 18.6365 7.6905C18.548 7.602 18.4448 7.55775 18.327 7.55775H17.1345C17.0167 7.55775 16.9135 7.602 16.825 7.6905C16.7365 7.77883 16.6923 7.882 16.6923 8V12C16.6923 12.118 16.7365 12.2212 16.825 12.3095C16.9135 12.398 17.0167 12.4423 17.1345 12.4423C17.2525 12.4423 17.3558 12.398 17.4443 12.3095C17.5328 12.2212 17.577 12.118 17.577 12V10.4423ZM8.05775 17.5C7.55258 17.5 7.125 17.325 6.775 16.975C6.425 16.625 6.25 16.1974 6.25 15.6923V4.30775C6.25 3.80258 6.425 3.375 6.775 3.025C7.125 2.675 7.55258 2.5 8.05775 2.5H19.4423C19.9474 2.5 20.375 2.675 20.725 3.025C21.075 3.375 21.25 3.80258 21.25 4.30775V15.6923C21.25 16.1974 21.075 16.625 20.725 16.975C20.375 17.325 19.9474 17.5 19.4423 17.5H8.05775ZM8.05775 16H19.4423C19.5193 16 19.5898 15.9679 19.6538 15.9038C19.7179 15.8398 19.75 15.7692 19.75 15.6923V4.30775C19.75 4.23075 19.7179 4.16025 19.6538 4.09625C19.5898 4.03208 19.5193 4 19.4423 4H8.05775C7.98075 4 7.91025 4.03208 7.84625 4.09625C7.78208 4.16025 7.75 4.23075 7.75 4.30775V15.6923C7.75 15.7692 7.78208 15.8398 7.84625 15.9038C7.91025 15.9679 7.98075 16 8.05775 16ZM4.55775 21C4.05258 21 3.625 20.825 3.275 20.475C2.925 20.125 2.75 19.6974 2.75 19.1923V7.05775C2.75 6.84525 2.82192 6.66708 2.96575 6.52325C3.10958 6.37958 3.28775 6.30775 3.50025 6.30775C3.71292 6.30775 3.89108 6.37958 4.03475 6.52325C4.17825 6.66708 4.25 6.84525 4.25 7.05775V19.1923C4.25 19.2693 4.28208 19.3398 4.34625 19.4038C4.41025 19.4679 4.48075 19.5 4.55775 19.5H16.6923C16.9047 19.5 17.0829 19.5719 17.2268 19.7157C17.3704 19.8596 17.4423 20.0378 17.4423 20.2502C17.4423 20.4629 17.3704 20.641 17.2268 20.7845C17.0829 20.9282 16.9047 21 16.6923 21H4.55775Z"
+                                    fill="#0052CC" />
+                            </g>
+                        </svg>
                     </div>
                 </div>
             </div>
-            <hr class="border-CustomBorder">
 
-            <div class="flex justify-between mt-2">
-                <div class="flex gap-5">
-                    <div class="flex gap-1 my-auto">
-                        <span class="text-sm">{{this.sharedService.T('workplaceName')}}:</span>
-                        <span class="text-sm font-bold">{{ this.sharedService.workshopName}}</span>
+            <div class="">
+                <p-toast />
+                <p-confirmdialog />
+
+                <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="timesheets" [rows]="10"
+                    [tableStyle]="{'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px'}"
+                    (onLazyLoad)="sortColumn($event)" sortField="timesheetId" responsiveLayout="scroll"
+                    [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value" [sortOrder]="-1">
+
+                    <ng-template pTemplate="header">
+                        <tr class="table-header-row">
+                            <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="timesheetId">
+                                <p-sortIcon field="timesheetId" />
+                            </th>
+                            <th class="table-header-cell">{{this.sharedService.T('status')}}</th>
+                            <th class="table-header-cell">{{this.sharedService.T('employeeName')}}</th>
+                            <th class="table-header-cell">{{this.sharedService.T('date')}}</th>
+                            <th class="table-header-cell">{{this.sharedService.T('type')}}</th>
+                            <th class="table-header-cell">{{this.sharedService.T('intervalId')}}</th>
+                            <th class="table-header-cell">{{this.sharedService.T('startTime')}}</th>
+                            <th class="table-header-cell">{{this.sharedService.T('endTime')}}</th>
+                            <th class="table-header-cell rounded-r-xl">{{this.sharedService.T('comments')}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-timesheet>
+                        <tr class="p-selectable-row" data-href="#">
+                            <td class="id-column-cell rounded-l-lg">{{timesheet.timesheetId}}</td>
+                            <td>
+                                @if(timesheet.isActive)
+                                {
+                                <p-message severity="success"
+                                    variant="simple">{{this.sharedService.getEnumByValue('timesheetStatus',timesheet.isActive.toString()).text}}</p-message>
+                                }
+                                @else {
+                                <p-message severity="error" variant="simple">
+                                    {{this.sharedService.getEnumByValue('timesheetStatus',timesheet.isActive.toString()).text}}
+                                </p-message>
+                                }
+                            </td>
+                            <td class="whitespace-nowrap cursor-pointer" title="{{ timesheet.employeeName }}">
+                                {{ timesheet.employeeName > 18 ? (timesheet.employeeName | slice:0:18) + '...' :
+                                timesheet.employeeName }}
+                            </td>
+                            <td class="fw-bold">
+                                {{ timesheet.startDate }}
+                            </td>
+                            <td>
+                                @if(timesheet.timesheetType === 'leave' )
+                                {
+                                <p-message severity="error" variant="simple">
+                                    {{this.sharedService.getEnumByValue('timesheetType',timesheet.timesheetType).text}}
+                                </p-message>
+                                }
+                                @else if(timesheet.timesheetType === 'sickleave' )
+                                {
+                                <p-message severity="secondary" variant="simple">
+                                    {{this.sharedService.getEnumByValue('timesheetType',timesheet.timesheetType).text}}
+                                </p-message>
+                                }
+                                @else if(timesheet.timesheetType === 'vacations' )
+                                {
+                                <p-message severity="warn" variant="simple">
+                                    {{this.sharedService.getEnumByValue('timesheetType',timesheet.timesheetType).text}}
+                                </p-message>
+                                }
+                                @else()
+                                {
+                                <p-message severity="success" variant="simple">
+                                    {{this.sharedService.getEnumByValue('timesheetType',timesheet.timesheetType).text}}
+                                </p-message>
+                                }
+
+                            </td>
+                            <td class="fw-bold ">
+                                {{ timesheet.intervalId}}
+                            </td>
+                            <td class="text-nowrap">
+                                @if(timesheet.timesheetType != 'workhour' )
+                                {
+                                {{this.sharedService.T('fullDay')}}
+                                }
+                                @else
+                                {
+                                <span class="custom-label">
+                                    {{ timesheet.timeIn }}
+                                </span>
+                                }
+
+                            </td>
+                            <td class="whitespace-nowrap">
+                                @if(timesheet.timesheetType != 'workhour')
+                                {
+                                {{this.sharedService.T('fullDay')}}
+                                }
+                                @else{
+
+                                @if( !timesheet.timeOut)
+                                {
+                                <p-button label="Tid ut" variant="text" [raised]="true" size="small"
+                                    (click)="openCheckout(timesheet.timesheetId,$event)">
+                                    <span><img src="assets/icons/employment/checkout.svg" alt=""></span>
+                                </p-button>
+                                }
+                                @else{
+                                <span class="custom-label">
+                                    {{ timesheet.timeOut }}
+                                </span>
+                                }
+                                }
+
+                            </td>
+                            <td class="whitespace-nowrap">
+                                <p-button variant="text" [raised]="true" size="small"
+                                    (click)="openComments(timesheet, $event)">
+                                    <span><img src="assets/icons/employment/leftclick.svg" alt=""></span>
+                                </p-button>
+                            </td>
+                            <td class="whitespace-nowrap">
+                                @if(timesheet.isActive)
+                                {
+                                <span pTooltip="Ta bort bokning" tooltipPosition="top"
+                                    (click)="openDelete(timesheet.timesheetId,$event)" class="cursor-pointer">
+                                    <img src="assets/icons/employment/del.svg" alt="">
+                                </span>
+                                }
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <!-- Pager Section -->
+                <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
+                    <!-- Page Size Dropdown -->
+                    <div class="flex items-center">
+                        <p-select [options]="[10, 20, 30]" [(ngModel)]="pager.pageSize"
+                            [ngModelOptions]="{standalone: true}"
+                            styleClass="bg-white border border-CustomBorder rounded-md"
+                            (onChange)="onPageSizeChange($event)"></p-select>
                     </div>
-                    <div class="flex gap-1 my-auto">
-                        <span class="text-sm">{{this.sharedService.T('totalPersonnelRegisters')}}:</span>
-                        <span class="text-sm font-bold">{{employeeCount}}</span>
-                    </div>
+                    <!-- Paginator -->
+                    <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
+                        (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+                        currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+                        styleClass="!bg-transparent">
+                        <ng-template pTemplate="firstpagelinkicon">
+                            <img src="assets/icons/paginator/previus.svg" alt="">
+                        </ng-template>
+                        <ng-template pTemplate="lastpagelinkicon">
+                            <img src="assets/icons/paginator/next.svg" alt="">
+                        </ng-template>
+                        <ng-template pTemplate="previouspagelinkicon">
+                            <div class="flex items-center gap-2">
+                                <div>{{ this.sharedService.T('previous') }}</div>
 
-                </div>
-                <div class="flex gap-2 px-3 rounded-md bg-darkSky !border border-BorderColor">
-                    <p-button size="large" styleClass=" border-0 !bg-darkSky !text-lightBlue px-0"
-                        label="{{ this.sharedService.T('pdf') }}" pTooltip="{{ this.sharedService.T('pdf') }}"
-                        tooltipPosition="top" tooltipStyleClass="custom-tooltip"></p-button>
-                    <svg width="24" height="24" viewBox="0 0 24 24" class="my-auto" xmlns="http://www.w3.org/2000/svg">
-                        <mask id="mask0_2741_3320" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
-                            width="24" height="24">
-                            <rect width="24" height="24" fill="#0052CC" />
-                        </mask>
-                        <g mask="url(#mask0_2741_3320)">
-                            <path
-                                d="M9.7115 10.4423H10.827C11.0775 10.4423 11.2876 10.3575 11.4573 10.188C11.6268 10.0185 11.7115 9.80842 11.7115 9.55775V8.44225C11.7115 8.19158 11.6268 7.9815 11.4573 7.812C11.2876 7.6425 11.0775 7.55775 10.827 7.55775H9.26925C9.15125 7.55775 9.048 7.602 8.9595 7.6905C8.87117 7.77883 8.827 7.882 8.827 8V12C8.827 12.118 8.87117 12.2212 8.9595 12.3095C9.048 12.398 9.15125 12.4423 9.26925 12.4423C9.38725 12.4423 9.49042 12.398 9.57875 12.3095C9.66725 12.2212 9.7115 12.118 9.7115 12V10.4423ZM9.7115 9.55775V8.44225H10.827V9.55775H9.7115ZM14.6923 12.4423C14.9429 12.4423 15.153 12.3575 15.3225 12.188C15.4922 12.0185 15.577 11.8084 15.577 11.5577V8.44225C15.577 8.19158 15.4922 7.9815 15.3225 7.812C15.153 7.6425 14.9429 7.55775 14.6923 7.55775H13.173C13.0552 7.55775 12.952 7.602 12.8635 7.6905C12.775 7.77883 12.7308 7.882 12.7308 8V12C12.7308 12.118 12.775 12.2212 12.8635 12.3095C12.952 12.398 13.0552 12.4423 13.173 12.4423H14.6923ZM13.6152 11.5577V8.44225H14.6923V11.5577H13.6152ZM17.577 10.4423H18.327C18.4448 10.4423 18.548 10.398 18.6365 10.3095C18.725 10.2212 18.7693 10.118 18.7693 10C18.7693 9.882 18.725 9.77883 18.6365 9.6905C18.548 9.602 18.4448 9.55775 18.327 9.55775H17.577V8.44225H18.327C18.4448 8.44225 18.548 8.398 18.6365 8.3095C18.725 8.22117 18.7693 8.118 18.7693 8C18.7693 7.882 18.725 7.77883 18.6365 7.6905C18.548 7.602 18.4448 7.55775 18.327 7.55775H17.1345C17.0167 7.55775 16.9135 7.602 16.825 7.6905C16.7365 7.77883 16.6923 7.882 16.6923 8V12C16.6923 12.118 16.7365 12.2212 16.825 12.3095C16.9135 12.398 17.0167 12.4423 17.1345 12.4423C17.2525 12.4423 17.3558 12.398 17.4443 12.3095C17.5328 12.2212 17.577 12.118 17.577 12V10.4423ZM8.05775 17.5C7.55258 17.5 7.125 17.325 6.775 16.975C6.425 16.625 6.25 16.1974 6.25 15.6923V4.30775C6.25 3.80258 6.425 3.375 6.775 3.025C7.125 2.675 7.55258 2.5 8.05775 2.5H19.4423C19.9474 2.5 20.375 2.675 20.725 3.025C21.075 3.375 21.25 3.80258 21.25 4.30775V15.6923C21.25 16.1974 21.075 16.625 20.725 16.975C20.375 17.325 19.9474 17.5 19.4423 17.5H8.05775ZM8.05775 16H19.4423C19.5193 16 19.5898 15.9679 19.6538 15.9038C19.7179 15.8398 19.75 15.7692 19.75 15.6923V4.30775C19.75 4.23075 19.7179 4.16025 19.6538 4.09625C19.5898 4.03208 19.5193 4 19.4423 4H8.05775C7.98075 4 7.91025 4.03208 7.84625 4.09625C7.78208 4.16025 7.75 4.23075 7.75 4.30775V15.6923C7.75 15.7692 7.78208 15.8398 7.84625 15.9038C7.91025 15.9679 7.98075 16 8.05775 16ZM4.55775 21C4.05258 21 3.625 20.825 3.275 20.475C2.925 20.125 2.75 19.6974 2.75 19.1923V7.05775C2.75 6.84525 2.82192 6.66708 2.96575 6.52325C3.10958 6.37958 3.28775 6.30775 3.50025 6.30775C3.71292 6.30775 3.89108 6.37958 4.03475 6.52325C4.17825 6.66708 4.25 6.84525 4.25 7.05775V19.1923C4.25 19.2693 4.28208 19.3398 4.34625 19.4038C4.41025 19.4679 4.48075 19.5 4.55775 19.5H16.6923C16.9047 19.5 17.0829 19.5719 17.2268 19.7157C17.3704 19.8596 17.4423 20.0378 17.4423 20.2502C17.4423 20.4629 17.3704 20.641 17.2268 20.7845C17.0829 20.9282 16.9047 21 16.6923 21H4.55775Z"
-                                fill="#0052CC" />
-                        </g>
-                    </svg>
-                </div>
-            </div>
-
-        </div>
-        <div class="">
-            <p-toast />
-            <p-confirmdialog />
-
-            <p-table 
-            styleClass="text-sm custom-table"
-            [lazy]="true" 
-            [value]="timesheets" 
-            [rows]="10"
-            [tableStyle]="{'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px'}"
-             (onLazyLoad)="sortColumn($event)" 
-             sortField="timesheetId" 
-             responsiveLayout="scroll" 
-             [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
-             [sortOrder]="-1">
-                
-                <ng-template pTemplate="header" >
-                    <tr class="table-header-row">
-                        <th class="table-header-cell id-column-header rounded-l-xl"
-                            pSortableColumn="timesheetId"> <p-sortIcon field="timesheetId" /></th>
-                        <th class="table-header-cell">{{this.sharedService.T('status')}}</th>
-                        <th class="table-header-cell">{{this.sharedService.T('employeeName')}}</th>
-                        <th class="table-header-cell">{{this.sharedService.T('date')}}</th>
-                        <th class="table-header-cell">{{this.sharedService.T('type')}}</th>
-                        <th class="table-header-cell">{{this.sharedService.T('intervalId')}}</th>
-                        <th class="table-header-cell">{{this.sharedService.T('startTime')}}</th>
-                        <th class="table-header-cell">{{this.sharedService.T('endTime')}}</th>
-                        <th class="table-header-cell rounded-r-xl">{{this.sharedService.T('comments')}}</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-timesheet>
-                    <tr class="p-selectable-row" data-href="#">
-                        <td class="id-column-cell rounded-l-lg">{{timesheet.timesheetId}}</td>
-                        <td>
-                            @if(timesheet.isActive)
-                            {
-                            <p-message severity="success"
-                                variant="simple">{{this.sharedService.getEnumByValue('timesheetStatus',timesheet.isActive.toString()).text}}</p-message>
-                            }
-                            @else {
-                            <p-message severity="error" variant="simple">
-                                {{this.sharedService.getEnumByValue('timesheetStatus',timesheet.isActive.toString()).text}}
-                            </p-message>
-                            }
-                        </td>
-                        <td class="whitespace-nowrap cursor-pointer"
-                            title="{{ timesheet.employeeName }}">
-                            {{ timesheet.employeeName > 18 ? (timesheet.employeeName | slice:0:18) + '...' :
-                            timesheet.employeeName }}
-                        </td>
-                        <td class="fw-bold">
-                            {{ timesheet.startDate }}
-                        </td>
-                        <td>
-                            @if(timesheet.timesheetType === 'leave' )
-                            {
-                            <p-message severity="error" variant="simple">
-                                {{this.sharedService.getEnumByValue('timesheetType',timesheet.timesheetType).text}}
-                            </p-message>
-                            }
-                            @else if(timesheet.timesheetType === 'sickleave' )
-                            {
-                            <p-message severity="secondary" variant="simple">
-                                {{this.sharedService.getEnumByValue('timesheetType',timesheet.timesheetType).text}}
-                            </p-message>
-                            }
-                            @else if(timesheet.timesheetType === 'vacations' )
-                            {
-                            <p-message severity="warn" variant="simple">
-                                {{this.sharedService.getEnumByValue('timesheetType',timesheet.timesheetType).text}}
-                            </p-message>
-                            }
-                            @else()
-                            {
-                            <p-message severity="success" variant="simple">
-                                {{this.sharedService.getEnumByValue('timesheetType',timesheet.timesheetType).text}}
-                            </p-message>
-                            }
-                            
-                        </td>
-                        <td class="fw-bold ">
-                            {{ timesheet.intervalId}}
-                        </td>
-                        <td class="text-nowrap">
-                            @if(timesheet.timesheetType != 'workhour' )
-                            {
-                            {{this.sharedService.T('fullDay')}}
-                            }
-                            @else
-                            {
-                            <span class="custom-label">
-                                {{ timesheet.timeIn }}
-                            </span>
-                            }
-
-                        </td>
-                        <td class="whitespace-nowrap">
-                            @if(timesheet.timesheetType != 'workhour')
-                            {
-                            {{this.sharedService.T('fullDay')}}
-                            }
-                            @else{
-
-                            @if( !timesheet.timeOut)
-                            {
-                            <p-button label="Tid ut" variant="text" [raised]="true" size="small"
-                                (click)="openCheckout(timesheet.timesheetId,$event)">
-                                <span><img src="assets/icons/employment/checkout.svg" alt=""></span>
-                            </p-button>
-                            }
-                            @else{
-                            <span class="custom-label">
-                                {{ timesheet.timeOut }}
-                            </span>
-                            }
-                            }
-
-                        </td>
-                        <td class="whitespace-nowrap">
-                            <p-button variant="text" [raised]="true" size="small"
-                                (click)="openComments(timesheet, $event)">
-                                <span><img src="assets/icons/employment/leftclick.svg" alt=""></span>
-                            </p-button>
-                        </td>
-                        <td class="whitespace-nowrap">
-                            @if(timesheet.isActive)
-                            {
-                            <span pTooltip="Ta bort bokning" tooltipPosition="top"
-                                (click)="openDelete(timesheet.timesheetId,$event)" class="cursor-pointer">
-                                <img src="assets/icons/employment/del.svg" alt="">
-                            </span>
-                            }
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-            <!-- Pager Section -->
-            <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
-                <!-- Page Size Dropdown -->
-                <div class="flex items-center">
-                <p-select [options]="[10, 20, 30]" 
-                [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}"
-                    styleClass="bg-white border border-CustomBorder rounded-md"
-                    (onChange)="onPageSizeChange($event)"></p-select>
-                </div>
-                <!-- Paginator -->
-                <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
-                    (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-                    currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-                    styleClass="!bg-transparent">
-                    <ng-template pTemplate="firstpagelinkicon">
-                        <img src="assets/icons/paginator/previus.svg" alt="">
-                    </ng-template>
-                    <ng-template pTemplate="lastpagelinkicon">
-                        <img src="assets/icons/paginator/next.svg" alt="">
-                    </ng-template>
-                    <ng-template pTemplate="previouspagelinkicon">
-                        <div class="flex items-center gap-2">
-                        <div>{{ this.sharedService.T('previous') }}</div>
-
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="nextpagelinkicon">
-                        <div class="flex items-center gap-2">
-                        <div>{{ this.sharedService.T('next') }}</div>
-                        </div>
-                    </ng-template>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="nextpagelinkicon">
+                            <div class="flex items-center gap-2">
+                                <div>{{ this.sharedService.T('next') }}</div>
+                            </div>
+                        </ng-template>
                     </p-paginator>
+                </div>
             </div>
-            </div>
+        </div>
     </form>
     <p-popover #checkoutPopup>
         <ng-template pTemplate="content">
             <form [formGroup]="checkoutTimesheet">
-            <div class="mb-3 mt-6">
-                    <label class="block text-sm text-Darkgray mb-1">{{this.sharedService.T('timeOut')}}</label>
+                <div class="mb-3 mt-6">
+                    <label class="block mb-2">{{this.sharedService.T('timeOut')}}</label>
                     <input type="text" placeholder="HH:MM" maxlength="5" formControlName="timeOut"
-                           (input)="onCheckoutTimeInput($event)"
-                            class="w-32 border border-CustomBorder rounded-md px-3 py-2"
-                            [ngClass]="{'!border-red-500': this.checkoutTimesheet.get('timeOut')?.invalid && this.checkoutTimesheet.get('timeOut')?.touched}">
-            </div>
-            <div class="flex gap-3 mt-4">
-                <p-button class="saveBtn" styleClass="px-4" label="Checkout" (click)="checkout($event)" />
-            </div>
+                        (input)="onCheckoutTimeInput($event)">
+                </div>
+                <div class="flex gap-3 mt-4">
+                    <p-button class="saveBtn" styleClass="px-4" label="Checkout" (click)="checkout($event)" />
+                </div>
             </form>
         </ng-template>
     </p-popover>
@@ -275,19 +271,15 @@
         <ng-template pTemplate="content">
             <form [formGroup]="deleteTimesheet">
                 <div class="mb-3 mt-6">
-                        <label class="block text-sm text-Darkgray mb-1">{{this.sharedService.T('comments')}}</label>    
-                        <div [ngClass]="{'custom-error': deleteTimesheet.get('deleteComments')?.hasError('required') && deleteTimesheet.get('deleteComments')?.touched}"> 
-                        <textarea
-                        class="border border-CustomBorder rounded-md" 
-                        formControlName="deleteComments"
-                        rows="5" cols="30" 
-                        style="width: 100%; background-color: white;" 
-                        pTextarea>
+                    <label class="block mb-2">{{this.sharedService.T('comments')}}</label>
+                    <div>
+                        <textarea formControlName="deleteComments" rows="5" cols="30"
+                            style="width: 100%; background-color: white;" pTextarea>
                         </textarea>
                     </div>
                 </div>
                 <div class="flex gap-3 mt-4">
-                    <p-button class="saveBtn" styleClass="px-4" label="Delete" (click)="delete($event)" />
+                    <p-button class="saveBtn" label="Delete" (click)="delete($event)" />
                 </div>
             </form>
         </ng-template>
@@ -296,12 +288,11 @@
         <ng-template pTemplate="content">
             <div class="p-3" style="min-width: 250px;">
                 <div class="mb-3">
-                <label class="block text-sm text-Darkgray mb-1">{{this.sharedService.T('comments')}}</label>    
-                <textarea class="border border-CustomBorder rounded-md" 
-                [(ngModel)]="selectedComment" rows="4"
-                cols="30" style="width: 100%; background-color: white;" pTextarea>
+                    <label class="block mb-2">{{this.sharedService.T('comments')}}</label>
+                    <textarea [(ngModel)]="selectedComment" rows="4" cols="30"
+                        style="width: 100%; background-color: white;" pTextarea>
                 </textarea>
-                    
+
                 </div>
                 <div class="flex justify-end gap-2">
                     <p-button label="Update" size="small" class="saveBtn" styleClass="px-4"
@@ -329,18 +320,14 @@
                     <div class="mb-10">
                         <p-floatlabel variant="on">
                             <p-select [options]="employees" optionLabel="fullName" optionValue="employeeId"
-                                formControlName="employeeId" styleClass="w-full" />
+                                formControlName="employeeId" class="w-full" />
                             <label>{{this.sharedService.T('employee')}}</label>
                         </p-floatlabel>
                     </div>
 
                     <!-- Calendar -->
-                    <p-datepicker 
-                        inline="true" 
-                        dateFormat="yy-mm-dd" 
-                        formControlName="startDate"
-                        styleClass="w-full border border-CustomBorder rounded-md"
-                        (onSelect)="onSelectStartDate($event)">
+                    <p-datepicker inline="true" dateFormat="yy-mm-dd" formControlName="startDate"
+                        class="w-full border border-CustomBorder rounded-md" (onSelect)="onSelectStartDate($event)">
                     </p-datepicker>
 
                 </div>
@@ -349,64 +336,53 @@
                 <div class="flex flex-col">
 
                     <div class="mb-4">
-                        <label class="block text-sm text-Darkgray mb-1">{{this.sharedService.T('date')}}</label>
-                        <p-datepicker styleClass="w-40" 
-                        [(ngModel)]="selectedDate" 
-                        [ngModelOptions]="{standalone: true}"
-                        [disabled]="true" />
+                        <label class="block mb-2">{{this.sharedService.T('date')}}</label>
+                        <p-datepicker class="w-full" [(ngModel)]="selectedDate" [ngModelOptions]="{standalone: true}"
+                            [disabled]="true" />
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-sm text-Darkgray mb-1">{{this.sharedService.T('type')}}</label>
-                        <p-selectButton [options]="timesheetTypeOptions"
-                            formControlName="timesheetType" optionLabel="text" optionValue="value"
-                            (onChange)="onChangeTimesheetType($event)">
+                        <label class="block mb-2">{{this.sharedService.T('type')}}</label>
+                        <p-selectButton [options]="timesheetTypeOptions" formControlName="timesheetType"
+                            optionLabel="text" optionValue="value" (onChange)="onChangeTimesheetType($event)">
                         </p-selectButton>
                     </div>
 
                     @if(getf('timesheetType')?.value !== 'workhour') {
                     <div class="mb-4 flex items-center gap-2 text-sm text-Darkgray">
                         <input type="checkbox" checked [disabled]="true" />
-                            {{this.sharedService.T('fullDay')}}
+                        {{this.sharedService.T('fullDay')}}
                     </div>
                     }
 
                     @if(getf('timesheetType')?.value === 'workhour') {
                     <div class="mb-4">
-                        <label class="block text-sm text-Darkgray mb-1">{{this.sharedService.T('timeIn')}}</label>
+                        <label class="block mb-2">{{this.sharedService.T('timeIn')}}</label>
                         <input type="text" placeholder="HH:MM" maxlength="5" formControlName="timeIn"
-                           (input)="onTimeInInput($event)"
-                            class="w-32 border border-CustomBorder rounded-md px-3 py-2"
+                            (input)="onTimeInInput($event)" class="w-32 border rounded-md px-3 py-2"
                             [ngClass]="{'!border-red-500': getf('timeIn')?.invalid && getf('timeIn')?.touched}">
                     </div>
                     <!-- (input)="onTimeInput($event)"  -->
                     <div class="mb-4">
-                        <label class="block text-sm text-Darkgray mb-1">{{this.sharedService.T('timeOut')}}</label>
+                        <label class="block mb-2">{{this.sharedService.T('timeOut')}}</label>
                         <input type="text" placeholder="HH:MM" maxlength="5" formControlName="timeOut"
-                            (input)="onTimeOutInput($event)"
-                            class="w-32 border rounded-md px-3 py-2 transition-all outline-none" [ngClass]="{
-            '!border-red-500 bg-red-50': (getf('timeOut')?.invalid && getf('timeOut')?.touched) || getf('timeOut')?.hasError('invalidTime'),
-            'border-CustomBorder': !getf('timeOut')?.hasError('invalidTime')
-        }">
+                            (input)="onTimeOutInput($event)" class="w-32 border rounded-md px-3 py-2">
                     </div>
                     }
                     <div class="flex-1">
-                        <label class="block text-sm text-Darkgray mb-1">{{this.sharedService.T('comments')}}</label>
-                        <textarea formControlName="comments" rows="5"
-                            class="w-64 border border-CustomBorder rounded-md px-3 py-2 bg-white"
-                            [ngClass]="{'!border-red-500': getf('comments')?.invalid && getf('comments')?.touched}"
-                            pTextarea>
+                        <label class="block mb-2">{{this.sharedService.T('comments')}}</label>
+                        <textarea formControlName="comments" rows="5" pTextarea>
                     </textarea>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="flex mb-5 gap-3 mt-4">
-                <p-button [raised]="true" label="{{ this.sharedService.T('registerTime') }}" size="large" styleClass="border-0 px-5"
-                    (click)="checkIn()">
+                <p-button [raised]="true" label="{{ this.sharedService.T('registerTime') }}" size="large"
+                    styleClass="border-0 px-5" icon="pi pi-plus" (click)="checkIn()">
                 </p-button>
-                <p-button size="large" styleClass="border-0 px-5" styleClass="cancel-button" label="{{ this.sharedService.T('cancel') }}" 
-                    (click)="cancelCheckIn()">
+                <p-button size="large" severity="secondary" styleClass="cancel-button"
+                    label="{{ this.sharedService.T('cancel') }}" (click)="cancelCheckIn()">
                 </p-button>
             </div>
         </form>

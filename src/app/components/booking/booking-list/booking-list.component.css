@@ -1,9 +1,43 @@
 /* :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td,
 :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
   border-color: var(--booking-border);
+} */
+
+:host ::ng-deep .booking-icon-btn > button {
+  height: 26px;
+  width: 26px;
+  padding: 0;
+  border-radius: 9999px;
 }
 
-.booking-slide {
+
+.time-span {
+  position: relative;
+}
+
+.time-span::before {
+  content: '';
+  position: absolute;
+  inset: 4px 6px;
+  background-color: var(--p-primary-200);
+  /* background: linear-gradient(180deg, rgba(59, 130, 246, 0.18), rgba(14, 165, 233, 0.08)); */
+  border-radius: 0.4rem;
+  pointer-events: none;
+}
+
+.time-span > * {
+  position: relative;
+  z-index: 1;
+}
+
+::ng-deep .p-datatable .modal_table > tr > td,
+::ng-deep .p-datatable .modal_table > tr > th {
+    /* border: none  !important; */
+    text-align: start !important;
+    padding: 10px 10px;
+}
+
+/* .booking-slide {
   display: flex;
   flex: 0 0 100%;
   flex-direction: column;
@@ -609,3 +643,5 @@
     width: 40%;
   }
 } */
+
+

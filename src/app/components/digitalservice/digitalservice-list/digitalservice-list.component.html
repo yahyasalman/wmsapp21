@@ -24,6 +24,8 @@
 
   <form [formGroup]="filters">
     <div class="p-8 rounded-lg shadow-lg bg-white">
+
+
       <div class="mb-6 mt-1 text-sm font-medium shadow-sm rounded-md p-5">
         <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
 
@@ -210,22 +212,26 @@
             </div>
 
             <div>
-              <label class="block mb-2">{{ this.sharedService.T('digitalWorkshopId') }} *</label>
+              <label class="block mb-2">{{ this.sharedService.T('digitalWorkshopId') }} <span
+                  class="text-red-500">*</span> </label>
+
               <input type="text" formControlName="userId" class="w-full" pInputText />
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div class="relative">
-                <label class="block mb-2">{{ this.sharedService.T('vehiclePlate') }} *</label>
+                <label class="block mb-2">{{ this.sharedService.T('vehiclePlate') }}<span
+                    class="text-red-500">*</span></label>
                 <p-iconfield>
                   <p-inputicon class=" icon-primary pi pi-car" />
-                    <input pInputText type="text" class="uppercase p-2 w-full pl-12 " formControlName="vehiclePlate" maxlength="10" placeholder="ABC123"
-                      (input)="onInputChange($event)" />
+                  <input pInputText type="text" class="uppercase p-2 w-full pl-12 " formControlName="vehiclePlate"
+                    maxlength="10" placeholder="ABC123" (input)="onInputChange($event)" />
                 </p-iconfield>
               </div>
 
               <div>
-                <label class="block mb-2">{{ this.sharedService.T('vehicleMake') }} *</label>
+                <label class="block mb-2">{{ this.sharedService.T('vehicleMake') }}<span class="text-red-500">*</span>
+                </label>
                 <p-autoComplete formControlName="vehicleManufacturer" [suggestions]="manufacturers"
                   (completeMethod)="filterManufacturers($event)" [minLength]="1" placeholder="Ange söktext"
                   forceSelection="true" class="w-full">
@@ -235,27 +241,31 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }} *</label>
+                <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }} <span
+                    class="text-red-500">*</span></label>
                 <p-autoComplete formControlName="vehicleModel" [suggestions]="models"
                   (completeMethod)="filterModels($event)" [minLength]="1" placeholder="Välj modell"
                   forceSelection="true" class="w-full">
                 </p-autoComplete>
               </div>
               <div>
-                <label class="block mb-2">{{ this.sharedService.T('vehicleYear') }} *</label>
-                <input type="number" formControlName="vehicleYear" class="w-full" pInputText/>
+                <label class="block mb-2">{{ this.sharedService.T('vehicleYear') }} <span
+                    class="text-red-500">*</span></label>
+                <input type="number" formControlName="vehicleYear" class="w-full" pInputText />
               </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block mb-2">{{ this.sharedService.T('serviceDate') }} *</label>
+                <label class="block mb-2">{{ this.sharedService.T('serviceDate') }} <span
+                    class="text-red-500">*</span></label>
                 <p-date-picker formControlName="serviceDate" dataType="string" dateFormat="yy-mm-dd"
                   icon="pi pi-calendar" class="w-full">
                 </p-date-picker>
               </div>
               <div>
-                <label class="block mb-2">{{ this.sharedService.T('nextServiceDate') }} *</label>
+                <label class="block mb-2">{{ this.sharedService.T('nextServiceDate') }} <span
+                    class="text-red-500">*</span></label>
                 <p-date-picker formControlName="nextServiceDate" dataType="string" dateFormat="yy-mm-dd"
                   icon="pi pi-calendar" class="w-full">
                 </p-date-picker>
@@ -264,26 +274,30 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block mb-2">{{ this.sharedService.T('vehicleMileage') }} *</label>
-                <input type="text" formControlName="vehicleMileage" class="w-full" pInputText  />
+                <label class="block mb-2">{{ this.sharedService.T('vehicleMileage') }} <span
+                    class="text-red-500">*</span></label>
+                <input type="text" formControlName="vehicleMileage" class="w-full" pInputText />
               </div>
               <div>
-                <label class="block mb-2">{{ this.sharedService.T('nextServiceMileage') }} *</label>
-                <input formControlName="nextServiceVehicleMileage" class="w-full" pInputText/>
+                <label class="block mb-2">{{ this.sharedService.T('nextServiceMileage') }} <span
+                    class="text-red-500">*</span></label>
+                <input formControlName="nextServiceVehicleMileage" class="w-full" pInputText />
               </div>
             </div>
           </div>
 
           <div class="flex flex-col gap-4">
             <div>
-              <label class="block mb-2">{{ this.sharedService.T('serviceType') }} *</label>
+              <label class="block mb-2">{{ this.sharedService.T('serviceType') }} <span
+                  class="text-red-500">*</span></label>
               <p-select [options]="this.sharedService.getEnums('digitalserviceType')" formControlName="serviceType"
                 optionLabel="text" optionValue="value" editable="true" class="w-full"
                 (onChange)="onServiceTypeChange($event)">
               </p-select>
             </div>
             <div class="flex-grow">
-              <label class="block mb-2">{{ this.sharedService.T('workCarriedOut') }} *</label>
+              <label class="block mb-2">{{ this.sharedService.T('workCarriedOut') }} <span
+                  class="text-red-500">*</span></label>
               <p-listbox [options]="this.sharedService.getEnums('digitalservice')" [multiple]="true" [checkbox]="true"
                 formControlName="services" optionLabel="text" optionValue="value" class="w-full custom-listbox">
               </p-listbox>
@@ -299,9 +313,9 @@
 
         <div class="flex items-center gap-3">
           <p-button [raised]="true" label="{{ this.sharedService.T('createDigitalservice') }}" size="large"
-            (click)="validateDigitalService($event)">
+            icon="pi pi-plus" (click)="validateDigitalService($event)">
           </p-button>
-          <p-button size="large" styleClass="cancel-button" label="{{ this.sharedService.T('cancel') }}"
+          <p-button size="large" severity="secondary" label="{{ this.sharedService.T('cancel') }}"
             (click)="closeDigitalServiceDialog()">
           </p-button>
         </div>
