@@ -1,0 +1,6 @@
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: transparent !important;
+}
+:host ::ng-deep .p-selectable-row:hover {
+    background-color: transparent !important;
+} 

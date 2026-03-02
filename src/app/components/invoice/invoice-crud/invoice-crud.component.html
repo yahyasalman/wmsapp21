@@ -17,9 +17,9 @@
 </header>
 <!-- header end -->
  
-<section class="p-5 pb-10">
+<section class="px-5 pb-10">
     <form [formGroup]="invoice" (keydown.enter)="onEnter($event)">
-        <div class="mt-5 mb-10 bg-White p-8 gap-3 rounded-lg shadow-lg bg-white">
+        <div class="mt-5 mb-10 p-8 gap-3 rounded-lg shadow-lg bg-white">
         <div class="grid grid-cols-12 gap-5">
             <div class="col-span-6 mb-2">
                 <label class="mb-2 block" for="customerId">{{ this.sharedService.T('customerName') }}</label>
@@ -28,7 +28,9 @@
                     <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
                         [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
                         (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()" [showClear]="true" class="w-full"
-                        [placeholder]="sharedService.T('chooseCustomer')" >
+                        [placeholder]="sharedService.T('chooseCustomer')" 
+                        [invalid]="!this.invoice.get('customerId')?.value || this.invoice.get('customerId')?.value === 0">
+                        
                         <ng-template let-customer #item>
                             <div class="flex items-center gap-2">
                                 <div>{{ customer.customerName }}</div>

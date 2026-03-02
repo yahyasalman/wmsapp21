@@ -5,7 +5,7 @@
     <p class="font-normal text-2xl">{{ this.sharedService.T('invoice') }} #{{this.invoiceId}} </p>
   </div>
 </header>
-<!-- header end -->
+<!-- header end --> 
 
 <section class="px-4 pb-5">
 
@@ -38,11 +38,12 @@
           [show-borders]="false"
           class="w-full h-full block">
         </pdf-viewer>
-      </div>    </div>
+      </div>    
+    </div>
     <div class="col-span-4">
       <p-toast />
       <p-confirmdialog />
-      <div class="px-2 mb-3 mt-2 bg-white shadow rounded-xl">
+      <div class="px-2 mb-3 mt-2 pb-4 bg-white shadow rounded-xl">
           <p-button size="large" styleClass="w-full mb-3 mt-2" label="{{ this.sharedService.T('sendInvoice') }}"
             (onClick)="openEmailDialog()">
           <span class="material-symbols-outlined">forward_to_inbox</span>
@@ -81,7 +82,7 @@
 
             <div class="flex gap-2 my-3 cursor-pointer">
               <div class="w-5">
-                <span class="material-symbols-outlined">group</span>
+                <span class="material-symbols-outlined">person</span>
               </div>
               <span (click)="redirectToCustomerDetailComponent()">{{ this.sharedService.T('viewCustomer') }}</span>
             </div>

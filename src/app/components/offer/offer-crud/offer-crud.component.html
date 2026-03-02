@@ -6,17 +6,10 @@
             this.sharedService.T('editOffer')}}
             #{{offer.get('offerId')?.value}}</p>
     </div>
-    <div class="flex gap-2">
-        <span class="my-auto">{{ this.sharedService.workshopName}}</span>
-        <div
-            class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
-            <p>AS</p>
-        </div>
-    </div>
 </header>
 <!-- header end -->
 
-<section class="p-5 pb-10">
+<section class="px-5 pb-10">
     <form [formGroup]="offer" (keydown.enter)="onEnter($event)">
         <div class="mt-5 mb-10 bg-White p-8 gap-3 rounded-lg shadow-lg bg-white">
             <div class="grid grid-cols-12 gap-5">
@@ -27,7 +20,8 @@
                         <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
                             [suggestions]="customers" (completeMethod)="filterCustomer($event)"
                             optionLabel="customerName" (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()"
-                            [showClear]="true" class="w-full" [placeholder]="sharedService.T('chooseCustomer')">
+                            [showClear]="true" class="w-full" [placeholder]="sharedService.T('chooseCustomer')"
+                            [invalid]="!this.offer.get('customerId')?.value || this.offer.get('customerId')?.value === 0">
                             <ng-template let-customer #item>
                                 <div class="flex items-center gap-2">
                                     <div>{{ customer.customerName }}</div>

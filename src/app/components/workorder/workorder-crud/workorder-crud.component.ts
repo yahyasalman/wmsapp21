@@ -551,11 +551,15 @@ export class WorkOrderCrudComponent implements OnInit {
     this.logger.info('Submitting WorkOrder Form...');
 
     if (this.workOrder.invalid) {
-      this.logger.info(this.workOrder.invalid);
-      this.logger.info(this.workOrder.errors);
       this.workOrder.markAllAsTouched();
       return;
     }
+    
+    if(!this.selectedServices || this.selectedServices.length === 0){ 
+     this.workOrder.markAllAsTouched();
+      return;
+    }
+    
     this.logger.info('Form is Valid.. Starting Submittion');
 
     var submittedWorkOrder: IWorkOrder = this.workOrder.value;

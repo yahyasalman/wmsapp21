@@ -1,17 +1,7 @@
 <app-generic-loader *ngIf="isLoading"></app-generic-loader>
-
-
-<!-- header start -->
-<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
-    <div class="">
-        <p class="font-normal text-2xl">{{ this.sharedService.T('registerTime') }}</p>
-    </div>
-</header>
-<section class="p-6 pb-10">
+<section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
-        <div class="p-8 rounded-lg shadow-lg bg-white">
-
-            <div class="mb-6 mt-1 text-sm font-medium shadow-sm rounded-md p-5">
+        <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
                 <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
 
                     <div *ngIf="employeeCount > 0" class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
@@ -251,7 +241,6 @@
                     </p-paginator>
                 </div>
             </div>
-        </div>
     </form>
     <p-popover #checkoutPopup>
         <ng-template pTemplate="content">

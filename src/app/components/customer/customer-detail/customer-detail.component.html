@@ -24,7 +24,7 @@
       <p class="text-xs text-Darkgray">
         Tag: <span class="font-bold">{{ customer.customerTagName }}</span>
       </p>
-      <p-button size="small" icon="pi pi-pencil" [label]="this.sharedService.T('editCustomer')"
+      <p-button size="small" variant="outlined" icon="pi pi-pencil" [label]="this.sharedService.T('editCustomer')"
         (onClick)="redirectToCustomerCrudComponent()"></p-button>
 
 
@@ -141,7 +141,8 @@
                   <td class="id-column-cell rounded-l-lg">
 
                     <p-select [options]="getFilteredEnums(order.workOrderStatus)" [(ngModel)]="order.workOrderStatus"
-                      [ngModelOptions]="{ standalone: true }" [style]="{ width: '190px' }" [optionLabel]="'text'"
+                      [ngModelOptions]="{ standalone: true }" [optionLabel]="'text'"
+                      [style]="{ width: '179px', textAlign: 'center' }"
                       [optionValue]="'value'" appendTo="body"
                       (onChange)="onStatusChange(order.workOrderId, $event.value)">
                       <ng-template let-option pTemplate="item">
@@ -283,7 +284,7 @@
                       [(ngModel)]="offer.isSent" [ngModelOptions]="{ standalone: true }"
                       [onLabel]="this.sharedService.T('sent')" [offLabel]="this.sharedService.T('notSent')"
                       onIcon="pi pi-check" offIcon="pi pi-times" size="small"
-                      styleClass="h-9 w-28 !bg-sky border-0 rounded-md"></p-togglebutton>
+                      ></p-togglebutton>
                   </td>
                   <td class="id-column-cell rounded-l-lg">
                     <p-select [options]="this.sharedService.getEnums('offerType')" [(ngModel)]="offer.selectedOfferType"
@@ -374,7 +375,7 @@
                   <th class="table-header-cell">{{ this.sharedService.T('paymentType') }}</th>
                   <th class="table-header-cell">{{ this.sharedService.T('paymentStatus') }}</th>
                   <th class="table-header-cell">{{ this.sharedService.T('deliveryStatus') }}</th>
-                  <th class="table-header-cell">{{ this.sharedService.T('remarks') }}</th>
+                  <th class="table-header-cell">{{ this.sharedService.T('comments') }}</th>
                   <th class="table-header-cell rounded-r-xl"></th>
                 </tr>
               </ng-template>

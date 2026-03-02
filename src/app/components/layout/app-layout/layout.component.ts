@@ -116,7 +116,7 @@ palettes = [
 
                     {
                         label: this.sharedService.T('customers'),
-                        materialIcon: 'group',
+                        materialIcon: 'person',
                         routerLink:'/sv/customer',
                         styleClass: this.selectedRoute.startsWith('/sv/customer') ? 'active-menu-item' : ''
 
@@ -187,7 +187,7 @@ palettes = [
                        label: this.sharedService.T('settings'),
                         materialIcon: 'settings',
                         routerLink: '/sv/setting',
-                        styleClass: this.selectedRoute.startsWith('/sv/employment') ? 'active-menu-item' : ''
+                        styleClass: this.selectedRoute.startsWith('/sv/settings') ? 'active-menu-item' : ''
                     }
 
                 ]

@@ -22,7 +22,7 @@
 <form [formGroup]="workOrder">
   <p-toast />
 <!-- <p class="mt-1 font-semibold text-lg">Grundinformation</p> -->
-  <div class="mt-5 mb-10 bg-White p-8 gap-3 rounded-lg shadow-lg bg-white">
+  <div class="mt-5 mb-10 p-8 gap-3 rounded-lg shadow-lg bg-white">
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-3">
         <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
@@ -31,7 +31,8 @@
              <p-inputicon class=" icon-primary pi pi-car" />
           <input pInputText type="text" formControlName="vehiclePlate" maxlength="10" placeholder="ABC123"
             (input)="onInputChange($event)"
-            class="uppercase p-2 w-full pl-12 " />
+            class="uppercase p-2 w-full pl-12 "
+            [invalid]="!this.workOrder.get('vehiclePlate')?.value"  />
             </p-iconfield>
         </div>
       </div>
@@ -76,7 +77,8 @@
           <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
             [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
             (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()" [showClear]="true"
-            [placeholder]="sharedService.T('chooseCustomer')" styleClass="w-full" class="w-full">
+            [placeholder]="sharedService.T('chooseCustomer')" styleClass="w-full" class="w-full"
+            [invalid]="!this.workOrder.get('customerId')?.value || this.workOrder.get('customerId')?.value === 0">
             <ng-template let-customer #item>
               <div class="flex items-center gap-2">
                 <div>{{ customer.customerName }}</div>
@@ -213,7 +215,8 @@
 
         <p-multiselect *ngIf="services && services.length" [options]="services" [(ngModel)]="selectedServices"
           [ngModelOptions]="{ standalone: true }" optionLabel="serviceName" placeholder="select"
-          (onChange)="onSelectService($event)" [maxSelectedLabels]="5" class="w-full" />
+          (onChange)="onSelectService($event)" [maxSelectedLabels]="5" class="w-full"
+          [invalid]="!this.workOrder.get('selectedServices')?.value || this.workOrder.get('selectedServices')?.value.length === 0"   />
 
 
       </div>

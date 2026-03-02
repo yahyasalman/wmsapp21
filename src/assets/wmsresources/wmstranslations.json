@@ -1660,6 +1660,16 @@
         "sv": "Godkänd"
     },
     {
+        "tkey": "add_booking_at_time",
+        "en": "Add Booking at",
+        "sv": "Lägg till bokning kl."
+    },
+    {
+        "tkey": "offerHistory",
+        "en": "Offer History",
+        "sv": "Offerthistorik"
+    },
+    {
         "tkey": "success",
         "en": "Success",
         "sv": "Lyckades"

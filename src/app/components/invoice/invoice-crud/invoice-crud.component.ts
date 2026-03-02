@@ -451,18 +451,18 @@ export class InvoiceCrudComponent implements OnInit {
 
 onFormSubmit() {
     this.errorOnCustomer = false;
-    const currentCustomerId = this.invoice.get('customerId')?.value;
-  
-  if (!currentCustomerId || currentCustomerId === 0) {
-    this.errorOnCustomer = true;
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: this.sharedService.T('Customer name is required'),
-      life: 3000
-    });
-    return;
-  }
+  // const currentCustomerId = this.invoice.get('customerId')?.value;
+  // if (!currentCustomerId || currentCustomerId === 0) {
+  //   this.errorOnCustomer = true;
+  //   this.messageService.add({
+  //     severity: 'error',
+  //     summary: 'Error',
+  //     detail: this.sharedService.T('Customer name is required'),
+  //     life: 3000
+  //   });
+  //   return;
+  // }
+
     var invoice: IInvoice = this.invoice.value;
     invoice.details = [];
 

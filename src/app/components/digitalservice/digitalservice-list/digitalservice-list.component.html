@@ -1,34 +1,11 @@
 <app-generic-loader *ngIf="isLoading"></app-generic-loader>
-<!-- header start -->
-<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
-  <div class="">
-    <p class="font-normal text-2xl">{{ this.sharedService.T('digitalServiceRecord') }}</p>
-  </div>
-  <div class="flex gap-2">
-    <span class="my-auto">{{ this.sharedService.workshopName}}</span>
-    <div
-      class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
-      <p>AS</p>
-    </div>
-  </div>
-</header>
-
-<!-- header end -->
-
-<!-- <main class="flex-1 overflow-x-hidden overflow-y-auto bg-bgColor">
- <div class="container px-4 mx-auto"> -->
-
-<section class="p-6 pb-10">
+<section class="p-6 pb-10 bg-white">
   <p-toast />
   <p-confirmdialog />
 
   <form [formGroup]="filters">
-    <div class="p-8 rounded-lg shadow-lg bg-white">
-
-
-      <div class="mb-6 mt-1 text-sm font-medium shadow-sm rounded-md p-5">
+    <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
         <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
-
           <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
             <p-button [raised]="true" size="large" label="{{ this.sharedService.T('createDigitalservice') }}"
               icon="pi pi-plus" (onClick)="openDigitalServiceDialog()">
@@ -176,7 +153,6 @@
           </p-paginator>
         </div>
       </div>
-    </div>
   </form>
   <!-- digital service popup code -->
 

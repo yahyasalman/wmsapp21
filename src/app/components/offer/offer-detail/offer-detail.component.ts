@@ -11,15 +11,16 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, firstValueFrom } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
-
+import { TimelineModule } from 'primeng/timeline';
 @Component({
   selector: 'app-offer-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent,
+    ...SHARED_IMPORTS, GenericLoaderComponent, TimelineModule,
     PdfViewerModule
   ], providers: [ConfirmationService, MessageService],
-  templateUrl: './offer-detail.component.html'
+  templateUrl: './offer-detail.component.html',
+  styleUrls: ['./offer-detail.component.css']
 })
 export class OfferDetailComponent {
 

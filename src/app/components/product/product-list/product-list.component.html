@@ -1,8 +1,7 @@
-<section class="px-5 py-10">
-    <app-generic-loader *ngIf="isLoading"></app-generic-loader>
-
+<app-generic-loader *ngIf="isLoading"></app-generic-loader>
+<section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
-        <div class="mb-6 mt-10 bg-white rounded-md p-5">
+        <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
             <div class="flex gap-4 mb-6">
                 <div class="flex gap-3 ">
                     <p-button [raised]="true" label="{{this.sharedService.T('createProduct')}}" size="large"
