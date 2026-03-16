@@ -9,7 +9,6 @@ import { WorkshopService } from 'app/services/workshop.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, Observable } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from '../shared/generic-loader/generic-loader.component';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ProductService } from 'app/services/product.service';
 import { SaleService } from 'app/services/sale.service ';
@@ -20,7 +19,7 @@ import { AiService } from 'app/services/ai.service';
   selector: 'app-customer-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,GenericLoaderComponent, SplitterModule,DragDropModule
+    ...SHARED_IMPORTS,SplitterModule,DragDropModule
   ],
   templateUrl: './setting-crud.component.html',
   styleUrl: './setting-crud.component.css',

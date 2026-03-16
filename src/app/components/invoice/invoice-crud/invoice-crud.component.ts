@@ -9,12 +9,11 @@ import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { ProductService } from 'app/services/product.service';
-import { CustomerInputComponent } from 'app/components/shared/customer-input/customer-input.component';
 import { MenuItem, MessageService, SortEvent } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { catchError } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AiService } from 'app/services/ai.service';
 import { CustomerService } from 'app/services';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -28,7 +27,7 @@ import { InputIconModule } from 'primeng/inputicon';
     ...SHARED_IMPORTS,
     DragDropModule,
     // CustomerInputComponent,
-    GenericLoaderComponent,IconFieldModule,InputIconModule 
+    IconFieldModule,InputIconModule,ProgressSpinnerModule 
   ],
   templateUrl: './invoice-crud.component.html',
   styleUrl: './invoice-crud.component.css',
@@ -233,11 +232,17 @@ export class InvoiceCrudComponent implements OnInit {
   }
 
   // detail selection
-  getProducts(event: AutoCompleteCompleteEvent) {
+  getProducts(detail:any, event: AutoCompleteCompleteEvent) {
     this.isSpinnerLoading = true;
+    let category = detail.get('category').value;
+    this.logger.info(category);
     let query = event.query;
     this.productService.getProductsByprefix(query).subscribe((response) => {
-      this.products = response;
+
+      this.products = response
+        .filter((product: any) => product.category === category)
+        .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
+      this.logger.info(this.products);
       this.isSpinnerLoading = false;
     })
 
@@ -448,21 +453,12 @@ export class InvoiceCrudComponent implements OnInit {
     // const keyboardEvent = event as KeyboardEvent;
     event.preventDefault(); 
   }
-
+onBlurProduct(event: any, detail: AbstractControl): void {
+  const typedValue = event.target.value; // Get the typed value from the input
+  detail.get('product')?.setValue(typedValue); // Update the form control with the typed value
+}
 onFormSubmit() {
     this.errorOnCustomer = false;
-  // const currentCustomerId = this.invoice.get('customerId')?.value;
-  // if (!currentCustomerId || currentCustomerId === 0) {
-  //   this.errorOnCustomer = true;
-  //   this.messageService.add({
-  //     severity: 'error',
-  //     summary: 'Error',
-  //     detail: this.sharedService.T('Customer name is required'),
-  //     life: 3000
-  //   });
-  //   return;
-  // }
-
     var invoice: IInvoice = this.invoice.value;
     invoice.details = [];
 
@@ -485,25 +481,25 @@ onFormSubmit() {
     }
 
     this.isLoading = true;
-
-    this.invoiceService
-      .upsertInvoice(invoice)
-      .pipe(
-        catchError((err) => {
-          this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
-      )
-      .subscribe((res: any) => {
-        this.isLoading = false;
+    this.logger.info('Submitting invoice:', invoice);
+    // this.invoiceService
+    //   .upsertInvoice(invoice)
+    //   .pipe(
+    //     catchError((err) => {
+    //       this.isLoading = false;
+    //       console.log(err);
+    //       throw err;
+    //     })
+    //   )
+    //   .subscribe((res: any) => {
+    //     this.isLoading = false;
         
-        if (res) {
-          this.sharedService.clearState();
-          this.sharedService.setState({ disableEdit: 'false', creditInvoice: 'false', customerId: invoice.customerId, customerEmail: invoice.customerEmail });
-          this.router.navigate([`sv/invoice/details/${res.data?.invoiceId || invoice.invoiceId}`]); 
-        }
-      });
+    //     if (res) {
+    //       this.sharedService.clearState();
+    //       this.sharedService.setState({ disableEdit: 'false', creditInvoice: 'false', customerId: invoice.customerId, customerEmail: invoice.customerEmail });
+    //       this.router.navigate([`sv/invoice/details/${res.data?.invoiceId || invoice.invoiceId}`]); 
+    //     }
+    //   });
   }
     onCancelForm() {
     this.location.back();

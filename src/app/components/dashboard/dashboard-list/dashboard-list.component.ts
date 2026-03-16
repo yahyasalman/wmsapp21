@@ -2,7 +2,7 @@ import { Component, OnInit, PLATFORM_ID, ChangeDetectorRef, inject, OnDestroy } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { Form, FormBuilder, FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
-import {IInvoice, IMonthSummary, IOutStandingBalance, IPager, ITopCustomer, ITopManufacturer, ITopSale, IUnpaidInvoice } from 'app/app.model';
+import {IInvoice, IMonthSummary, IOffer, IOutStandingBalance, IPager, ITopCustomer, ITopManufacturer, ITopSale, IUnpaidInvoice } from 'app/app.model';
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
 import { DashboardService } from 'app/services/dashboard.service';
@@ -13,14 +13,14 @@ import { catchError, concatMap, forkJoin, map, Observable, of, switchMap, tap, S
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { InvoiceService } from 'app/services/invoice.service';
 import { SelectChangeEvent } from 'primeng/select';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
   selector: 'app-dashboard-list',
   standalone: true,
  imports: [
-    ...SHARED_IMPORTS,GenericLoaderComponent,ProgressBarModule 
+    ...SHARED_IMPORTS,ProgressSpinnerModule,ProgressBarModule 
   ],
     templateUrl: './dashboard-list.component.html',
   styleUrl: './dashboard-list.component.css'
@@ -36,6 +36,7 @@ progressPercentage:number = 0;
 
   
   unpaidInvoices: IUnpaidInvoice[] = [];
+  waitingOffers:IOffer[] = [];
   pager:IPager = <IPager>{};
   
   topSales:ITopSale[] = [];
@@ -348,8 +349,8 @@ onPeriodChange(event: any): void {
         })
       )
       .subscribe((res) => {
-        this.unpaidInvoices = res.objectList;
-        this.pager = res.pager;
+        this.unpaidInvoices = res;
+        //this.pager = res.pager;
         this.logger.info('unpaidInvoices',this.unpaidInvoices);
       });
 
@@ -358,6 +359,28 @@ onPeriodChange(event: any): void {
 }, 500);
     }
 
+  getWaitingOffers() {
+     this.isLoading = true;
+    this.logger.info('getWaitingOffers',this.filters.value);
+    this.dashboardService
+      .getWaitingOffers()
+      .pipe(
+        catchError((err) => {
+          this.logger.error(err);
+          this.isLoading = false;
+          throw err;
+        })
+      )
+      .subscribe((res) => {
+        this.waitingOffers = res;
+        //this.pager = res.pager;
+        this.logger.info('waitingOffers',this.waitingOffers);
+      });
+
+      setTimeout(() => {
+  this.isLoading = false;
+}, 500);
+    }
 
  async loadDashboardCards() {
   this.isLoading = true;
@@ -418,41 +441,7 @@ onPeriodChange(event: any): void {
   /**
    * Convert hex color to rgba format
    */
-  hexToRgba(hex: string, alpha: number): string {
-    // Remove '#' if present and trim whitespace
-    hex = hex.trim().replace('#', '');
-    
-    // Handle short hex format (e.g., #FFF)
-    if (hex.length === 3) {
-      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-    }
-    
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
-
-  /**
-   * Generate a complementary color for better contrast
-   * Takes a hex color and returns a contrasting lighter color
-   */
-  getContrastColor(hexColor: string): string {
-    const hex = hexColor.trim().replace('#', '');
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-
-    // Create a lighter, warm complementary color (orange/amber range)
-    // Shift towards orange: boost red, reduce blue
-    const contrastR = Math.min(255, Math.floor((r + 255) / 2 + 40));
-    const contrastG = Math.min(255, Math.floor((g + 150) / 2));
-    const contrastB = Math.min(255, Math.floor(b / 2));
-
-    const contrastHex = `${contrastR.toString(16).padStart(2, '0')}${contrastG.toString(16).padStart(2, '0')}${contrastB.toString(16).padStart(2, '0')}`;
-    return `#${contrastHex}`;
-  }
+  
 
   lineChart() {
     this.logger.info('Initializing chart with top sales data:');
@@ -461,24 +450,23 @@ onPeriodChange(event: any): void {
     if (isPlatformBrowser(this.platformId)) {
       // Get PrimeNG Design Tokens from CSS Variables (v21 Styled Mode)
       const documentStyle = getComputedStyle(document.documentElement);
-      
-      // Semantic Tokens for text and surface
       const textColor = documentStyle.getPropertyValue('--p-text-color').trim();
       const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color').trim();
       const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color').trim();
+
       
       // Primary Color Tokens (Automatically adapts to selected theme: Rose, Indigo, Emerald, Violet)
       const primaryColor = documentStyle.getPropertyValue('--p-primary-500').trim();
-      const primaryLight = documentStyle.getPropertyValue('--p-primary-100').trim();
-      const primaryLighter = documentStyle.getPropertyValue('--p-primary-50').trim();
+      const primaryLight = documentStyle.getPropertyValue('--p-primary-200').trim();
       
-      // Secondary/Success Color Tokens (for contrast)
-      const successColor = documentStyle.getPropertyValue('--p-success-500').trim();
-      const successLight = documentStyle.getPropertyValue('--p-success-100').trim();
-      const successLighter = documentStyle.getPropertyValue('--p-success-50').trim();
+      const emerald = documentStyle.getPropertyValue('--p-emerald-500').trim();
+      const emeraldLight = documentStyle.getPropertyValue('--p-emerald-200').trim();
       
-      // Generate a contrasting color for second dataset (derived from primary, not black)
-      const contrastColor = this.getContrastColor(primaryColor);
+      const amber = documentStyle.getPropertyValue('--p-amber-500').trim();
+      const amberLight = documentStyle.getPropertyValue('--p-amber-200').trim();
+
+      
+      
       
       this.lineChartData = {
         labels: Array.from({ length: this.topSales.map((m: any) => m.monthYear).length }, (_, i) => (this.months.find(m => m.key === this.topSales[i].monthYear.split('-')[0])?.value ?? '') + ' ' + this.topSales[i].monthYear.split('-')[1]), 
@@ -489,7 +477,7 @@ onPeriodChange(event: any): void {
             fill: true,
             tension: 0.4,
             borderColor: primaryColor,
-            backgroundColor: this.hexToRgba(primaryColor, 0.15),
+            backgroundColor: primaryLight,
             pointBackgroundColor: primaryColor,
             pointBorderColor: primaryColor,
             pointRadius: 0,
@@ -502,10 +490,10 @@ onPeriodChange(event: any): void {
             data: this.topSales.map((m: any) => Number(m.partsSale)),
             fill: true,
             tension: 0.4,
-            borderColor: contrastColor,
-            backgroundColor: this.hexToRgba(contrastColor, 0.15),
-            pointBackgroundColor: contrastColor,
-            pointBorderColor: contrastColor,
+            borderColor: emerald,
+            backgroundColor: emeraldLight, // Tailwind's emerald-200 for a fresh contrast
+            pointBackgroundColor: emerald,
+            pointBorderColor: emerald,
             pointRadius: 0,
             pointHoverRadius: 8,
             borderWidth: 3,
@@ -516,10 +504,10 @@ onPeriodChange(event: any): void {
             data: this.topSales.map((m: any) => Number(m.otherSale)),
             fill: true,
             tension: 0.4,
-            borderColor: contrastColor,
-            backgroundColor: this.hexToRgba(contrastColor, 0.15),
-            pointBackgroundColor: contrastColor,
-            pointBorderColor: contrastColor,
+            borderColor: amber,
+            backgroundColor: amberLight,
+            pointBackgroundColor: amber,
+            pointBorderColor: amber,
             pointRadius: 0,
             pointHoverRadius: 8,
             borderWidth: 3,
@@ -550,7 +538,7 @@ onPeriodChange(event: any): void {
             position: 'top' as const
           },
           tooltip: {
-            backgroundColor: this.hexToRgba(textColor, 0.95),
+            backgroundColor: textColor,
             padding: 12,
             titleColor: '#fff',
             bodyColor: '#fff',

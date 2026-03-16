@@ -80,7 +80,13 @@ palettes = [
         this.selectedWorkshop = this.workshops[0];
         this.theme.setPrimaryPalette(this.selectedWorkshop.defaultTheme);
         this.selectedTheme = this.selectedWorkshop.defaultTheme;
-        this.selectedLang = this.selectedWorkshop.defaultLang;
+        
+        this.selectedLang = sessionStorage.getItem('lang') || this.selectedWorkshop.defaultLang;
+
+        // this.logger.info('Selected Language from workshop::', this.selectedLang ,this.selectedWorkshop.defaultLang);
+        // if(this.selectedLang === '' || this.selectedLang === null){
+        //   this.selectedLang = this.selectedWorkshop.defaultLang;
+        // }
         this.currentUser = sessionStorage.getItem('userName');
         this.logger.info(this.workshop);
       }
@@ -188,9 +194,10 @@ palettes = [
 
   }
   ChangeLang(event:any){
-
   this.logger.info('language changed::' + event.value);
   sessionStorage.setItem('lang',event.value);
+  sessionStorage.setItem('lang', event.value);
+  this.selectedLang = event.value;
   window.location.reload();
 }
 

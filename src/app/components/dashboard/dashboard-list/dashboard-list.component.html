@@ -1,4 +1,8 @@
-<app-generic-loader *ngIf="isLoading"></app-generic-loader>
+<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+    <div class="bg-white rounded-lg p-8 shadow-lg">
+    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+    </div>
+</div>
 
 <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
   <div class="">
@@ -195,8 +199,8 @@
                     <h3 class="text-lg font-semibold">{{this.sharedService.T('unpaidInvoicesByCustomers')}}</h3>
                 </div>
                 <div class="">
-     <p-table [lazy]="true" [value]="unpaidInvoices" [rows]="10"
-        responsiveLayout="scroll" [sortOrder]="-1">
+                <p-table [value]="unpaidInvoices" [rows]="10"
+         [sortOrder]="-1">
         <ng-template #header>
           <tr>
             <th class="id-column-header rounded-l-xl" pSortableColumn="customerId">

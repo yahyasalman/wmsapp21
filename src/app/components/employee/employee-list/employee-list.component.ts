@@ -7,14 +7,14 @@ import { catchError } from 'rxjs';
 import { LogService } from 'app/services/log.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 // import { GenericLoaderComponent } from '../shared/generic-loader/generic-loader.component';
 @Component({
   selector: 'app-employee-list',
   standalone: true,
   imports: [
     ...SHARED_IMPORTS,
-    GenericLoaderComponent
+    ProgressSpinnerModule
   ],
   templateUrl: './employee-list.component.html'
 })

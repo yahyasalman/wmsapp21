@@ -12,15 +12,14 @@ import { RemovePlaceholderOnFocusDirective } from 'app/directives/remove-placeho
 import { WorkshopService } from 'app/services/workshop.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
-
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 @Component({
   selector: 'app-customer-crud',
   standalone: true,
   imports: [
     ...SHARED_IMPORTS,
-    RemovePlaceholderOnFocusDirective
-    , GenericLoaderComponent
+   RemovePlaceholderOnFocusDirective,ProgressSpinnerModule
+
 
   ],
   templateUrl: './customer-crud.component.html',

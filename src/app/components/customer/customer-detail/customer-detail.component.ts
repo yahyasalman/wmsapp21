@@ -16,7 +16,6 @@ import { RemovePlaceholderOnFocusDirective } from 'app/directives/remove-placeho
 import { WorkOrderService } from 'app/services/workorder.service';
 import { BookingService } from 'app/services/booking.service';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 
 @Component({
   selector: 'app-customer-detail',
@@ -31,24 +30,10 @@ import { GenericLoaderComponent } from 'app/components/shared/generic-loader/gen
 })
 export class CustomerDetailComponent implements OnInit {
 
-  customerId: number = 0;
   customer: ICustomer = <ICustomer>{};
-
-  // Filters 
-  workOrderFilters: FormGroup;
-  offerFilters: FormGroup;
-  invoiceFilters: FormGroup;
-  // Objects
-
   orders: IWorkOrder[] = [];
   offers: IOffer[] = [];
   invoices: IInvoice[] = [];
-
-  // Pagers
-
-  workOrderPager: IPager = <IPager>{};
-  offerPager: IPager = <IPager>{};
-  invoicePager: IPager = <IPager>{};
 
   // Totals
   offerTotal: number = 0;
@@ -86,9 +71,6 @@ export class CustomerDetailComponent implements OnInit {
               private messageService: MessageService
               ) {
                 
-                this.workOrderFilters = this.fb.group({customerId:this.customerId,currentPage:1,pageSize:10});
-                this.offerFilters = this.fb.group({customerId:this.customerId,currentPage:1,pageSize:10});
-                this.invoiceFilters = this.fb.group({customerId:this.customerId,currentPage:1,pageSize:10});
                 this.payment = this.fb.group({
                       invoiceId:'',
                       paymentId:0,
@@ -101,18 +83,15 @@ export class CustomerDetailComponent implements OnInit {
                  
   }
   ngOnInit() {
-    this.customerId = Number(this.route.snapshot.paramMap.get('customerId'));
-    this.getCustomer();
-    this.getWorkOrders();
-    this.getInvoices();
-    this.getOffers();
+    const customerId = Number(this.route.snapshot.paramMap.get('customerId'));
+    this.getCustomer(customerId);
   }
 
 
-  getCustomer() {
+  getCustomer(customerId:number) {
     this.isLoading = true;
     this.customerService
-      .getCustomer(this.customerId)
+      .getCustomer(customerId)
       .pipe(
         catchError((err) => {
           this.isLoading = false;
@@ -123,9 +102,9 @@ export class CustomerDetailComponent implements OnInit {
       .subscribe((response: any) => {
         if (response) {
           this.customer = response.data;
-          this.workOrderFilters.patchValue({ customerId: this.customerId });
-          this.offerFilters.patchValue({ customerId: this.customerId });
-          this.invoiceFilters.patchValue({ customerId: this.customerId });
+          this.getWorkOrders(this.customer.customerId);
+          this.getOffers(this.customer.customerId);
+          this.getInvoices(this.customer.customerId);
         }
         setTimeout(() => {
           this.isLoading = false;
@@ -135,10 +114,10 @@ export class CustomerDetailComponent implements OnInit {
 
   // WorkOrder Methods
 
-  getWorkOrders() {
+  getWorkOrders(customerId:number) {
     this.isLoading = true;
     this.workOrderService
-      .getWorkOrders(this.workOrderFilters)
+      .getWorkOrdersByCustomerId(customerId)
       .pipe(
         catchError((err) => {
           this.isLoading = false;
@@ -147,7 +126,7 @@ export class CustomerDetailComponent implements OnInit {
         })
       )
       .subscribe((res) => {
-        this.orders = res.objectList;
+        this.orders = res
         this.orders.forEach((order) => {
           order.workOrderDate = new Date(order.workOrderDate).toISOString().split('T')[0];
           this.workOrderStatus = [];
@@ -161,30 +140,10 @@ export class CustomerDetailComponent implements OnInit {
             });
           }
         });
-        this.workOrderPager = res.pager;
         setTimeout(() => {
           this.isLoading = false;
         }, 500);
       });
-  }
-
-  sortWorkOrderTable(e: any) {
-    if (e) {
-      let pageIndex = e.first / e.rows;
-      this.workOrderPager.firstPage = e.first;
-      this.workOrderFilters.patchValue({ currentPage: (++pageIndex).toString(), pageSize: e.rows, sortDir: e.sortOrder, sortBy: e.sortField });
-      this.getWorkOrders();
-    }
-  }
-
-  onPageChangeWorkOrder(e: any) {
-    this.workOrderFilters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-    this.getWorkOrders();
-  }
-
-  onPageSizeChangeWorkOrder(event: SelectChangeEvent) {
-    this.workOrderFilters.patchValue({ pageSize: event.value });
-    this.getWorkOrders();
   }
 
   getFilteredEnums(workOrderStatus: string) {
@@ -206,7 +165,7 @@ export class CustomerDetailComponent implements OnInit {
       )
       .subscribe((res: any) => {
         if (res) {
-          this.getWorkOrders();
+          this.getWorkOrders(this.customer.customerId);
         }
         setTimeout(() => {
           this.isLoading = false;
@@ -274,7 +233,7 @@ export class CustomerDetailComponent implements OnInit {
           .subscribe((res: any) => {
             if (res) {
               this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('confirmSaveMessage') });
-              this.getWorkOrders();
+              this.getWorkOrders(this.customer.customerId);
             }
             setTimeout(() => {
               this.isLoading = false;
@@ -294,10 +253,10 @@ export class CustomerDetailComponent implements OnInit {
 
   // Offer Methods
 
-  getOffers() {
+  getOffers(customerId:number) {
     this.isLoading = true;
     this.offerService
-      .getOffers(this.offerFilters)
+      .getOffersByCustomerId(customerId)
       .pipe(
         catchError((err) => {
           this.isLoading = false;
@@ -306,9 +265,7 @@ export class CustomerDetailComponent implements OnInit {
         })
       )
       .subscribe((res) => {
-        const objectData: any = res.objectList;
-        this.offers = objectData;
-
+        this.offers = res;
         this.offers.forEach((offer) => {
           let offerTypeValue = 'pending';
           if (offer.isAccepted)
@@ -318,11 +275,10 @@ export class CustomerDetailComponent implements OnInit {
           offer.selectedOfferType = offerTypeValue;
         });
 
-        this.offerPager = res.pager;
         
         // Nested Call
         this.offerService
-          .offerSumByCustomer(this.customerId)
+          .offerSumByCustomer(this.customer.customerId)
           .pipe(
             catchError((err) => {
               this.isLoading = false;
@@ -353,27 +309,6 @@ export class CustomerDetailComponent implements OnInit {
   redirectToOfferCrudComponent() {
     this.router.navigate(['sv/offer/crud', { customerId: this.customer.customerId }]);
   }
-
-  onPageChangeOffer(e: any) {
-    this.offerFilters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-    this.getOffers();
-  }
-
-  onPageSizeChangeOffer(event: SelectChangeEvent) {
-    this.offerFilters.patchValue({ pageSize: event.value });
-    this.getOffers();
-  }
-
-  sortOfferTable(e: any) {
-    if (e) {
-      let pageIndex = e.first / e.rows;
-      this.offerPager.firstPage = e.first;
-      this.offerFilters.patchValue({ currentPage: (++pageIndex).toString(), pageSize: e.rows, sortDir: e.sortOrder, sortBy: e.sortField });
-      this.getOffers();
-    }
-  }
-
-
   getSeverityOffer(status: string): "success" | "secondary" | "info" | "warn" | "danger" | "contrast" | undefined {
     switch (status) {
       case 'pending':
@@ -418,7 +353,7 @@ export class CustomerDetailComponent implements OnInit {
           )
           .subscribe((res: any) => {
             if (res) {
-              this.getOffers();
+              this.getOffers(this.customer.customerId);
             }
             setTimeout(() => {
               this.isLoading = false;
@@ -429,10 +364,10 @@ export class CustomerDetailComponent implements OnInit {
 
 
   // Invoice Methods
-  getInvoices() {
+  getInvoices(customerId:number) {
     this.isLoading = true;
     this.invoiceService
-      .getInvoices(this.invoiceFilters)
+      .getInvoicesByCustomerId(customerId)
       .pipe(
         catchError((err) => {
           this.isLoading = false;
@@ -441,9 +376,7 @@ export class CustomerDetailComponent implements OnInit {
         })
       )
       .subscribe((res) => {
-        this.invoices = res.objectList;
-        this.invoicePager = res.pager;
-        
+        this.invoices = res;
         // We handle the loading stop here for the main list
         setTimeout(() => {
           this.isLoading = false;
@@ -452,7 +385,7 @@ export class CustomerDetailComponent implements OnInit {
 
     // We don't control main spinner with this secondary call to avoid flickering
     this.invoiceService
-      .invoiceSumByCustomer(this.customerId)
+      .invoiceSumByCustomer(this.customer.customerId)
       .pipe(
         catchError((err) => {
           // No isLoading=false here, let the main list handle it
@@ -502,7 +435,7 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   redirectToInvoiceCrudComponent() {
-    this.router.navigate(['sv/invoice/crud', { customerId: this.customerId }]);
+    this.router.navigate(['sv/invoice/crud', { customerId: this.customer.customerId }]);
   }
 
   redirectToCustomerCrudComponent() {
@@ -538,7 +471,7 @@ export class CustomerDetailComponent implements OnInit {
             .subscribe((res: any) => {
               if (res) {
                 this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('sentSuccessMessage') });
-                this.getInvoices();
+                this.getInvoices(this.customer.customerId);
               }
               else {
                 this.messageService.add({ severity: 'error', summary: '', detail: this.sharedService.T('emailSentConfirmMessageError') });
@@ -555,7 +488,7 @@ export class CustomerDetailComponent implements OnInit {
             detail: this.sharedService.T('cancelled'),
             life: 3000,
           });
-          this.getInvoices();
+          this.getInvoices(this.customer.customerId);
         },
       });
     }
@@ -581,25 +514,6 @@ export class CustomerDetailComponent implements OnInit {
           this.isLoading = false;
         }, 500);
       });
-  }
-
-  onPageChangeInvoice(e: any) {
-    this.invoiceFilters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-    this.getInvoices();
-  }
-
-  onPageSizeChangeInvoice(event: SelectChangeEvent) {
-    this.invoiceFilters.patchValue({ pageSize: event.value });
-    this.getInvoices();
-  }
-
-  sortInvoiceTable(e: any) {
-    if (e) {
-      let pageIndex = e.first / e.rows;
-      this.invoicePager.firstPage = e.first;
-      this.invoiceFilters.patchValue({ currentPage: (++pageIndex).toString(), pageSize: e.rows, sortDir: e.sortOrder, sortBy: e.sortField });
-      this.getInvoices();
-    }
   }
 
   generatePdfInvoice(selectedInvoice: any) {
@@ -768,8 +682,8 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   onCloseDialog() {
-    this.getCustomer();
-    this.getInvoices();
+    this.getCustomer(this.customer.customerId);
+    this.getInvoices(this.customer.customerId);
   }
 
 }

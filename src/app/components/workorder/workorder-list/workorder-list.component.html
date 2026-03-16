@@ -1,4 +1,8 @@
-<app-generic-loader *ngIf="isLoading"></app-generic-loader>
+<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+    <div class="bg-white rounded-lg p-8 shadow-lg">
+    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+    </div>
+</div>
 <section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
         <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
@@ -92,19 +96,36 @@
         <p-toast />
         <p-confirmdialog />
         <div class="">
-            <p-table [lazy]="true" [value]="orders" [rows]="10"
+            <p-table 
+                [lazy]="true" 
+                [value]="orders" 
+                [showGridlines]="false"
+                [paginator]="true"
+                [rows]="filters.get('pageSize')?.value"
                 [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
-                (onLazyLoad)="sortColumn($event)" sortField="workOrderId" responsiveLayout="scroll" [sortOrder]="-1">
+                [totalRecords]="totalRecords"
+                [rowsPerPageOptions]="[10, 20, 30]"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+                [showFirstLastIcon]="true"
+                (onLazyLoad)="onPageChange($event)"
+                [sortField]="sortField"
+                [sortOrder]="sortOrder"
+                responsiveLayout="scroll"
+                data-testid="workorder-table">
 
                 <ng-template pTemplate="header">
                     <tr>
-                        <th class="id-column-header rounded-l-xl" pSortableColumn="workOrderId">
-                            <p-sortIcon field="workOrderId" />
+                        <th class="rounded-l-xl" pSortableColumn="workOrderId">
+                            {{ this.sharedService.T('id') }}
+                            <p-sortIcon field="workOrderId"></p-sortIcon>
                         </th>
                         <th>{{ this.sharedService.T('date') }}</th>
                         <th>{{ this.sharedService.T('vehiclePlate') }}</th>
                         <th>{{ this.sharedService.T('vehicleInfo') }}</th>
-                        <th>{{ this.sharedService.T('customer') }}</th>
+                        <th pSortableColumn="customerName">{{ this.sharedService.T('customer') }} 
+                            <p-sortIcon field="customerName"></p-sortIcon>
+                        </th>
                         <th>{{ this.sharedService.T('estimatedHours') }}</th>
                         <th>{{ this.sharedService.T('puchaseorderCount') }}</th>
                         <th>{{ this.sharedService.T('paymentType') }}</th>
@@ -126,8 +147,8 @@
                         <td class="id-column-cell rounded-l-lg">
                             <div class="flex items-center gap-2 cursor-pointer"
                                 (click)="redirectToOrderDetailComponent(order.workOrderId)">
-                                <span class="id-text">{{ order.workOrderId }}</span>
-                                <span class="material-icons text-blue-500 hover:text-blue-700">open_in_new</span>
+                                <span>{{ order.workOrderId }}</span>
+                                <i class="pi pi-external-link icon-primary"></i>
                             </div>
                         </td>
                         <td>{{ order.workOrderDate }}</td>
@@ -183,7 +204,6 @@
                         <td>{{ order.workOrderDate }}</td>
                         <td><strong>{{ order.vehiclePlate }}</strong></td>
                         <td>{{order?.vehicleManufacturer}} {{order?.vehicleModel}} {{order?.vehicleYear}}</td>
-
                         <td title="{{ order.customerName }}"
                             (click)="redirectToOrderDetailComponent(order.workOrderId)">
                             {{ order.customerName.length > 25 ? (order.customerName | slice:0:25) + '...' :
@@ -226,35 +246,6 @@
                 </ng-template>
 
             </p-table>
-            <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
-                <!-- Page Size Dropdown -->
-                <div class="flex items-center">
-                    <p-select [options]="[10, 20, 30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}" (onChange)="onPageSizeChange($event)"></p-select>
-                </div>
-
-                <!-- Paginator -->
-                <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
-                    (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-                    currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}">
-                    
-                    <ng-template pTemplate="firstpagelinkicon">
-                        <img src="assets/icons/paginator/previus.svg" alt="">
-                    </ng-template>
-                    <ng-template pTemplate="lastpagelinkicon">
-                        <img src="assets/icons/paginator/next.svg" alt="">
-                    </ng-template>
-                    <ng-template pTemplate="previouspagelinkicon">
-                        <div class="flex items-center gap-2">
-                            <div>{{ this.sharedService.T('previous') }}</div>
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="nextpagelinkicon">
-                        <div class="flex items-center gap-2">
-                            <div>{{ this.sharedService.T('next') }}</div>
-                        </div>
-                    </ng-template>
-                </p-paginator>
-            </div>
         </div>
     </form>
 </section>

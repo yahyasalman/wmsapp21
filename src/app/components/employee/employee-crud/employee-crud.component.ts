@@ -7,14 +7,14 @@ import { IEmployee } from 'app/app.model';
 import { catchError } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-employee-crud',
   standalone: true,
   imports: [
     ...SHARED_IMPORTS,
-    GenericLoaderComponent
+    ProgressSpinnerModule
   ],
   templateUrl: './employee-crud.component.html',
   styleUrls: ['./employee-crud.component.css'],

@@ -18,6 +18,14 @@ export class WorkOrderService {
     return this.http.get<IPageList<IWorkOrder>>(url);
   }
 
+  getWorkOrdersByCustomerId(customerId:number) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("customerId", customerId.toString());
+    const url = `${this.baseUrl}/list-by-customerid?${queryParams}`;
+    return this.http.get<IWorkOrder[]>(url);
+  }
+
   getWorkOrder(offerId:number | undefined,customerId:number | undefined,workOrderId:number | undefined,isDuplicate:boolean = false)
   {
     const queryParams = new URLSearchParams();

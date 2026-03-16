@@ -12,7 +12,7 @@ import { Popover } from 'primeng/popover';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { catchError, EMPTY, filter, switchMap, take } from 'rxjs';
 import { InvoiceService } from 'app/services/invoice.service';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 
@@ -23,7 +23,7 @@ interface WorkshopService { name: string };
   selector: 'app-order-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent,IconFieldModule,InputIconModule
+    ...SHARED_IMPORTS, ProgressSpinnerModule,IconFieldModule,InputIconModule
   ],
   providers: [ConfirmationService, MessageService],
   styleUrl: './digitalservice-list.component.css',

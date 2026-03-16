@@ -19,7 +19,7 @@ import { SelectChangeEvent } from 'primeng/select';
 import { RemovePlaceholderOnFocusDirective } from 'app/directives/remove-placeholder-on-focus.directive';
 import { CustomerService } from 'app/services/customer.service';
 import { Popover } from 'primeng/popover';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 
@@ -30,7 +30,7 @@ import { InputIconModule } from 'primeng/inputicon';
   imports: [
     ...SHARED_IMPORTS,
     RemovePlaceholderOnFocusDirective,
-    GenericLoaderComponent,IconFieldModule,InputIconModule  
+    ProgressSpinnerModule,IconFieldModule,InputIconModule  
   ],
   templateUrl: './workorder-crud.component.html',
   styleUrls: ['./workorder-crud.component.css'],
@@ -43,7 +43,7 @@ export class WorkOrderCrudComponent implements OnInit {
   uploadedFiles: any[] = [];
   customers: ICustomer[] = [];
 
-  services: IWorkShopService[] = [];
+  services: IProduct[] = [];
   selectedServices: any[] = [];
 
   employees: IEmployee[] = [];
@@ -163,10 +163,12 @@ export class WorkOrderCrudComponent implements OnInit {
         switchMap((response: any) => {
           if (response.data) {
             this.logger.info('WorkOrder Loaded', response.data);
-            return this.workshopService.getServices('').pipe(
-              tap((servicesResponse: any) => {
-                this.services = servicesResponse;
+            return this.productService.getProductsByCategory('labour').pipe(
+              tap((response: any) => {
+                this.logger.info(response);
+                this.services = response;
                 this.logger.info('Services Loaded', this.services);
+
               }),
               map(() => response)
             );
@@ -185,7 +187,7 @@ export class WorkOrderCrudComponent implements OnInit {
           this.logger.info('WO Purchases', this.woPurchases);
 
           response.data.woServices.forEach((s: any) => {
-            const matchingService = this.services.find(service => service.serviceName === s.serviceName);
+            const matchingService = this.services.find(service => service.productName === s.serviceName);
             if (matchingService) {
               this.selectedServices.push(matchingService);
             }
@@ -462,12 +464,19 @@ export class WorkOrderCrudComponent implements OnInit {
   }
 
   onSelectService(event: any) {
-    this.logger.info(event.itemValue.serviceName + ' ' + event.itemValue.serviceHours);
+    this.logger.info(event.itemValue.productName + ' ' + event.itemValue.quantity);
     let hoursSum = 0;
     this.selectedServices.forEach(element => {
-      hoursSum += element.serviceHours;
+      hoursSum += element.quantity;
     });
     this.workOrder.patchValue({ serviceDuration: hoursSum });
+
+
+
+
+
+
+
   }
 
   // savePurchaseOrder() {

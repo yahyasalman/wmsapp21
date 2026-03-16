@@ -9,7 +9,7 @@ import { TimesheetService } from 'app/services/timesheet.service';
 import { ITimesheet, IPager, ISelect, IEnums, IEmployee } from 'app/app.model'
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { SelectChangeEvent } from 'primeng/select';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { EmployeeService } from 'app/services/employee.service';
 import { Popover } from 'primeng/popover';
 
@@ -18,7 +18,7 @@ import { Popover } from 'primeng/popover';
   selector: 'app-invoice-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent
+    ...SHARED_IMPORTS, ProgressSpinnerModule
   ],
   templateUrl: './timesheet-list.component.html',
   styleUrl: './timesheet-list.component.css',

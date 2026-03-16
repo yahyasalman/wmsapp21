@@ -7,13 +7,13 @@ import { LogService } from 'app/services/log.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-supplier-list',
   standalone: true,
-  imports: [...SHARED_IMPORTS, GenericLoaderComponent],
+  imports: [...SHARED_IMPORTS, ProgressSpinnerModule],
   templateUrl: './supplier-list.component.html',
   providers: [ConfirmationService, MessageService],
 })

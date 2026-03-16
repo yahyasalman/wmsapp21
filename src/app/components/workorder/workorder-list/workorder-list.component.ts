@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IWorkOrder, IEnum, IPager, SverityType } from 'app/app.model';
@@ -11,7 +11,7 @@ import { SelectChangeEvent } from 'primeng/select';
 import { Popover } from 'primeng/popover';
 import { catchError, filter, of } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 
@@ -19,7 +19,7 @@ import { InputIconModule } from 'primeng/inputicon';
   selector: 'app-order-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent,IconFieldModule,InputIconModule
+    ...SHARED_IMPORTS, ProgressSpinnerModule,IconFieldModule,InputIconModule
   ], providers: [ConfirmationService, MessageService],
   styleUrl: './workorder-list.component.css',
   templateUrl: './workorder-list.component.html'
@@ -28,6 +28,9 @@ import { InputIconModule } from 'primeng/inputicon';
 export class WorkOrderListComponent {
   @ViewChild('op') op!: Popover;
   selectedLocale: string = 'sv-SE';
+  sortField = 'workorderId';
+  sortOrder = -1;
+  totalRecords: number = 0;
 
   orders: IWorkOrder[] = [];
   workOrderStatus: MenuItem[] = [];
@@ -48,7 +51,8 @@ export class WorkOrderListComponent {
     private messageService: MessageService,
     private readonly fb: FormBuilder,
     private readonly workOrderService: WorkOrderService,
-    private readonly bookingService: BookingService) {
+    private readonly bookingService: BookingService,
+    private readonly cdr: ChangeDetectorRef) {
 
     const currentDate = new Date();
     const oneYearBack = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
@@ -62,8 +66,8 @@ export class WorkOrderListComponent {
       vehiclePlate: '',
       currentPage: 1,
       pageSize: 10,
-      sortBy: '',
-      sortDir: '',
+      sortBy: this.sortField,
+      sortDir: this.sortOrder,
       isActive: 1
     });
   }
@@ -111,7 +115,8 @@ export class WorkOrderListComponent {
           }
           //order.workOrderStatusItems = this.workOrderStatus;
         });
-        this.pager = res.pager;
+        //this.pager = res.pager;
+        this.totalRecords = res.pager.totalRecords;
       });
     setTimeout(() => {
       this.isLoading = false;
@@ -420,11 +425,11 @@ export class WorkOrderListComponent {
     this.getOrders();
   }
 
-  onPageChange(e: any) {
-    this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-    this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getOrders();
-  }
+  // onPageChange(e: any) {
+  //   this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
+  //   this.sharedService.updateFiltersInNavigation(this.filters);
+  //   this.getOrders();
+  // }
 
   sortColumn(e: any) {
     if (e) {
@@ -448,6 +453,21 @@ export class WorkOrderListComponent {
   setSverity(value: string): SverityType {
     const allowed: SverityType[] = ['success', 'secondary', 'warn', 'help', 'info', 'danger', 'primary', 'contrast'];
     return allowed.includes(value as SverityType) ? (value as SverityType) : 'primary';
+  }
+   onPageChange(e: any) {
+  const currentPage = (e.first / e.rows) + 1;
+  this.sortField = (e.sortField || this.sortField || 'invoiceId').trim();
+  this.sortOrder = (e.sortOrder !== undefined && e.sortOrder !== null) ? Number(e.sortOrder) : (this.sortOrder ?? 1);
+  const oldSortBy = this.filters.get('sortBy')?.value?.trim(); 
+  const oldSortDir = Number(this.filters.get('sortDir')?.value); 
+  const isSortChanged = (this.sortField !== oldSortBy) || (this.sortOrder !== oldSortDir);
+  const pageToSet = isSortChanged ? 1 : currentPage;
+  this.filters.patchValue({currentPage: pageToSet,pageSize: e.rows,sortBy: this.sortField,sortDir: this.sortOrder});
+  this.sharedService.updateFiltersInNavigation(this.filters);
+  this.cdr.detectChanges();
+     setTimeout(() => {
+      this.getOrders();
+     }, 0);
   }
 
 }

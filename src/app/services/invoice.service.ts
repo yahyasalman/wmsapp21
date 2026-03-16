@@ -38,7 +38,15 @@ export class InvoiceService {
       const url = `${this.baseUrl}/detail?${queryParams}`;
       return this.http.get<any>(url);
   }
+  getInvoicesByCustomerId(customerId:number) {
+      const queryParams = new URLSearchParams();
+      queryParams.append("wmsId", this.sharedService.wmsId);
+      queryParams.append("customerId", customerId.toString());
+      const url = `${this.baseUrl}/list-by-customerid?${queryParams}`;
+      return this.http.get<IInvoice[]>(url);
+    }
   
+
   createCreditInvoice(invoiceId:number)
   {
     const queryParams = new URLSearchParams();

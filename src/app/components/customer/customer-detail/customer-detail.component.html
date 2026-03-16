@@ -98,10 +98,20 @@
 
           <!-- workorder Table -->
           <div class="">
-            <p-table [lazy]="true" [value]="orders" [rows]="10"
-              [tableStyle]="{'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px',}"
-              (onLazyLoad)="sortWorkOrderTable($event)" sortField="workOrderId" responsiveLayout="scroll"
-              [sortOrder]="-1">
+            <p-table 
+            [value]="orders" 
+            [tableStyle]="{'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px',}"
+            [showGridlines]="false" 
+            [rows]="10"
+            [first]="0"
+            [paginator]="true"
+            [rowsPerPageOptions]="[10, 20,30]"  
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
+            sortField="workOrderId" 
+            [sortOrder]="-1"
+            data-testid="customer-table">
+            
               <ng-template pTemplate="header">
                 <tr class="">
                   <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="workOrderId">
@@ -169,38 +179,6 @@
                 </tr>
               </ng-template>
             </p-table>
-            <div *ngIf="workOrderPager.totalRecords > 10" class="flex items-center justify-between py-6">
-              <!-- Page Size Dropdown -->
-              <div class="flex items-center">
-                <p-select [options]="[10, 20, 30]" formControlName="pageSize"
-                  styleClass="bg-white border border-CustomBorder rounded-md"
-                  (onChange)="onPageSizeChangeWorkOrder($event)"></p-select>
-              </div>
-
-              <!-- Paginator -->
-              <p-paginator [first]="workOrderPager.firstPage" [rows]="workOrderPager.pageSize"
-                [totalRecords]="workOrderPager.totalRecords" (onPageChange)="onPageChangeWorkOrder($event)"
-                [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-                styleClass="!bg-transparent">
-                <ng-template pTemplate="firstpagelinkicon">
-                  <img src="assets/icons/paginator/previus.svg" alt="">
-                </ng-template>
-                <ng-template pTemplate="lastpagelinkicon">
-                  <img src="assets/icons/paginator/next.svg" alt="">
-                </ng-template>
-                <ng-template pTemplate="previouspagelinkicon">
-                  <div class="flex items-center gap-2">
-                    <div>{{ this.sharedService.T('previous') }}</div>
-                  </div>
-                </ng-template>
-                <ng-template pTemplate="nextpagelinkicon">
-                  <div class="flex items-center gap-2">
-                    <div>{{ this.sharedService.T('next') }}</div>
-                  </div>
-                </ng-template>
-              </p-paginator>
-            </div>
           </div>
         </p-tabpanel>
 
@@ -230,9 +208,19 @@
 
           <!-- Offers Table -->
           <div class="mt-2">
-            <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="offers" [rows]="10"
-              [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
-              (onLazyLoad)="sortOfferTable($event)" sortField="offerId" responsiveLayout="scroll" [sortOrder]="-1">
+            <p-table 
+            [value]="offers" 
+            [rows]="10"
+            [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+            [showGridlines]="false" 
+            [first]="0"
+            [paginator]="true"
+            [rowsPerPageOptions]="[10, 20,30]"  
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
+            sortField="offerId" 
+            [sortOrder]="-1"
+            data-testid="customer-table">
               <ng-template pTemplate="header" styleClass="">
                 <tr class="table-header-row">
                   <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="offerId"><p-sortIcon
@@ -320,18 +308,6 @@
                 </tr>
               </ng-template>
             </p-table>
-
-            <!-- Pager for Offers -->
-            <div *ngIf="offerPager.totalRecords > 10" class="flex justify-between py-4">
-              <div class="my-auto">
-                <p-select [options]="[10, 20, 30]" formControlName="pageSize"
-                  (onChange)="onPageSizeChangeOffer($event)"></p-select>
-              </div>
-              <p-paginator [first]="offerPager.firstPage" [rows]="offerPager.pageSize"
-                [totalRecords]="offerPager.totalRecords" (onPageChange)="onPageChangeOffer($event)"
-                [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"></p-paginator>
-            </div>
           </div>
         </p-tabpanel>
 
@@ -358,16 +334,25 @@
 
           <!-- Invoices Table -->
           <div class="mt-2">
-            <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="invoices" [rows]="10"
-              [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
-              (onLazyLoad)="sortInvoiceTable($event)" sortField="invoiceId" responsiveLayout="scroll" [sortOrder]="-1">
+            <p-table 
+            [value]="invoices" 
+            [rows]="10"
+            [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
+            [showGridlines]="false" 
+            [first]="0"
+            [paginator]="true"
+            [rowsPerPageOptions]="[10, 20,30]"  
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
+            sortField="invoiceId" 
+            [sortOrder]="-1">
+              
               <!-- Table Header -->
               <ng-template #header>
                 <tr class="table-header-row">
                   <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="invoiceId">
                     <p-sortIcon field="invoiceId" />
                   </th>
-                  <th class="table-header-cell">{{ this.sharedService.T('customer') }}</th>
                   <th class="table-header-cell">{{ this.sharedService.T('vehiclePlate') }}</th>
                   <th class="table-header-cell">{{ this.sharedService.T('amount') }}</th>
                   <th class="table-header-cell">{{ this.sharedService.T('invoiceDate') }}</th>
@@ -392,12 +377,6 @@
                   <!-- Vehicle Plate -->
                   <td>
                     <strong>{{ invoice.vehiclePlate }} </strong>
-                  </td>
-
-                  <!-- Customer Name -->
-                  <td title="{{ invoice.customerName }}">
-                    {{ invoice.customerName.length > 18 ? (invoice.customerName | slice: 0:18) + '...' :
-                    invoice.customerName }}
                   </td>
 
                   <td>
@@ -478,35 +457,6 @@
                 </tr>
               </ng-template>
             </p-table>
-
-            <!-- Pager -->
-            <div *ngIf="invoicePager.totalRecords > 10" class="flex justify-between py-4">
-              <div class="my-auto">
-                <p-select [options]="[10, 20, 30]" formControlName="pageSize"
-                  (onChange)="onPageSizeChangeInvoice($event)"></p-select>
-              </div>
-              <p-paginator [first]="invoicePager.firstPage" [rows]="invoicePager.pageSize"
-                [totalRecords]="invoicePager.totalRecords" (onPageChange)="onPageChangeInvoice($event)"
-                [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}">
-                <ng-template pTemplate="firstpagelinkicon">
-                  <img src="assets/icons/paginator/previus.svg" alt="" />
-                </ng-template>
-                <ng-template pTemplate="lastpagelinkicon">
-                  <img src="assets/icons/paginator/next.svg" alt="" />
-                </ng-template>
-                <ng-template pTemplate="previouspagelinkicon">
-                  <div class="flex align-items-center gap-2">
-                    <div>{{ this.sharedService.T('previous') }}</div>
-                  </div>
-                </ng-template>
-                <ng-template pTemplate="nextpagelinkicon">
-                  <div class="flex align-items-center gap-2">
-                    <div>{{ this.sharedService.T('next') }}</div>
-                  </div>
-                </ng-template>
-              </p-paginator>
-            </div>
           </div>
         </p-tabpanel>
         <p-toast />

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IPager, IOffer } from 'app/app.model';
@@ -9,21 +9,24 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
 import { catchError, filter } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent,IconFieldModule,InputIconModule
+    ...SHARED_IMPORTS, IconFieldModule,InputIconModule,ProgressSpinnerModule
   ], templateUrl: './offer-list.component.html',
   styleUrl: './offer-list.component.css',
   providers: [ConfirmationService, MessageService]
 })
 export class OfferListComponent implements OnInit {
 
-
+  sortField = 'offerId';
+  sortOrder = -1;
+  totalRecords: number = 0;
+  
   offers: IOffer[] = [];
   pager: IPager = <IPager>{};
   totalSum: number = 0.00;
@@ -43,6 +46,7 @@ export class OfferListComponent implements OnInit {
     private readonly fb: FormBuilder,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
+    private readonly cdr: ChangeDetectorRef,
     private readonly offerService: OfferService) {
     const currentDate = new Date();
     const oneYearBack = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
@@ -58,8 +62,8 @@ export class OfferListComponent implements OnInit {
       customerId: 0,
       currentPage: 1,
       pageSize: 10,
-      sortBy: '',
-      sortDir: ''
+      sortBy: this.sortField,
+      sortDir: this.sortOrder
     });
 
   }
@@ -105,7 +109,8 @@ export class OfferListComponent implements OnInit {
           offer.selectedOfferType = offerTypeValue; //this.sharedService.getEnumByValue('offerType',offerTypeValue);
         });
 
-        this.pager = res.pager;
+        //this.pager = res.pager;
+        this.totalRecords = res.pager.totalRecords;
         this.totalSum = res.totalSum;
         this.totalVat = res.totalVat;
         this.totalNet = res.totalNet;
@@ -208,11 +213,11 @@ export class OfferListComponent implements OnInit {
   }
 
 
-  onPageChange(e: any) {
-    this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-    this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getOffers();
-  }
+  // onPageChange(e: any) {
+  //   this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
+  //   this.sharedService.updateFiltersInNavigation(this.filters);
+  //   this.getOffers();
+  // }
 
   sortColumn(e: any) {
     if (e) {
@@ -367,5 +372,21 @@ export class OfferListComponent implements OnInit {
     } 
     return allOptions.filter(opt => opt.value === offer.selectedOfferType);
 }
+  onPageChange(e: any) {
+  const currentPage = (e.first / e.rows) + 1;
+  this.sortField = (e.sortField || this.sortField || 'invoiceId').trim();
+  this.sortOrder = (e.sortOrder !== undefined && e.sortOrder !== null) ? Number(e.sortOrder) : (this.sortOrder ?? 1);
+  const oldSortBy = this.filters.get('sortBy')?.value?.trim(); 
+  const oldSortDir = Number(this.filters.get('sortDir')?.value); 
+  const isSortChanged = (this.sortField !== oldSortBy) || (this.sortOrder !== oldSortDir);
+  const pageToSet = isSortChanged ? 1 : currentPage;
+  this.filters.patchValue({currentPage: pageToSet,pageSize: e.rows,sortBy: this.sortField,sortDir: this.sortOrder});
+  this.sharedService.updateFiltersInNavigation(this.filters);
+  this.cdr.detectChanges();
+     setTimeout(() => {
+      this.getOffers();
+     }, 0);
+  }
+
 }
 

@@ -7,14 +7,14 @@ import { LogService } from 'app/services/log.service';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @Component({
   selector: 'app-order-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,GenericLoaderComponent,
+    ...SHARED_IMPORTS,ProgressSpinnerModule,
     // Only add modules that are NOT in SHARED_IMPORTS
     PdfViewerModule
   ],

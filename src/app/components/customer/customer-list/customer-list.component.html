@@ -1,5 +1,10 @@
 <!-- header start -->
-  <app-generic-loader *ngIf="isLoading"></app-generic-loader>
+  <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+    <div class="bg-white rounded-lg p-8 shadow-lg">
+    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+    </div>
+</div>
+
     <section class="p-6 pb-10 bg-white">
       <form [formGroup]="filters">
         <!-- Filter Section -->
@@ -26,7 +31,7 @@
             </div>
 
             <!-- Right Section: Search -->
-            <div class="rounded-md ml-auto">
+            <!-- <div class="rounded-md ml-auto">
               <div class=" w-full ps-2 h-10 rounded-md ">
                 <p-iconfield>
                 <p-inputicon class="pi pi-search" />
@@ -44,7 +49,7 @@
                 </p-autoComplete>
                 </p-iconfield>
               </div>
-            </div>
+            </div> -->
           </div>
 
 
@@ -64,21 +69,19 @@
         <!-- Table Section -->
         <div class="mb-12">
           <p-table 
-          [lazy]="true" 
           [value]="customers" 
-          [showGridlines]="false"  
-          [paginator]="true"
-          [rows]="filters.get('pageSize')?.value" 
-          [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
-          [totalRecords]="totalRecords"
-          [rowsPerPageOptions]="[10, 20, 30]"  
-          [showCurrentPageReport]="true"
-          currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-          [showFirstLastIcon]="true"
-          (onLazyLoad)="onPageChange($event)"
-          [sortField]="sortField"
-          [sortOrder]="sortOrder"
-          data-testid="customer-table">
+            [showGridlines]="false" 
+            [globalFilterFields]="['customerName']"
+            [rows]="10"
+            [first]="0"
+            [paginator]="true"
+            [rowsPerPageOptions]="[10, 20,30]"  
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
+            [sortOrder]="-1" 
+            sortField="customerId" 
+            data-testid="customer-table">
+
             <ng-template pTemplate="header">
               <tr>
                 <th pSortableColumn="customerId">
@@ -112,6 +115,19 @@
                   
                 </th>
               </tr>
+              <tr>
+              <th></th>
+                    <th>
+                         <p-columnFilter type="text" field="customerName" placeholder="{{this.sharedService.T('search') }} {{this.sharedService.T('customer') }}" ariaLabel="Filter Name" filterOn="input"></p-columnFilter>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>   
+                    <th></th>
+                    <th></th>   
+              </tr>     
+
             </ng-template>
             <ng-template pTemplate="body" let-customer>
               <tr data-testid="customer-row">

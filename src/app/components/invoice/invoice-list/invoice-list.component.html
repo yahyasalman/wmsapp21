@@ -149,15 +149,33 @@
     <!-- Table Section -->
     <div class="mb-12">
       <p-table
-      [lazy]="true" [value]="invoices" [rows]="10" [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
-        (onLazyLoad)="sortColumn($event)" sortField="invoiceId" responsiveLayout="scroll" [sortOrder]="-1">
-        <ng-template #header>
+      [lazy]="true" 
+      [value]="invoices" 
+      [showGridlines]="false"
+      [paginator]="true"
+      [rows]="filters.get('pageSize')?.value" 
+      [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
+      [totalRecords]="totalRecords"
+      [rowsPerPageOptions]="[10, 20, 30]"  
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+      [showFirstLastIcon]="true"
+      (onLazyLoad)="onPageChange($event)"
+      [sortField]="sortField"
+      [sortOrder]="sortOrder"
+      responsiveLayout="scroll"
+      data-testid="invoice-table">
+        <ng-template pTemplate="header">
           <tr>
-            <th class="id-column-header rounded-l-xl" pSortableColumn="invoiceId">
-              <p-sortIcon field="invoiceId" />
+            <th class="rounded-l-xl" pSortableColumn="invoiceId">
+              {{ this.sharedService.T('id') }}
+              <p-sortIcon field="invoiceId"></p-sortIcon>
+            </th>
+            <th pSortableColumn="customerName">
+              {{ this.sharedService.T('customer') }}
+              <p-sortIcon field="customerName"></p-sortIcon>
             </th>
             <th>{{ this.sharedService.T('vehiclePlate') }}</th>
-            <th>{{ this.sharedService.T('customer') }}</th>
             <th>{{ this.sharedService.T('amount') }}</th>
             <th>{{ this.sharedService.T('invoiceDate') }}</th>
             <th>{{ this.sharedService.T('dueDate') }}</th>
@@ -166,31 +184,29 @@
             <th>{{ this.sharedService.T('deliveryStatus') }}</th>
             <th>{{ this.sharedService.T('comments') }}</th>
             <th class="rounded-r-xl"></th>
-
           </tr>
         </ng-template>
 
-        <ng-template #body let-invoice>
-          <tr class="p-selectable-row">
+        <ng-template pTemplate="body" let-invoice>
+          <tr data-testid="invoice-row">
             <!-- Invoice ID -->
-            <td class="id-column-cell rounded-l-lg">
+            <td class="rounded-l-lg">
               <div class="flex items-center gap-2 cursor-pointer"
                 (click)="redirectToInvoiceDetailComponent(invoice.invoiceId)">
-                <span class="id-text">{{ invoice.invoiceId }}</span>
-                <i class="pi pi-external-link icon-primary" ></i>
+                <span>{{ invoice.invoiceId }}</span>
+                <i class="pi pi-external-link icon-primary"></i>
               </div>
-            </td>
-            <!-- Vehicle Plate -->
-            <td>
-              <strong>{{ invoice.vehiclePlate }} </strong>
             </td>
 
             <!-- Customer Name -->
             <td title="{{ invoice.customerName }}">
-              {{ invoice.customerName.length > 18 ? (invoice.customerName | slice: 0:18) + '...' : invoice.customerName
-              }}
+              {{ invoice.customerName.length > 18 ? (invoice.customerName | slice: 0:18) + '...' : invoice.customerName }}
             </td>
 
+            <!-- Vehicle Plate -->
+            <td>
+              <strong>{{ invoice.vehiclePlate }}</strong>
+            </td>
 
             <!-- Amount -->
             <td>
@@ -242,62 +258,31 @@
             <td>
               <p-togglebutton [disabled]="invoice.isSent" (onChange)="confirmMarkAsSent($event, invoice)"
                 [(ngModel)]="invoice.isSent" [ngModelOptions]="{ standalone: true }"
-                onLabel= "{{ this.sharedService.T('sent') }}" 
+                onLabel="{{ this.sharedService.T('sent') }}" 
                 offLabel="{{ this.sharedService.T('notSent') }}" 
                 onIcon="pi pi-check"
                 offIcon="pi pi-times" size="small"></p-togglebutton>
             </td>
+
             <!-- Remarks -->
-            <td class="rounded-r-lg">
-              <!-- @if(invoice.remainingBalance > 0 && invoice.remainingBalance < invoice.priceIncVat)  -->
+            <td>
               <ng-container *ngIf="invoice.remainingBalance > 0 && invoice.remainingBalance < invoice.priceIncVat">
-              
-                <span>{{ this.sharedService.T('remaining') }} </span>
+                <span>{{ this.sharedService.T('remaining') }}</span>
                 <p-inputnumber [(ngModel)]="invoice.remainingBalance" [ngModelOptions]="{standalone: true}"
                   inputId="minmax" mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
                   [locale]="this.sharedService.currentLocale"
                   [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
                   readonly="true" class="with-out-border"></p-inputnumber>
-              
               </ng-container>
             </td>
+
+            <!-- PDF Button -->
             <td class="rounded-r-lg">
-              <p-button icon="pi pi-file-pdf" severity="primary" (click)="generatePdf(invoice)" size="small"  />
+              <p-button icon="pi pi-file-pdf" severity="primary" (click)="generatePdf(invoice)" size="small"></p-button>
             </td>
           </tr>
         </ng-template>
       </p-table>
-      <!-- Pager Section -->
-      <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
-        <!-- Page Size Dropdown -->
-        <div class="flex items-center">
-          <p-select [options]="[10, 20, 30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}"
-            (onChange)="onPageSizeChange($event)"></p-select>
-        </div>
-        <!-- Paginator -->
-        <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
-              (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-              >
-              <ng-template pTemplate="firstpagelinkicon">
-                <img src="assets/icons/paginator/previus.svg" alt="">
-              </ng-template>
-              <ng-template pTemplate="lastpagelinkicon">
-                <img src="assets/icons/paginator/next.svg" alt="">
-              </ng-template>
-              <ng-template pTemplate="previouspagelinkicon">
-                <div class="flex items-center gap-2">
-                  <div>{{ this.sharedService.T('previous') }}</div>
-
-                </div>
-              </ng-template>
-              <ng-template pTemplate="nextpagelinkicon">
-                <div class="flex items-center gap-2">
-                  <div>{{ this.sharedService.T('next') }}</div>
-                </div>
-              </ng-template>
-            </p-paginator>
-      </div>
     </div>
   </form>
   <p-toast />

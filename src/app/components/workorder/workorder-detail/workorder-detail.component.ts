@@ -10,13 +10,13 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, concatMap, from, of, switchMap, tap } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 interface WorkshopService { name: string };
 @Component({
   selector: 'app-order-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,GenericLoaderComponent,
+    ...SHARED_IMPORTS, ProgressSpinnerModule,
     PdfViewerModule
   ],
   providers: [ConfirmationService, MessageService],

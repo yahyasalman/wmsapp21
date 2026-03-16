@@ -10,13 +10,13 @@ import { LogService } from 'app/services/log.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, firstValueFrom } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TimelineModule } from 'primeng/timeline';
 @Component({
   selector: 'app-offer-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent, TimelineModule,
+    ...SHARED_IMPORTS, TimelineModule, ProgressSpinnerModule,
     PdfViewerModule
   ], providers: [ConfirmationService, MessageService],
   templateUrl: './offer-detail.component.html',

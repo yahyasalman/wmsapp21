@@ -7,17 +7,17 @@ import { LogService } from 'app/services/log.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, debounceTime, distinctUntilChanged, firstValueFrom, switchMap } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent,IconFieldModule,InputIconModule
+    ...SHARED_IMPORTS, IconFieldModule,InputIconModule,ProgressSpinnerModule
   ],
   styleUrl: './product-list.component.css',
   templateUrl: './product-list.component.html',
@@ -25,17 +25,17 @@ import { InputIconModule } from 'primeng/inputicon';
 
 })
 export class ProductListComponent {
-  products: any[] = [];
+  products: IProduct[] = [];
   product!: FormGroup;
   filters: FormGroup;
   inventoryForm!: FormGroup;
-  pager: IPager = <IPager>{};
-  successProductLabel: string = '';
+  uccessProductLabel: string = '';
   failProductLabel: string = '';
   latestProductId: number | null = null;
   loadingDelete: boolean = false;
   isLoading: boolean = true;
   showProductDialog = false;
+  successProductLabel: string = '';
   isInventoryChecked: boolean = false;
   isSelingProductChecked: boolean = false;
   isNewObject: boolean = true;
@@ -60,17 +60,10 @@ export class ProductListComponent {
   ) {
 
     this.filters = this.fb.group({
-      template: '',
-      templateId: '',
-      productName: '',
       category: null,
       inventory: false,
       sale: false,
-      currentPage: 1,
-      pageSize: 10,
-      sortBy: undefined,
       isActive: 1,
-      sortDir: undefined
     });
 
     this.productForm();
@@ -79,17 +72,17 @@ export class ProductListComponent {
   }
   ngOnInit() {
     this.isLoading = true;
-    this.route.queryParams.subscribe((params) => { this.sharedService.updateFiltersFromQueryParams(this.filters, params) });
+    //this.route.queryParams.subscribe((params) => { this.sharedService.updateFiltersFromQueryParams(this.filters, params) });
     this.getProducts();
     /// instant search on input///
-    this.filters.get('productName')?.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(() => {
-      this.filters.patchValue({ currentPage: 1 }, { emitEvent: false });
-      this.sharedService.updateFiltersInNavigation(this.filters);
-      this.getProducts();
-    });
+    // this.filters.get('productName')?.valueChanges.pipe(
+    //   debounceTime(300),
+    //   distinctUntilChanged()
+    // ).subscribe(() => {
+    //   this.filters.patchValue({ currentPage: 1 }, { emitEvent: false });
+    //   this.sharedService.updateFiltersInNavigation(this.filters);
+    //   this.getProducts();
+    // });
   }
   InventoryForm() {
     this.inventoryForm = this.fb.group({
@@ -114,8 +107,10 @@ export class ProductListComponent {
   }
 
   getProducts(): void {
-    this.isLoading = true; // 🟢 Start loader
+    this.isLoading = true; 
     const filterValues = this.filters.value;
+    this.logger.info('getProducts started');
+    this.logger.info(this.filters);
     this.productService.getProducts(this.filters)
       .pipe(
         catchError((err) => {
@@ -125,8 +120,9 @@ export class ProductListComponent {
         })
       )
       .subscribe((res) => {
-        this.products = res?.objectList || [];
-        this.pager = res?.pager;
+        this.logger.info('ompleted...');
+        this.products = res;
+        this.logger.info(this.products);
         this.isLoading = false;
       });
   }
@@ -135,17 +131,17 @@ export class ProductListComponent {
   //   this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
   //   this.getProducts();
   // }
-  onPageChange(e: any) {
-    this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-    this.router.navigate([],
-      {
-        relativeTo: this.route,
-        queryParams: { page: e.page + 1 },
-        queryParamsHandling: 'merge',
-      });
-    this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getProducts();
-  }
+  // onPageChange(e: any) {
+  //   this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
+  //   this.router.navigate([],
+  //     {
+  //       relativeTo: this.route,
+  //       queryParams: { page: e.page + 1 },
+  //       queryParamsHandling: 'merge',
+  //     });
+  //   this.sharedService.updateFiltersInNavigation(this.filters);
+  //   this.getProducts();
+  // }
 
   onPageSizeChange(event: any) {
     this.filters.patchValue({ pageSize: event.value });
@@ -387,8 +383,8 @@ export class ProductListComponent {
   }
 
   onProductKeyup(event: any) {
-    const query = event.target.value || '';
-    this.filters.get('productName')?.setValue(query);
+    // const query = event.target.value || '';
+    // this.filters.get('productName')?.setValue(query);
   }
 
   closeProductDialog() {
@@ -398,7 +394,7 @@ export class ProductListComponent {
   onChangeCurrentWorkshop(event: any): void {
     const checked = event.checked;
     this.filters.patchValue({ inventory: checked });
-    this.filters.patchValue({ currentPage: 1 });
+    //this.filters.patchValue({ currentPage: 1 });
     this.sharedService.updateFiltersInNavigation(this.filters);
     this.getProducts();
   }
@@ -493,24 +489,24 @@ export class ProductListComponent {
     });
   }
 
-  sortColumn(e: any) {
-    if (e) {
-      let pageIndex = e.first / e.rows;
-      // If the current page is already set, use it instead of resetting
-      if (this.filters.get('currentPage')?.value) {
-        pageIndex = +this.filters.get('currentPage')?.value - 1; // Convert to zero-based index
-      }
-      // Update the pager and filters
-      this.pager.firstPage = e.first;
-      this.filters.patchValue({
-        currentPage: (pageIndex + 1).toString(), // Convert back to one-based index
-        pageSize: e.rows,
-        sortDir: e.sortOrder,
-        sortBy: e.sortField,
-      });
-      this.getProducts();
-    }
-  }
+  // sortColumn(e: any) {
+  //   if (e) {
+  //     let pageIndex = e.first / e.rows;
+  //     // If the current page is already set, use it instead of resetting
+  //     if (this.filters.get('currentPage')?.value) {
+  //       pageIndex = +this.filters.get('currentPage')?.value - 1; // Convert to zero-based index
+  //     }
+  //     // Update the pager and filters
+  //     this.pager.firstPage = e.first;
+  //     this.filters.patchValue({
+  //       currentPage: (pageIndex + 1).toString(), // Convert back to one-based index
+  //       pageSize: e.rows,
+  //       sortDir: e.sortOrder,
+  //       sortBy: e.sortField,
+  //     });
+  //     this.getProducts();
+  //   }
+  // }
 
 
   onCancel() {
@@ -527,8 +523,7 @@ export class ProductListComponent {
   HideDeletedProducts(event: any) {
     const checked = event.checked;
     this.filters.patchValue({
-      isActive: checked ? 1 : '',
-      currentPage: 1
+      isActive: checked ? 1 : ''
     });
     this.sharedService.updateFiltersInNavigation(this.filters);
     this.getProducts();

@@ -8,13 +8,13 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { IInventory, IProduct, IPager } from 'app/app.model'; // IPager import zaroori hai
 import { switchMap, catchError } from 'rxjs';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent
+    ...SHARED_IMPORTS, ProgressSpinnerModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './product-detail.component.html',

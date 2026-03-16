@@ -14,7 +14,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { catchError } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { AiService } from 'app/services/ai.service';
@@ -24,7 +24,7 @@ import { AiService } from 'app/services/ai.service';
   selector: 'app-create-offer',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent,
+    ...SHARED_IMPORTS, ProgressSpinnerModule,
     DragDropModule,
    IconFieldModule, InputIconModule
   ], templateUrl: './offer-crud.component.html',
@@ -218,16 +218,22 @@ export class OfferCrudComponent implements OnInit {
     this.models = this.sharedService.getVehicleModels(this.offer.get('vehicleManufacturer')?.value, event.query.toUpperCase());
   }
   // detail selection
-  getProducts(event: AutoCompleteCompleteEvent) {
-    this.isLoading = true;
-    this.isSpinnerLoading = true;
-    let query = event.query;
-    this.productService.getProductsByprefix(query).subscribe((response) => {
-      this.products = response;
-      this.isSpinnerLoading = false;
-    })
-    this.isLoading = false;
-  }
+    getProducts(detail:any, event: AutoCompleteCompleteEvent) {
+      this.isSpinnerLoading = true;
+      let category = detail.get('category').value;
+      this.logger.info(category);
+      let query = event.query;
+      this.productService.getProductsByprefix(query).subscribe((response) => {
+  
+        this.products = response
+          .filter((product: any) => product.category === category)
+          .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
+        this.logger.info(this.products);
+        this.isSpinnerLoading = false;
+      })
+  
+    }
+  
 
   onSelectProduct(detail: any, e: any) {
     const item = e.value;
@@ -466,6 +472,11 @@ export class OfferCrudComponent implements OnInit {
 
       });
   }
+  onBlurProduct(event: any, detail: AbstractControl): void {
+  const typedValue = event.target.value; // Get the typed value from the input
+  detail.get('product')?.setValue(typedValue); // Update the form control with the typed value
+}
+
   onFormSubmit() {
     this.isLoading = true;
     this.errorOnCustomer = false;

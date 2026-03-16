@@ -9,7 +9,6 @@ import { MessageService } from 'primeng/api';
 import { environment } from 'environments/environment';
 import { catchError, map, of, tap, finalize } from "rxjs";
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 
 interface Feature {
   icon: string;

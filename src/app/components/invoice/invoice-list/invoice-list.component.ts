@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute,NavigationEnd, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RemovePlaceholderOnFocusDirective } from 'app/directives/remove-placeholder-on-focus.directive';
@@ -10,7 +10,6 @@ import { MenuItem, ConfirmationService, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
 import { catchError, filter, firstValueFrom, map, switchMap } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -22,7 +21,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   imports: [
     ...SHARED_IMPORTS,
     RemovePlaceholderOnFocusDirective,
-    GenericLoaderComponent,IconFieldModule,InputIconModule,ProgressSpinnerModule
+    IconFieldModule,InputIconModule,ProgressSpinnerModule
   ],  
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css',
@@ -30,7 +29,10 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 })
 export class InvoiceListComponent implements OnInit {
    
-  
+  sortField = 'invoiceId';
+  sortOrder = -1;
+  totalRecords: number = 0;
+
   invoices: IInvoice[] = [];
   pager:IPager = <IPager>{};
   totalSum:number = 0.00;
@@ -60,7 +62,7 @@ export class InvoiceListComponent implements OnInit {
               private readonly fb:FormBuilder,
               private readonly invoiceService: InvoiceService,
               private confirmationService: ConfirmationService,
-              private messageService: MessageService,){
+              private messageService: MessageService,private cdr: ChangeDetectorRef){
 
 const currentDate = new Date();
 const oneYearBack = new Date(currentDate.getFullYear() - 1,currentDate.getMonth(),currentDate.getDate());
@@ -74,8 +76,8 @@ const oneYearBack = new Date(currentDate.getFullYear() - 1,currentDate.getMonth(
       customerId:null,
       currentPage:1,
       pageSize:10,
-      sortBy:null,
-      sortDir:'-1'
+      sortBy: this.sortField,
+      sortDir: this.sortOrder,
     });
     
     this.payment = this.fb.group({
@@ -122,7 +124,8 @@ ngOnInit(){
         //const objectData:any = res.objectList;
         this.invoices = res.objectList;
         this.logger.info('invoices',this.invoices);
-        this.pager = res.pager;
+        //this.pager = res.pager;
+        this.totalRecords = res.pager.totalRecords;
         this.totalSum = res.totalSum;
         this.totalNet = res.totalNet;
         this.totalVat = res.totalVat;
@@ -270,11 +273,11 @@ ngOnInit(){
     this.router.navigate([`sv/invoice/crud`]);
   }
   
-  onPageChange(e:any){
-    this.filters.patchValue({currentPage: e.page + 1,pageSize:e.rows });
-    this.sharedService.updateFiltersInNavigation(this.filters);    
-    this.getInvoices();
-  }
+  // onPageChange(e:any){
+  //   this.filters.patchValue({currentPage: e.page + 1,pageSize:e.rows });
+  //   this.sharedService.updateFiltersInNavigation(this.filters);    
+  //   this.getInvoices();
+  // }
   
   onPageSizeChange(event:SelectChangeEvent){
     this.filters.patchValue({ currentPage:1,pageSize: event.value });
@@ -468,6 +471,21 @@ sortColumn(e: any) {
       window.URL.revokeObjectURL(url);
       this.isLoading = false;
     });
+  }
+  onPageChange(e: any) {
+  const currentPage = (e.first / e.rows) + 1;
+  this.sortField = (e.sortField || this.sortField || 'invoiceId').trim();
+  this.sortOrder = (e.sortOrder !== undefined && e.sortOrder !== null) ? Number(e.sortOrder) : (this.sortOrder ?? 1);
+  const oldSortBy = this.filters.get('sortBy')?.value?.trim(); 
+  const oldSortDir = Number(this.filters.get('sortDir')?.value); 
+  const isSortChanged = (this.sortField !== oldSortBy) || (this.sortOrder !== oldSortDir);
+  const pageToSet = isSortChanged ? 1 : currentPage;
+  this.filters.patchValue({currentPage: pageToSet,pageSize: e.rows,sortBy: this.sortField,sortDir: this.sortOrder});
+  this.sharedService.updateFiltersInNavigation(this.filters);
+  this.cdr.detectChanges();
+     setTimeout(() => {
+      this.getInvoices();
+     }, 0);
   }
 
 }

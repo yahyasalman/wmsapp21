@@ -11,7 +11,7 @@ import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TimelineModule } from 'primeng/timeline';
 interface WorkshopService { name: string };
 
@@ -20,7 +20,7 @@ interface WorkshopService { name: string };
   standalone: true,
   imports: [
     ...SHARED_IMPORTS,
-    PdfViewerModule, GenericLoaderComponent,TimelineModule
+    PdfViewerModule,TimelineModule,ProgressSpinnerModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './invoice-detail.component.html',

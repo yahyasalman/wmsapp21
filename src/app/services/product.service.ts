@@ -19,7 +19,15 @@ export class ProductService {
   getProducts(filters: FormGroup) {
     const queryString = this.sharedService.buildQueryParams(filters);
     const url = `${this.baseUrl}/list?${queryString}`;
-    return this.http.get<IPageList<IProduct>>(url);
+    return this.http.get<IProduct[]>(url);
+  }
+  getProductsByCategory(category: string) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);  
+    queryParams.append("category", category);
+    const url = `${this.baseUrl}/list?${queryParams}`;
+    return this.http.get<IProduct[]>(url);
+  
   }
 
   getProduct(productId: number | undefined) {

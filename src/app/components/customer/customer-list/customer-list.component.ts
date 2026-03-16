@@ -5,15 +5,16 @@ import { catchError, filter, of, switchMap } from 'rxjs';
 import { SHARED_IMPORTS } from '../../../sharedimports';
 import { ICustomer, ICustomerTag, ICustomerType, IEnum, IPager } from 'app/app.model';
 import { SharedService, CustomerService, LogService, WorkshopService } from 'app/services';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { Table } from 'primeng/table';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [...SHARED_IMPORTS, GenericLoaderComponent, IconFieldModule, InputIconModule],
+  imports: [...SHARED_IMPORTS, IconFieldModule, InputIconModule, ProgressSpinnerModule],
   templateUrl: './customer-list.component.html'
 })
 
@@ -31,7 +32,7 @@ export class CustomerListComponent {
   isLoading: boolean = false;
   sortField = 'customerId';
   sortOrder = -1;
-  totalRecords: number = 0;
+  
   constructor(
     private readonly router: Router,
     private readonly fb: FormBuilder,
@@ -45,12 +46,7 @@ export class CustomerListComponent {
     this.filters = this.fb.group({
       customerType: '',
       customerTag: '',
-      customerCity: '',
-      customerName: '',
-      currentPage: 1,
-      pageSize: 10,
-      sortBy: this.sortField,
-      sortDir: this.sortOrder,
+      customerCity: ''
     });
   }
 
@@ -89,13 +85,10 @@ export class CustomerListComponent {
         })
       )
       .subscribe((res: any) => {
-        const objectData: any = res.objectList;
-        this.customers = objectData;
+       
+        this.customers = res;
         this.logger.info(this.customers);
         this.logger.info(`Fetched ${this.customers.length} customers.`);
-        this.totalRecords = res.pager.totalRecords;
-        //this.filters.patchValue({ totalRecords: res.pager.totalRecords }, { emitEvent: false });
-        
         this.isLoading = false;
       });
   }
@@ -145,7 +138,9 @@ export class CustomerListComponent {
 
   onPageChange(e: any) {
 
+    this.logger.info('Page change event:', e.first,e.rows);
     const currentPage = (e.first / e.rows) + 1;
+    this.logger.info('Current page calculated:', currentPage);
     this.sortField = e.sortField || this.sortField || 'customerId';
     this.sortOrder = (e.sortOrder !== undefined && e.sortOrder !== null)? e.sortOrder : this.sortOrder ?? 1;
 

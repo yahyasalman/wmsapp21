@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { IMonthSummary, IOutStandingBalance, IPageList, ISelect, ITopCustomer, ITopManufacturer, ITopSale, IUnpaidInvoice} from 'app/app.model'
+import { IMonthSummary, IOffer, IOutStandingBalance, IPageList, ISelect, ITopCustomer, ITopManufacturer, ITopSale, IUnpaidInvoice} from 'app/app.model'
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
 import { FormGroup } from '@angular/forms';
@@ -40,9 +40,16 @@ export class DashboardService {
   }
 
     getUnpaidInvoices(filters:FormGroup) {
-      const queryString = this.sharedService.buildQueryParams(filters);
-      const url = `${this.baseUrl}/unpaid-invoices?${queryString}`;
-      return this.http.get<IPageList<IUnpaidInvoice>>(url);
+      const queryParams = new URLSearchParams();
+      queryParams.append("wmsId", this.sharedService.wmsId);
+      const url = `${this.baseUrl}/unpaid-invoices?${queryParams}`;
+      return this.http.get<IUnpaidInvoice[]>(url);
+    }
+    getWaitingOffers() {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    return this.http.get<IOffer[]>(`${this.baseUrl}/waiting-offers?${queryParams}`);
+
     }
   
  getMonthSale(cyear:string,cmonth:string) {

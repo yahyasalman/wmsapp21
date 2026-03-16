@@ -1,4 +1,9 @@
-<app-generic-loader *ngIf="isLoading"></app-generic-loader>
+<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+    <div class="bg-white rounded-lg p-8 shadow-lg">
+    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+    </div>
+</div>
+
 <section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
         <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
@@ -35,7 +40,7 @@
                     </div>
 
                 </div>
-                <div class=" flex justify-end items-end md:ml-auto">
+                <!-- <div class=" flex justify-end items-end md:ml-auto">
                     <div class="ps-2">
                         <p-iconfield>
                             <p-inputicon class="pi pi-search" />
@@ -44,22 +49,37 @@
                                 (input)="onProductKeyup($event)" pInputText />
                         </p-iconfield>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
         <div class="mb-10">
-            <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="products" [rows]="10"
-                [first]="(filters.get('currentPage')?.value - 1) * 10" responsiveLayout="scroll"
-                (onLazyLoad)="sortColumn($event)" [sortOrder]="-1" sortField="productId" data-testid="product-table">
+            <p-table 
+            [value]="products" 
+            [showGridlines]="false" 
+            [globalFilterFields]="['productName']"
+            [rows]="10"
+            [first]="0"
+            [paginator]="true"
+            [rowsPerPageOptions]="[10, 20,30]"  
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
+            [sortOrder]="-1" 
+            sortField="productId" 
+            data-testid="product-table">
 
                 <ng-template #header>
                     <tr>
-                        <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="productId">
+                        <th pSortableColumn="productId">
+                            {{ this.sharedService.T('id') }}
                             <p-sortIcon field="productId" />
                         </th>
                         <th>{{ this.sharedService.T('category') }}</th>
-                        <th>{{ this.sharedService.T('productService') }}</th>
+                        <th pSortableColumn="productName">
+                            {{ this.sharedService.T('productService') }}
+                            <p-sortIcon field="productName" />
+                        </th>
+
                         <th>{{ this.sharedService.T('freeText') }}</th>
                         <th>{{ this.sharedService.T('quantity') }}</th>
                         <th>{{ this.sharedService.T('unit') }}</th>
@@ -70,6 +90,20 @@
 
                         </th>
                     </tr>
+                    <tr>
+                    <th></th>
+                    <th></th>
+                    <th>
+                         <p-columnFilter type="text" field="productName" placeholder="{{this.sharedService.T('search') }} {{this.sharedService.T('product') }}" ariaLabel="Filter Name" filterOn="input"></p-columnFilter>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>   
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-product>
@@ -78,7 +112,7 @@
                         'bg-green-100': product.productId === latestProductId
                     }" style="transition: background-color 0.8s ease;" class="p-selectable-row">
 
-                        <td class="id-column-cell rounded-l-lg">
+                        <td class="rounded-l-lg">
                             <div class="flex items-center gap-2 cursor-pointer"
                                 (click)="redirectToProductDetail(product.productId)">
                                 <span class="id-text">{{ product.productId }}</span>
@@ -86,8 +120,7 @@
                             </div>
                         </td>
 
-                        <td>{{ this.sharedService.getEnumByValue('detailCategory',
-                            product.category).text }}</td>
+                        <td>{{ this.sharedService.getEnumByValue('detailCategory',product.category).text }}</td>
                         <td>{{ product.productName }}</td>
                         <td>{{ product.productDescription }}</td>
                         <td>{{ product.quantity }}</td>
@@ -109,37 +142,7 @@
                     </tr>
                 </ng-template>
             </p-table>
-            <!-- Pager Section -->
-            <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
-                <!-- Page Size Dropdown -->
-                <div class="flex items-center">
-                    <p-select [options]="[10, 20, 30]" [(ngModel)]="pager.pageSize"
-                        [ngModelOptions]="{standalone: true}" (onChange)="onPageSizeChange($event)"></p-select>
-                </div>
-                <!-- Paginator -->
-                <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
-                    (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-                    currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}">
-                    <ng-template pTemplate="firstpagelinkicon">
-                        <img src="assets/icons/paginator/previus.svg" alt="">
-                    </ng-template>
-                    <ng-template pTemplate="lastpagelinkicon">
-                        <img src="assets/icons/paginator/next.svg" alt="">
-                    </ng-template>
-                    <ng-template pTemplate="previouspagelinkicon">
-                        <div class="flex items-center gap-2">
-                            <div>{{ this.sharedService.T('previous') }}</div>
-
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="nextpagelinkicon">
-                        <div class="flex items-center gap-2">
-                            <div>{{ this.sharedService.T('next') }}</div>
-                        </div>
-                    </ng-template>
-                </p-paginator>
-            </div>
-
+            
         </div>
     </form>
 
