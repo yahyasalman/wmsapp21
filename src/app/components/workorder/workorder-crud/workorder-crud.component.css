@@ -1,4 +1,4 @@
-::ng-deep.rounded-pill{
+/* ::ng-deep.rounded-pill{
     border: unset !important;
     padding: 0 !important;
     margin-right: 3px;
@@ -9,7 +9,6 @@
 }
 ::ng-deep.p-autocomplete.p-component.p-inputwrapper input {
     width: 100% !important;
-    /* padding: .5rem!important; */
   }
 
 ::ng-deep .p-autocomplete.p-component.p-inputwrapper input:focus,
@@ -29,4 +28,4 @@
   
   
   
-
+ */

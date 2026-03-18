@@ -33,7 +33,7 @@ export class VehicleListComponent {
   customers: ICustomer[] = [];
   vehiclesData: TreeNode[] = [];
   
-  
+  refreshedAt: string = '';
   
   partsSale: number = 0;
   labourSale: number = 0;
@@ -280,6 +280,7 @@ this.prepareStory();
         this.vehiclesData = []; // Initialize an empty array
 // Loop through each entry in the JSON data array
 jsonDataArray.forEach((jsonData: any) => {
+  this.refreshedAt = jsonData.refreshedAt; // Capture refreshedAt for potential use in the story or elsewhere
   const vehicleData = {
     data: {
       label: this.sharedService.T('customer'),

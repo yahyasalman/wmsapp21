@@ -117,6 +117,7 @@ percentage: number = 0;
     this.loadCurrentMonthStats(cyear.toString(),cmonth.toString());
     this.loadLineChart("3");
     this.getUnpaidInvoices();
+    this.getWaitingOffers();
     
     // Listen for theme/palette changes and refresh chart
     this.listenForThemeChanges();
@@ -640,24 +641,5 @@ onPeriodChange(event: any): void {
     this.router.navigate(['sv/product', {}]);
   }
 
- onPageChange(e:any){
-    this.filters.patchValue({currentPage: e.page + 1,pageSize:e.rows });
-    this.getUnpaidInvoices();
-  }
-  
-  onPageSizeChange(event:SelectChangeEvent){
-    this.filters.patchValue({pageSize:event.value });
-    this.getUnpaidInvoices();
-  }
-
-  // sortColumn(e: any) {
-  //   if (e) {
-  //     let pageIndex = e.first / e.rows; 
-  //     this.pager.firstPage = e.first;
-  //     this.filters.patchValue({ currentPage: (++pageIndex).toString(),pageSize:e.rows,sortDir:e.sortOrder,sortBy:e.sortField});
-  //     this.getInvoices();
-  //   }
-  //}
- 
 
 }

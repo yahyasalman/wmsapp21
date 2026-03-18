@@ -2,7 +2,7 @@
     <div class="bg-white rounded-lg p-8 shadow-lg">
     <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
     </div>
-</div>
+</div> 
 
 <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
   <div class="">
@@ -199,8 +199,18 @@
                     <h3 class="text-lg font-semibold">{{this.sharedService.T('unpaidInvoicesByCustomers')}}</h3>
                 </div>
                 <div class="">
-                <p-table [value]="unpaidInvoices" [rows]="10"
-         [sortOrder]="-1">
+                <p-table 
+                [value]="unpaidInvoices" 
+                [showGridlines]="false" 
+                [rows]="5"
+                [first]="0"
+                [paginator]="true"
+                [rowsPerPageOptions]="[5,10, 15]"  
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
+                [sortOrder]="-1" 
+                sortField="customerId" 
+                >
         <ng-template #header>
           <tr>
             <th class="id-column-header rounded-l-xl" pSortableColumn="customerId">
@@ -245,39 +255,75 @@
         </tr>
         </ng-template>
       </p-table>
-      <div *ngIf="pager.totalRecords > 5" class="flex items-center justify-between py-6">
-        <!-- Page Size Dropdown -->
-        <div class="flex items-center">
-          <p-select [options]="[5, 10, 15]" formControlName="pageSize"
-            styleClass="bg-white border border-CustomBorder rounded-md"
-            (onChange)="onPageSizeChange($event)"></p-select>
-        </div>
-        <!-- Paginator -->
-        <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
-              (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of')}} {totalRecords}"
-              styleClass="!bg-transparent">
-              <ng-template pTemplate="firstpagelinkicon">
-                <img src="assets/icons/paginator/previus.svg" alt="">
-              </ng-template>
-              <ng-template pTemplate="lastpagelinkicon">
-                <img src="assets/icons/paginator/next.svg" alt="">
-              </ng-template>
-              <ng-template pTemplate="previouspagelinkicon">
-                <div class="flex items-center gap-2">
-                  <div>{{ this.sharedService.T('previous')}}</div>
-
-                </div>
-              </ng-template>
-              <ng-template pTemplate="nextpagelinkicon">
-                <div class="flex items-center gap-2">
-                  <div>{{ this.sharedService.T('next')}}</div>
-                </div>
-              </ng-template>
-            </p-paginator>
-      </div>
-
        </div>
+       <div>
+        <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">{{this.sharedService.T('unpaidInvoicesByCustomers')}}</h3>
+                </div>
+                
+                <p-table 
+                [value]="waitingOffers" 
+                [showGridlines]="false" 
+                [rows]="5"
+                [first]="0"
+                [paginator]="true"
+                [rowsPerPageOptions]="[5,10, 15]"  
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
+                [sortOrder]="-1" 
+                sortField="offerId" 
+                >
+        <ng-template #header>
+          <tr>
+            <th class="id-column-header rounded-l-xl" pSortableColumn="offerId">
+              <p-sortIcon field="offerId" />
+            </th>
+            <th>{{ this.sharedService.T('customerName') }}</th>
+            <th>{{ this.sharedService.T('vehiclePlate') }}</th>
+            <th>{{ this.sharedService.T('amount') }}</th>
+            <th>{{ this.sharedService.T('offerDate') }}</th>
+            <th>{{ this.sharedService.T('validTo') }}</th>
+       </tr>
+        </ng-template>
+
+        <ng-template #body let-offer>
+          <tr class="p-selectable-row">
+            <!-- Invoice ID -->
+            <td class="id-column-cell rounded-l-lg">
+              <div class="flex items-center gap-2 cursor-pointer">
+                <span class="id-text">{{ offer.customerId }}</span>
+                <i class="pi pi-external-link icon-primary" ></i>
+              </div>
+            </td>
+            <td title="{{ offer.customerName }}">
+              {{offer.customerName
+              }}
+            </td>
+            <td title="{{ offer.vehiclePlate }}">
+            {{ offer.vehiclePlate }}
+            </td>
+            <td>
+                <p-inputnumber  
+                [(ngModel)]="offer.priceIncVat" [ngModelOptions]="{standalone: true}"
+                inputId="minmax" 
+                mode="currency"
+                currency="SEK"
+                [minFractionDigits]="0" 
+                [maxFractionDigits]="0" 
+                [locale]="this.sharedService.currentLocale" 
+                [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
+                readonly="true"
+                class="with-out-border"
+                ></p-inputnumber>
+             </td>
+            <td>{{ offer.offerDate }}</td>
+            <td>{{ offer.validTill }}</td>
+          </tr>
+        </ng-template>
+      </p-table>  
+            
+      </div>
+       
             </div>
             <!-- News -->
                 <div class="col-span-3 bg-white rounded-xl p-4 card-shadow border-t border-gray-200">

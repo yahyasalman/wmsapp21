@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, ISelect, IWOPurchase, IWorkShopService, IWOService, IProduct, ICustomerType, ICustomerTag, IEmployee } from 'app/app.model';
+import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -261,24 +261,6 @@ export class WorkOrderCrudComponent implements OnInit {
     this.customer.patchValue({ customerTag: event.value });
   }
 
-
-  // loadGroupOrders() {
-  //   this.purchaseOrder.supplier = null;
-  //   this.purchaseOrder.supplierOrderId = null;
-  //   this.purchaseOrder.productName = undefined;
-  //   this.purchaseOrder.quantity = null;
-  //   this.purchaseOrder.unit = null;
-  //   this.purchaseOrder.unitPrice = null;
-
-  //   this.groupedOrders = Object.values(
-  //     this.purchaseOrders.reduce((acc, item) => {
-  //       if (!acc[item.supplierOrderId]) acc[item.supplierOrderId] = [];
-  //       acc[item.supplierOrderId].push(item);
-  //       return acc;
-  //     }, {} as { [key: number]: IWOPurchaseOrder[] })
-  //   );
-  // }
-
   getSuppliers() {
     this.isLoading = true;
     this.supplierService
@@ -342,51 +324,7 @@ export class WorkOrderCrudComponent implements OnInit {
     }, 500);
   }
 
-  // onChangeCustomer($event: any) {
-  //   this.logger.info('EVENT Parent == ', $event.customerId, $event.customerName, $event.telephone, $event.email, $event.isCreatedNow);
-  //   if ($event && $event.showMessage) {
-  //     this.logger.info('Inside IF' + $event.customerId);
-  //     if ($event.customerId > 0) {
-  //       this.messageService.add({ severity: 'info', summary: 'Info', detail: 'New Customer has been created', life: 3000 });
-  //       setTimeout(() => {
-  //         this.setFocusToNextComponent();
-  //       }, 3000);
-  //     }
-  //     else {
-  //       this.messageService.add({ severity: 'error', summary: '', detail: this.sharedService.T('inv.sent.confirm.message.error') });
-  //     }
-  //   }
-
-  //   this.workOrder.patchValue({
-  //     customerId: $event.customerId,
-  //     customerName: $event.customerName,
-  //     customerTelephone: $event.telephone,
-  //     customerEmail: $event.email
-  //   });
-
-
-  // }
-
   onChangeCustomer($event: any) {
-
-    this.logger.info('onChangeCustomer EVENT Parent == ');
-
-    this.logger.info('EVENT Parent == ', $event.customerId, $event.customerName, $event.telephone, $event.email, $event.isCreatedNow, $event.customerType, $event.startCustomerName);
-
-    // if ($event && $event.showMessage) {
-    //   this.logger.info('Inside IF' + $event.customerId);
-    //   if ($event.customerId > 0) {
-    //     this.messageService.add({ severity: 'info', summary: 'Info', detail: 'New Customer has been created', life: 3000 });
-    //     setTimeout(() => {
-    //       this.setFocusToNextComponent();
-    //     }, 3000);
-    //   }
-    //   else {
-    //     this.messageService.add({ severity: 'error', summary: '', detail: this.sharedService.T('inv.sent.confirm.message.error') });
-    //   }
-    // }
-
-    // Patch values - map from customer edit screen names to work order form names
     this.workOrder.patchValue({
       customerId: $event.customerId,
       customerName: $event.customerName,
@@ -413,12 +351,9 @@ export class WorkOrderCrudComponent implements OnInit {
     input.value = sanitizedValue.toUpperCase(); // Convert to uppercase
     this.workOrder.get('vehiclePlate')?.setValue(sanitizedValue); // Update 
   }
-
-
   filterManufacturers(event: any): void {
     this.manufacturers = this.sharedService.getVehicleManufacturers(event.query.toUpperCase());
   }
-
   filterSuppliers(event: any): void {
     this.isLoading = true;
     this.supplierService
@@ -451,10 +386,6 @@ export class WorkOrderCrudComponent implements OnInit {
     }, 500);
   }
 
-
-
-
-
   filterModels(event: any): void {
     this.models = this.sharedService.getVehicleModels(this.workOrder.get('vehicleManufacturer')?.value, event.query.toUpperCase());
   }
@@ -464,84 +395,17 @@ export class WorkOrderCrudComponent implements OnInit {
   }
 
   onSelectService(event: any) {
-    this.logger.info(event.itemValue.productName + ' ' + event.itemValue.quantity);
     let hoursSum = 0;
     this.selectedServices.forEach(element => {
       hoursSum += element.quantity;
     });
     this.workOrder.patchValue({ serviceDuration: hoursSum });
-
-
-
-
-
-
-
   }
-
-  // savePurchaseOrder() {
-  //   const newPurchaseOrder = { ...this.purchaseOrder, index: this.purchaseOrders.length + 1 };
-  //   this.purchaseOrders.push(newPurchaseOrder);
-  //   this.loadGroupOrders();
-  // }
-
   saveWOPurchase() {
     const newPurchase = { ...this.newWOPurchase, woPurchaseId: this.woPurchases.length + 1 };
     this.woPurchases.push(newPurchase);
-    // Reset the newWOPurchase object for next entry
     this.newWOPurchase = { woPurchaseId: 0, supplierName: '', purchaseReference: '', purchaseNote: '' };
   }
-
-  // savePurchaseOrderDetail(group: any) {
-  //   // Check if there is an existing row with the same supplierOrderId and undefined ProductName
-  //   const existingOrder = this.purchaseOrders.find(
-  //     (order) => order.supplierOrderId === group.supplierOrderId && !order.productName
-  //   );
-
-  //   if (existingOrder) {
-  //     this.logger.info('Existing Order Found', existingOrder);
-  //     existingOrder.productName = this.purchaseOrder.productName; // Update ProductName or other details
-  //     existingOrder.quantity = this.purchaseOrder.quantity;
-  //     existingOrder.unit = this.purchaseOrder.unit;
-  //     existingOrder.unitPrice = this.purchaseOrder.unitPrice;
-  //     this.logger.info('Updated Existing Order:', existingOrder);
-  //   } else {
-  //     const newPurchaseOrder = {
-  //       ...this.purchaseOrder,
-  //       index: this.purchaseOrders.length + 1,
-  //       supplier: {
-  //         supplierId: group.supplier.supplierId,
-  //         supplierName: group.supplier.supplierName
-  //       },
-  //       supplierOrderId: group.supplierOrderId
-  //     };
-  //     this.logger.info('PO-After', newPurchaseOrder);
-  //     this.purchaseOrders.push(newPurchaseOrder);
-  //   }
-
-
-  //this.loadGroupOrders();
-  //}
-
-
-  // removePurchaseOrder(key: any): void {
-  //   this.purchaseOrders = this.purchaseOrders.filter(order => order.supplierOrderId !== key.supplierOrderId);
-  //   this.purchaseOrders.forEach((order, index) => {
-  //     order.index = index + 1; // Reassign index starting from 1
-  //   });
-  //   this.loadGroupOrders();
-  // }
-
-  // removePurchaseOrderItem(key: any, item: any): void {
-  //   this.purchaseOrders = this.purchaseOrders.filter(order =>
-  //     !(order.supplierOrderId === key.supplierOrderId && order.index === item.index)
-  //   );
-  //   this.purchaseOrders.forEach((order, index) => {
-  //     order.index = index + 1; // Reassign index starting from 1
-  //   });
-  //   this.loadGroupOrders();
-  // }
-
   removeWOPurchase(woPurchase: any): void {
 
     this.logger.info('WO Purchases', this.woPurchases);
@@ -554,8 +418,6 @@ export class WorkOrderCrudComponent implements OnInit {
       order.woPurchaseId = index + 1; // Reassign index starting from 1
     });
   }
-
-
   onFormSubmit() {
     this.logger.info('Submitting WorkOrder Form...');
 
@@ -563,7 +425,7 @@ export class WorkOrderCrudComponent implements OnInit {
       this.workOrder.markAllAsTouched();
       return;
     }
-    
+    this.logger.info(this.selectedServices);
     if(!this.selectedServices || this.selectedServices.length === 0){ 
      this.workOrder.markAllAsTouched();
       return;
@@ -589,8 +451,8 @@ export class WorkOrderCrudComponent implements OnInit {
     this.selectedServices.forEach(s => {
       submittedWorkOrder.woServices.push({
         index: i,
-        serviceName: s.serviceName,
-        serviceHours: s.serviceHours
+        serviceName: s.productName,
+        serviceHours: s.quantity
       });
       i++;
     });
@@ -618,29 +480,6 @@ export class WorkOrderCrudComponent implements OnInit {
   onCancelForm() {
     this.location.back();
   }
-  // loadCustomerTypes() {
-  //   this.workshopService
-  //     .getCustomerTypes()
-  //     .pipe(catchError((err) => {
-  //       console.log(err); throw err;
-  //     })).subscribe((response: any) => {
-  //       if (response) {
-  //         this.customerTypes = response;
-  //         this.logger.info('CUSTOMER TYPE', this.customerTypes);
-  //         if (!(this.workOrder.get('customerType') && Number(this.workOrder.get('customerType')) > 0))
-  //           this.workOrder.patchValue({ 'customerType': this.customerTypes[0].customerTypeId });
-
-  //       }
-  //     });
-
-  // }
-
-  // onChangeCustomerType(event: SelectChangeEvent) {
-  //   this.workOrder.patchValue({ customerType: event.value });
-  //   //if (event.value == 'privat')
-  //   this.logger.info(event.value);
-  // }
-
   isFieldInvalid(fieldName: string): boolean {
     const field = this.workOrder.get(fieldName);
     return field ? field.invalid && (field.touched || this.submitted) : false;
@@ -668,9 +507,6 @@ export class WorkOrderCrudComponent implements OnInit {
       this.logger.info('Could not create new customer object');
     }
   }
-
-  // Helper method to clear field errors
-
   async onCreateCustomer() {
     // Mark all touched to trigger red borders
     this.customer.markAllAsTouched();

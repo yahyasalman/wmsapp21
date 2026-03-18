@@ -32,11 +32,12 @@
                     </ng-template>
                   </p-autoComplete>                  
                 </p-iconfield> 
+              <span style="color: var(--p-text-muted-color); font-size: 0.75rem; margin-left: 1.5rem;">data refreshed on: {{this.refreshedAt | date:'MMM dd, yyyy HH:mm:ss'}}</span>
               </div>
             </div> 
           </div>  
           
-          <div class="mt-10">
+          <div class="mt-20">
             <h2 class="text-2xl font-semibold mb-6 text-gray-800 flex items-center space-x-2 pl-6">
               <span>{{ this.sharedService.T('vehicle') }}</span>
               <div
