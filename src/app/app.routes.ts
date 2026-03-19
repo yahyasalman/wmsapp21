@@ -20,7 +20,7 @@ import { WorkOrderDetailComponent } from 'app/components/workorder/workorder-det
 import { WorkOrderListComponent } from 'app/components/workorder/workorder-list/workorder-list.component';
 import { SettingCrudComponent } from 'app/components/setting/setting-crud.component';
 import { TimesheetListComponent } from 'app/components/employee/timesheet/timesheet-list.component';
-import { EnumsLoadedGuard } from 'app/guards/enumsloaded.guard';
+import { ResourcesLoadedGuard } from 'app/guards/resourcesloaded.guard';
 import { DigitalServiceListComponent } from 'app/components/digitalservice/digitalservice-list/digitalservice-list.component';
 import { DigitalServiceDetailComponent } from 'app/components/digitalservice/digitalservice-detail/digitalservice-detail.component';
 import { EmployeeListComponent } from './components/employee/employee-list/employee-list.component';
@@ -34,7 +34,6 @@ import { PrivacypolicyComponent } from './components/privacypolicy/privacypolicy
 import { OptOutComponent } from './components/opt-out/opt-out.component';
 import { ProductDetailComponent } from './components/product/product-list/product-detail/product-detail.component';
 import { SupplierListComponent } from './components/supplier/supplier-list/supplier-list.component';
-import { ReportsComponent } from './components/reports/reports.component';
 import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
 
 export const routes: Routes =  [
@@ -47,7 +46,7 @@ export const routes: Routes =  [
   { path: 'webview/resetpassword', component:ResetPasswordViewComponent},
   { path: 'webview/forgetpassword', component:ForgetPasswordViewComponent},
   { path: 'sv',component:LayoutComponent,
-    canActivate: [EnumsLoadedGuard],
+    canActivate: [ ResourcesLoadedGuard],
     children: [ 
               {path: 'dashboard',component:DashboardListComponent},
               {path: 'customer',component:CustomerListComponent},
@@ -73,7 +72,6 @@ export const routes: Routes =  [
               {path: 'employment',component:TimesheetListComponent},
               {path: 'booking',component:BookingListComponent},
               {path: 'setting',component:SettingCrudComponent},
-              {path: 'reports',component:ReportsComponent},
               {path: 'vehicle',component:VehicleListComponent},
               ]
   },

@@ -13,20 +13,6 @@ export class BookingService {
 
   private baseUrl: string = environment.BASE_URL + '/api/booking';
   constructor(private http: HttpClient,private logger: LogService,private sharedService:SharedService) {}
-
-  // getWeeklyBookings(selectedYear:number,selectedWeek:number,filters:FormGroup)
-  // {
-  //   const queryParams = new URLSearchParams();
-  //   queryParams.append("wmsId", this.sharedService.wmsId);
-  //   queryParams.append('cyear',selectedYear.toString());    
-  //   queryParams.append('cweek',selectedWeek.toString());
-
-  //   if (filters.get('employeeIds')?.value != undefined || filters.get('employeeIds')?.value != null)
-  //     queryParams.append('employeeIds',filters.get('employeeIds')?.value);    
-    
-  //   const url = `${this.baseUrl}/weekly?${queryParams.toString()}`;
-  //   return this.http.get<IWeeklyCalendar[]>(url);
-  // }
   
   getWeeklyBookings(startDate:string,endDate:string,filters:FormGroup)
   {

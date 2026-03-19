@@ -1,26 +1,42 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from 'app/services/employee.service';
-import { LogService, SharedService } from 'app/services';
+import { LogService } from 'app/services/log.service';
+import { SharedService } from 'app/services/shared.service';
 import { IEmployee } from 'app/app.model';
-import { catchError } from 'rxjs';
+import { catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { SHARED_IMPORTS } from 'app/sharedimports';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-employee-crud',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,
-    ProgressSpinnerModule
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    SelectModule,
+    DatePickerModule,
+    ProgressSpinnerModule,
+    ConfirmDialogModule,
+    ToastModule
   ],
   templateUrl: './employee-crud.component.html',
   styleUrls: ['./employee-crud.component.css'],
   providers: [ConfirmationService, MessageService],
 })
-export class EmployeeCrudComponent implements OnInit {
+export class EmployeeCrudComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   employee!: FormGroup;
   isLoading: boolean = false;
   
@@ -67,7 +83,9 @@ export class EmployeeCrudComponent implements OnInit {
       this.employeeService.checkExistingEmployee(
         this.sharedService.wmsId,
         fullName.trim()
-      ).subscribe({
+      )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (exists: boolean) => {
           resolve(exists);
         },
@@ -114,20 +132,22 @@ export class EmployeeCrudComponent implements OnInit {
     this.logger.info('Loading Employee Data:');
     this.isLoading = true;
     this.employeeService.getEmployee(employeeId)
-      .pipe(catchError((err) => { 
-        console.log(err); 
-        this.isLoading = false; 
-        throw err; 
-      }))
-      .subscribe((response: any) => {
-        if (response) {
-          this.logger.info('Loaded Employee Data:');
-          this.logger.info(response.data);
-          
-          this.employee.patchValue(response.data);
-          this.isNewObject  = response.isNewObject;
+      .pipe(
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.logger.info('Loaded Employee Data:');
+            this.logger.info(response.data);
+            this.employee.patchValue(response.data);
+            this.isNewObject = response.isNewObject;
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error loading employee:', err);
         }
-        this.isLoading = false;
       });
   }
 
@@ -194,37 +214,38 @@ export class EmployeeCrudComponent implements OnInit {
 
     // Submit Employee Data
     const employee = this.employee.value;
-    this.isLoading = true; 
-    try {
-      const res = await this.employeeService.upsertEmployee(employee).toPromise();
+    this.isLoading = true;
+    this.employeeService.upsertEmployee(employee)
+      .pipe(
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            const empRes = res as IEmployee;
+            const name = empRes.fullName || employee.fullName || 'Employee';
 
-      if (res) {
-        const empRes = res as IEmployee;
-        const name = empRes.fullName || employee.fullName || 'Employee';
+            this.showSuccess(
+              this.isNewObject
+                ? `Employee "${name}" has been created successfully`
+                : `Employee "${name}" has been updated successfully`
+            );
 
-        this.showSuccess(
-          this.isNewObject
-            ? `Employee "${name}" has been created successfully`
-            : `Employee "${name}" has been updated successfully`
-        );
+            this.scrollToTop();
 
-        this.scrollToTop();
-
-        // Redirect after delay
-        setTimeout(() => {
-          this.router.navigate(['sv/employee']);
-        }, 900);
-      } else {
-        this.showError('Failed to save employee.');
-        this.scrollToTop();
-      }
-    } catch (error) {
-      console.error('Error while saving employee:', error);
-      this.showError('Error occurred while saving employee.');
-    }
-    finally {
-      this.isLoading = false; 
-    }
+            // Navigate immediately after confirming success
+            this.router.navigate(['sv/employee']);
+          } else {
+            this.showError('Failed to save employee.');
+            this.scrollToTop();
+          }
+        },
+        error: (error) => {
+          this.logger.error('Error while saving employee:', error);
+          this.showError('Error occurred while saving employee.');
+        }
+      });
   }
 
   showError(message: string) {
@@ -284,5 +305,10 @@ export class EmployeeCrudComponent implements OnInit {
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

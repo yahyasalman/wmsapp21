@@ -1,31 +1,60 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IWorkOrder, IEnum, IPager, SverityType } from 'app/app.model';
 import { WorkOrderService } from 'app/services/workorder.service';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { BookingService } from 'app/services/booking.service';
 import { MenuItem, ConfirmationService, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
 import { Popover } from 'primeng/popover';
-import { catchError, filter, of } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { catchError, filter, of, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PaginatorModule } from 'primeng/paginator';
+import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
+import { TagModule } from 'primeng/tag';
 @Component({
   selector: 'app-order-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, ProgressSpinnerModule,IconFieldModule,InputIconModule
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ProgressSpinnerModule,
+    IconFieldModule,
+    InputIconModule,
+    ButtonModule,
+    SelectModule,
+    DatePickerModule,
+    AutoCompleteModule,
+    CheckboxModule,
+    TableModule,
+    ToastModule,
+    ConfirmDialogModule,
+    PaginatorModule,
+    TooltipModule,
+    InputTextModule,
+    TagModule
   ], providers: [ConfirmationService, MessageService],
   styleUrl: './workorder-list.component.css',
   templateUrl: './workorder-list.component.html'
 })
 
-export class WorkOrderListComponent {
+export class WorkOrderListComponent implements OnInit, OnDestroy {
   @ViewChild('op') op!: Popover;
   selectedLocale: string = 'sv-SE';
   sortField = 'workorderId';
@@ -42,8 +71,10 @@ export class WorkOrderListComponent {
   vehiclePlates: string[] = [];
   isLoading: boolean = false;
   hideDeletedBookings = true;
+  private destroy$ = new Subject<void>();
 
   constructor(private logger: LogService,
+    private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
     private router: Router,
     private readonly route: ActivatedRoute,
@@ -71,6 +102,12 @@ export class WorkOrderListComponent {
       isActive: 1
     });
   }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   ngOnInit() {
     this.initializePage();
     this.router.events
@@ -82,10 +119,8 @@ export class WorkOrderListComponent {
       });
 
   }
-
   initializePage() {
     this.route.queryParams.subscribe((params) => { this.sharedService.updateFiltersFromQueryParams(this.filters, params) });
-
     this.getOrders();
   }
   getOrders() {
@@ -93,34 +128,33 @@ export class WorkOrderListComponent {
     this.workOrderService
       .getWorkOrders(this.filters)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
+        finalize(() => {
           this.isLoading = false;
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.orders = res.objectList;
-        this.orders.forEach((order) => {
-          order.workOrderDate = new Date(order.workOrderDate).toISOString().split('T')[0];
-          this.workOrderStatus = [];
-          this.logger.info('workorder status', order.workOrderStatus);
-          if (order.workOrderStatus != 'completed') {
-            this.sharedService.getEnums('workOrderStatus').forEach((status) => {
-              if (status.value != 'booking' && status.value != order.workOrderStatus) {
-                const copiedOrder = { ...order, workOrderStatus: status.value };
-                this.workOrderStatus.push({ label: status.text, command: () => { this.setWorkOrderStatus(copiedOrder); } });
-              }
-            });
-          }
-          //order.workOrderStatusItems = this.workOrderStatus;
-        });
-        //this.pager = res.pager;
-        this.totalRecords = res.pager.totalRecords;
+      .subscribe({
+        next: (res) => {
+          this.orders = res.objectList;
+          this.logger.info('getOrders success', { orderCount: this.orders.length, orders: this.orders });
+          this.orders.forEach((order) => {
+            order.workOrderDate = new Date(order.workOrderDate).toISOString().split('T')[0];
+            this.workOrderStatus = [];
+            if (order.workOrderStatus != 'completed') {
+              this.sharedService.getEnums('workOrderStatus').forEach((status) => {
+                if (status.value != 'booking' && status.value != order.workOrderStatus) {
+                  const copiedOrder = { ...order, workOrderStatus: status.value };
+                  this.workOrderStatus.push({ label: status.text, command: () => { this.setWorkOrderStatus(copiedOrder); } });
+                }
+              });
+            }
+          });
+          this.totalRecords = res.pager.totalRecords;
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getOrders', 'Failed to load work orders.');
+        }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
   getFilteredEnums(workOrderStatus: string) {
     let enums = this.sharedService.getEnums('workOrderStatus');
@@ -132,30 +166,32 @@ export class WorkOrderListComponent {
     this.workOrderService
       .upsertWorkOrder(workOrder)
       .pipe(
-        catchError((err) => {
-          console.log(err);
+        finalize(() => {
           this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.messageService.add({
+              severity: 'success', 
+              summary: this.sharedService.T('success'),
+              detail: this.sharedService.T('workorder') + '#' + workOrder.workOrderId + ' ' + this.sharedService.T('statusConfirmMessage') + this.sharedService.getEnumByValue('workOrderStatus', workOrder.workOrderStatus).text
+            });
+            this.getOrders();
+          }
+        },
+        error: (err) => {
+          this.logger.error('setWorkOrderStatus error', err);
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: this.sharedService.T('g.errorOccurred'),
             life: 3000
           });
-          throw err;
-        })
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.messageService.add({
-            severity: 'success', summary: this.sharedService.T('success'),
-            detail: this.sharedService.T('workorder') + '#' + workOrder.workOrderId + ' ' + this.sharedService.T('statusConfirmMessage') + this.sharedService.getEnumByValue('workOrderStatus', workOrder.workOrderStatus).text
-          });
-          this.getOrders();
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   onStatusChange(workOrderId: number, newStatus: string) {
@@ -165,7 +201,6 @@ export class WorkOrderListComponent {
       selectedWorkOrder.workOrderStatus = newStatus;
       this.setWorkOrderStatus(selectedWorkOrder);
     }
-    // Update the status in your backend or state management
 
   }
 
@@ -220,9 +255,6 @@ export class WorkOrderListComponent {
               this.getOrders();
             }
           });
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
       },
       reject: () => {
         this.messageService.add({
@@ -233,9 +265,6 @@ export class WorkOrderListComponent {
         });
       },
     });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
 
@@ -279,6 +308,9 @@ export class WorkOrderListComponent {
   keyupNumberPlate(event: any) {
     if (event?.value) {
       this.workOrderService.getVehiclePlates(event?.value)
+        .pipe(
+          takeUntil(this.destroy$)
+        )
         .subscribe((response) => {
           this.vehiclePlates = response;
         });
@@ -318,49 +350,7 @@ export class WorkOrderListComponent {
         return undefined; // Default case
     }
   }
-  // printTodaysPdf()
-  // {
-  //   let today = new Date().toISOString().split('T')[0];
-  //   this.logger.info(today);
-
-  //   this.workOrderService
-  //   .getWorkOrdersByCalendarDate(today)
-  //   .pipe(
-  //     catchError((err) => {
-  //       console.log(err);
-  //       throw err;
-  //     })
-  //   )
-  //   .subscribe((response: any) => {
-  //     if(response){
-  //       let workorders:IWorkOrder[] = response;
-  //       let workOrderIds = '';
-  //       workorders.forEach(function (workOrder) {
-  //         workOrderIds += workOrder.workOrderId.toString() + ",";
-  //       }); 
-  //       workOrderIds = workOrderIds.substring(0, workOrderIds.length - 1);
-  //       this.logger.info('ids...' + workOrderIds);
-  //       this.workOrderService
-  //     .getPdf(workOrderIds)
-  //   .pipe(
-  //     catchError((err) => {
-  //       console.log(err);
-  //       throw err;
-  //     })
-  //   )
-  //   .subscribe((response: any) => {
-  //     if(response){
-  //       var newBlob = new Blob([response], { type: "application/pdf" });
-  //       window.open(window.URL.createObjectURL(newBlob));
-  //     }
-  //   });
-
-  //     }
-  //   });
-
-  // }
   deleteBooking(workOrderId: number, event: any) {
-
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Are you sure you want to this Booking?', //this.sharedService.T('workorder-list.confirm.message') + statusText,
@@ -391,11 +381,7 @@ export class WorkOrderListComponent {
               this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('confirmSaveMessage') });
               this.getOrders();
             }
-            setTimeout(() => {
-              this.isLoading = false;
-            }, 500);
           });
-
       },
       reject: () => {
         this.messageService.add({
@@ -406,9 +392,6 @@ export class WorkOrderListComponent {
         });
       },
     });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   redirectToOrderDetailComponent(workOrderId: number) {
@@ -419,37 +402,6 @@ export class WorkOrderListComponent {
     this.router.navigate(['sv/workorder/crud']);
   }
 
-  onPageSizeChange(event: SelectChangeEvent) {
-    this.filters.patchValue({ currentPage: 1, pageSize: event.value });
-    this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getOrders();
-  }
-
-  // onPageChange(e: any) {
-  //   this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-  //   this.sharedService.updateFiltersInNavigation(this.filters);
-  //   this.getOrders();
-  // }
-
-  sortColumn(e: any) {
-    if (e) {
-      let pageIndex = e.first / e.rows;
-      // If the current page is already set, use it instead of resetting
-      if (this.filters.get('currentPage')?.value) {
-        pageIndex = +this.filters.get('currentPage')?.value - 1; // Convert to zero-based index
-      }
-      // Update the pager and filters
-      this.pager.firstPage = e.first;
-      this.filters.patchValue({
-        currentPage: (pageIndex + 1).toString(), // Convert back to one-based index
-        pageSize: e.rows,
-        sortDir: e.sortOrder,
-        sortBy: e.sortField,
-      });
-      this.sharedService.updateFiltersInNavigation(this.filters);
-      this.getOrders
-    }
-  }
   setSverity(value: string): SverityType {
     const allowed: SverityType[] = ['success', 'secondary', 'warn', 'help', 'info', 'danger', 'primary', 'contrast'];
     return allowed.includes(value as SverityType) ? (value as SverityType) : 'primary';

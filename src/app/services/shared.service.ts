@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ITokenClaims, ITranslate, IVehicle, IWmsLog, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
 import { IEmail, IEnum, IEnums,IPdf,ISelect, PdfObject } from 'app/app.model';
 import { environment } from 'environments/environment';
-import { BehaviorSubject, catchError, concatMap, firstValueFrom, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, forkJoin, from, map, Observable, of, tap, finalize } from 'rxjs';
 import { LogService } from './log.service';
 import { WmsUser } from 'app/app.model';
 import { FormGroup } from '@angular/forms';
@@ -21,12 +21,13 @@ export class SharedService {
   authUrl: string = environment.BASE_URL + "/api/auth";
   userUrl: string = environment.BASE_URL + "/api/User";
   fileUrl: string = environment.BASE_URL + "/api/File";
-
+  resourceFileVersion: number = 1;
   enums: IEnums[] = [];  
-  private enumsLoadedSubject = new BehaviorSubject<boolean>(false);
-  enumsLoaded$ = this.enumsLoadedSubject.asObservable();
- allManufacturers!: IVehicle[];
- translations!: ITranslate[];
+  private resourcesLoadedSubject = new BehaviorSubject<boolean>(false);
+  resourcesLoaded$ = this.resourcesLoadedSubject.asObservable();
+  private resourceLoadingPromise: Promise<void> | null = null;
+  allManufacturers!: IVehicle[];
+  translations!: ITranslate[];
   
   
 
@@ -70,12 +71,6 @@ get lang(): 'en' | 'sv' {
     return 'sv'; // Default to 'en' if the value is invalid
   }
 }
-  
-  private stateInfo: {disableEdit:string, creditInvoice:string ,customerId: number; customerEmail: string } | null = null;
-  setState(data:{disableEdit:string, creditInvoice:string,customerId: number;customerEmail: string }) {this.stateInfo = data;}
-  getState() {return this.stateInfo; }
-  clearState() { this.stateInfo = null; }
-  
   // shared method
   buildQueryParams(filters: FormGroup,includeWmsId:boolean = true): string {
     const queryParams = new URLSearchParams();
@@ -213,23 +208,6 @@ get lang(): 'en' | 'sv' {
   });
   }
 
-  printPdfDigitalService(objectName:string,ids:string,templateName:string)
-  {
-    const pdf:IPdf = ({ country:'se',
-                        lang:'sv',
-                        wmsId: '5591800080',
-                        objectName:objectName,
-                        ids:ids,
-                        templateName:templateName});
-
-    return this.http.post(`${this.coreUrl}/pdf`, pdf, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/pdf'
-    },
-    responseType: 'blob' as 'json' // Type assertion to satisfy Angular's HttpClient
-  });
-  }
    getClaimsFromToken(token:string)
    {
     const queryParams = new URLSearchParams();
@@ -358,20 +336,37 @@ get lang(): 'en' | 'sv' {
 loadResources(): Observable<void> {
   this.logger.info('Start loading resource files');
 
+  // Return immediately if resources are already loaded
+  if (this.areResourcesLoaded()) {
+    this.logger.info('Resources already loaded, returning cached data');
+    return of(undefined);
+  }
+
+  // Return the memoized promise to prevent parallel loading
+  if (this.resourceLoadingPromise) {
+    this.logger.info('Resource loading already in progress, waiting for completion');
+    return from(this.resourceLoadingPromise);
+  }
+
+  // Create the actual loading operation
+  const translationsUrl = environment.production ? `${environment.CDN_URL}/resources/translations-${this.resourceFileVersion}.json` : 'assets/resources/translations.json';
+  const enumsUrl = environment.production ? `${environment.CDN_URL}/resources/enums-${this.resourceFileVersion}.json` : 'assets/resources/wmsenums.json';
+  const modelsUrl = environment.production ? `${environment.CDN_URL}/resources/models-${this.resourceFileVersion}.json` : 'assets/resources/wmsmodels.json';  
+
   const fileRequests: [Observable<ITranslate[]>, Observable<IEnums[]>, Observable<IVehicle[]>] = [
-    this.http.get<ITranslate[]>('assets/wmsresources/wmstranslations.json').pipe(
+    this.http.get<ITranslate[]>(translationsUrl).pipe(
       catchError(error => {
         this.logger.error('Error loading translation.json:', error);
         return of([] as ITranslate[]);
       })
     ),
-    this.http.get<IEnums[]>('assets/wmsresources/wmsenums.json').pipe(
+    this.http.get<IEnums[]>(enumsUrl).pipe(
       catchError(error => {
         this.logger.error('Error loading wmsenums.json:', error);
         return of([] as IEnums[]);
       })
     ),
-    this.http.get<IVehicle[]>('assets/wmsresources/wmsmodels.json').pipe(
+    this.http.get<IVehicle[]>(modelsUrl).pipe(
       catchError(error => {
         this.logger.error('Error loading wmsmodels.json:', error);
         return of([] as IVehicle[]);
@@ -379,78 +374,49 @@ loadResources(): Observable<void> {
     )
   ];
 
-  return forkJoin<[ITranslate[], IEnums[], IVehicle[]]>(fileRequests).pipe(
+  // Create the observable that will be memoized
+  const loadingObservable = forkJoin<[ITranslate[], IEnums[], IVehicle[]]>(fileRequests).pipe(
     tap(([wmsTranslate, wmsEnums, wmsModels]) => {
-      // Process the loaded files
       this.translations = wmsTranslate;
       this.enums = wmsEnums;
       this.allManufacturers = wmsModels;
-
-      // Notify that resources are loaded
-      this.enumsLoadedSubject.next(true);
       this.logger.info('All resource files loaded successfully');
     }),
-    map(() => undefined), // Transform the emitted value to void
-    catchError(error => {
-      this.enumsLoadedSubject.next(false);
-      this.logger.error('Unexpected error while loading resource files:', error);
-      return of(undefined); // Return an observable emitting void in case of error
-    })
+    map(() => undefined)
   );
-}
-  
-  
-  //enums '/assets/wmsenums.json'
-  loadEnums() {
-    this.logger.info('start loading enum file');
-    firstValueFrom(this.http.get<IEnums[]>(`${this.coreUrl}/enums`))
-    .then(data => {
-          this.enums = data;
-          this.enumsLoadedSubject.next(true);
-          this.logger.info('enums loaded successfully');
-    })
-   .catch(error => {
-      this.enumsLoadedSubject.next(false);
-      this.logger.error('Error loading enums:', error);
+
+  // Memoize the promise and clear it when complete
+  this.resourceLoadingPromise = new Promise<void>((resolve, reject) => {
+    loadingObservable.pipe(
+      finalize(() => {
+        // Set the resourcesLoaded state based on data availability
+        const isLoaded = this.translations && this.translations.length > 0;
+        this.resourcesLoadedSubject.next(isLoaded);
+      })
+    ).subscribe({
+      next: () => resolve(),
+      error: (err) => {
+        this.resourcesLoadedSubject.next(false);
+        this.logger.error('Resource loading error:', err);
+        resolve(); // Resolve instead of reject to handle failures gracefully
+      }
     });
+  });
+
+  // Ensure promise is cleared after completion
+  this.resourceLoadingPromise.finally(() => {
+    this.resourceLoadingPromise = null;
+  });
+
+  return from(this.resourceLoadingPromise);
+}
+   areResourcesLoaded(): boolean {
+    return this.resourcesLoadedSubject.value;
   }
   
-  areEnumsLoaded(): boolean {
-    return this.enumsLoadedSubject.value;
-  }
-  
-//   loadEnumsFromDb(): Promise<void> {
-//   this.logger.info('start loading enums from db');
-//   return firstValueFrom(this.http.get<IEnums[]>(`${this.coreUrl}/enums`))
-//     .then(data => {
-//       this.enums = data;
-//       this.enumsLoadedSubject.next(true);
-//       this.logger.info('enums loaded successfully');
-//     })
-//     .catch(error => {
-//       this.enumsLoadedSubject.next(false);
-//       this.logger.error('Error loading enums:', error);
-//     });
-// } 
-
-  
-
 
 T(key: string): string {
-  //this.logger.info('inside-translation-key', key,this.lang);
-  // if(this.translations)
-  // {
-  //   this.logger.info('inside-translation-total', this.translations.length);
-  // }
-  // else 
-  // {
-  //   this.logger.info('inside-translation-translations-is-null');
-  // }
   const translation = this.translations.find(d => d.tkey === key);
-  // this.logger.info('inside-translation-found', translation);
-  // if(translation)
-  // this.logger.info('inside-translation-Language', translation![this.lang]);
-
   return translation ? translation[this.lang] : '*'+key; // Return key if translation is not found
 }
  getEnums(key:string){
@@ -468,7 +434,7 @@ T(key: string): string {
     if(!singleEnum) 
       {
         this.logger.error(`Missing enum for country="${this.country}" lang="${this.lang}", key="${key}" and value="${value}"`);
-        this.loadEnums();
+        //this.loadEnums();
         singleEnum = this.enums.filter(d =>  d.country == this.country 
                                 && d.lang == this.lang 
                                 && d.key == key
@@ -495,71 +461,7 @@ T(key: string): string {
     return year +'-' + month + '-' + day
   }
   
-  getDateTimeString(e:any)
-  {
-    this.logger.info('inside-getDateTimeString', e);
-    const year:string  = e.getFullYear().toString();
-    const month:string = (e.getMonth() + 1).toString().padStart(2, "0");
-    const day:string   = e.getDate().toString().padStart(2, "0");
-    const hours:string = e.getHours().toString().padStart(2, "0");
-    const minutes:string = e.getMinutes().toString().padStart(2, "0");
-    return year +'-' + month + '-' + day + ' ' + hours + ':' + minutes + ':00';
-  }
-  
-  getTimeString(e:any)
-  {
-    const hours:string = e.getHours().toString().padStart(2, "0");
-    const minutes:string = e.getMinutes().toString().padStart(2, "0");
-    return hours + ':' + minutes + ':00';
-  }
-  
-  // getCurrentWeekNumber(date:Date): number {
-  // const d = new Date(date.getTime());
-  // d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-  // const yearStart = new Date(d.getFullYear(), 0, 1);
-  // const weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-  // return weekNo;
-  // }  
-
- getWeekInfo(date: Date, flag: 'current' | 'previous' | 'next'): { weekNumber: number, startDate: string, endDate: string } {
-  const currentDate = new Date(date.getTime());
-
-  // Adjust the date based on the flag
-  if (flag === 'previous') {
-    currentDate.setDate(currentDate.getDate() - 7); // Go back one week
-  } else if (flag === 'next') {
-    currentDate.setDate(currentDate.getDate() + 7); // Go forward one week
-  }
-
-  // Calculate the week number
-  const d = new Date(currentDate.getTime());
-  d.setDate(d.getDate() + 4 - (d.getDay() || 7)); // Adjust to Thursday in current week
-  const yearStart = new Date(d.getFullYear(), 0, 1);
-  const weekNumber = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-
-  // Calculate the start and end dates of the week
-  const dayOfWeek = currentDate.getDay() || 7; // Sunday is 0, so make it 7
-  const startOfWeek = new Date(currentDate);
-  const endOfWeek = new Date(currentDate);
-
-  startOfWeek.setDate(currentDate.getDate() - dayOfWeek + 1); // Monday
-  endOfWeek.setDate(currentDate.getDate() + (7 - dayOfWeek)); // Sunday
-
-  // Format dates to yyyy-mm-dd
-  const formatDate = (d: Date) => {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0'); // Ensure 2 digits
-    const day = String(d.getDate()).padStart(2, '0'); // Ensure 2 digits
-    return `${year}-${month}-${day}`;
-  };
-
-  return {
-    weekNumber,
-    startDate: formatDate(startOfWeek),
-    endDate: formatDate(endOfWeek),
-  };
-}
-
+ 
   getNextId(tableName:string) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.wmsId);
@@ -567,28 +469,6 @@ T(key: string): string {
     const url = `${this.baseUrl}/api/Core/next-id?${queryParams}`;
     return this.http.get<number>(url);
   }
-
-  getWorkshop() {
-    const url = `${this.baseUrl}/Core/Workshop/${this.wmsId}`;
-    return this.http.get<IWorkshop>(url);
-  }
-
-  updateWorkshop(workshop: IWorkshop) {
-    workshop.wmsId = this.wmsId;
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<IWorkshop>(`${this.baseUrl}/Core/UpdateWorkshop`, workshop, {headers});
-  }
-  
-  getMarkModelByRegnr(prefix: string) {
-    const url = `${this.baseUrl}/Core/MarkModelByRegnr/${prefix}`;
-    return this.http.get<Array<string>>(url);
-  }
-  
-   logError(wmsLog: IWmsLog) {
-      const headers = new HttpHeaders({'Content-Type': 'application/json',});
-      return this.http.post<IWmsLog>(`${this.baseUrl}/log-error`, wmsLog, {headers});
-    }
-  
     getCompanyInfo(companyId:string)
     {
         const queryParams = new URLSearchParams();
@@ -596,46 +476,6 @@ T(key: string): string {
         const url = `${this.coreUrl}/company-info?${queryParams}`;
         return this.http.get<any>(url);
     }
-
-  // Templates 
-  // getDetailTemplates() {
-  //   const url = `${this.baseUrl}/Core/DetailTemplates/${this.wmsId}`;
-  //   return this.http.get<ISelect[]>(url);
-  // }
-  
-  // getDetailTemplate(templateId:number) {
-  //   const url = `${environment.BASE_URL}/Core/DetailTemplate/${this.wmsId}/${templateId}`;
-  //   return this.http.get<IDetailTemplate[]>(url);
-  // }  
-
-// sendEmail(type:string,id:number,workshopName:string,creditDays:number,dueDate:string,validFrom:string,validTo:string,
-//   tokenExpiryDate:string,emailTo:string,subject:string,message:string)
-// {
-//   this.logger.info('inside-shared-sendEmail');
-//   const emailInfo:IEmailParameters = 
-//   {
-//     country: this.country,
-//     lang: this.lang,
-//     type:type,
-//     wmsId: this.wmsId,
-//     id: id,
-//     workshopName:workshopName,
-//     creditDays:creditDays,
-//     dueDate:dueDate,
-//     validFrom:validFrom,
-//     validTo:validTo,
-//     tokenExpiryDate: tokenExpiryDate,
-//     emailTo:emailTo,
-//     subject:subject,
-//     message: message  
-  
-//   };
-  
-//   this.logger.info(emailInfo);
-
-//   const headers = new HttpHeaders({'Content-Type': 'application/json',});
-//   return this.http.post<IEmailParameters>(`${environment.BASE_URL}/Core/SendEmail`, emailInfo, {headers});
-// }
 
 }
 

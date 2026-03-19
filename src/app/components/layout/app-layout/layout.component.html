@@ -5,7 +5,6 @@
 >
   <!-- Logo -->
   <div class="py-3 pl-6">
-    <!-- <img src="assets/images/logo.svg" alt="Logo" class="h-12 max-w-full object-contain logo-primary" /> -->
   <svg id="Color_big" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 729.4 257.7">
   <!-- Generator: Adobe Illustrator 29.1.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 142)  -->
   <defs>
@@ -185,7 +184,7 @@
       <ng-template pTemplate="selectedItem" let-selectedOption>
         <div class="flex items-center gap-2" *ngIf="selectedOption">
           <img
-            [src]="'assets/images/' + selectedOption.value + '.png'"
+            [src]="imagesUrl + selectedOption.value + '.png'"
             class="w-4 h-4"
           />
           <div>{{ selectedOption.text }}</div>
@@ -196,7 +195,7 @@
       <ng-template pTemplate="item" let-language>
         <div class="flex items-center gap-2">
           <img
-            [src]="'assets/images/' + language.value + '.png'"
+            [src]="imagesUrl + language.value + '.png'"
             class="w-4 h-4"
           />
           <div>{{ language.text }}</div>
@@ -215,25 +214,23 @@
   <footer class="fixed bottom-0 right-0 left-60 h-12 px-5 border-t flex justify-between items-center bg-white">
     <ul class="flex gap-4 text-sm">
       <li class="flex gap-1 items-center">
-        <a target="_blank" href="#">
           <span class="material-symbols-outlined">forward_to_inbox</span>
-          <span>FAQ</span> 
-        </a>
+          <a href="#">FAQ</a>
       </li>
       <li class="flex gap-1 items-center">
-        <img src="assets/images/help.png" alt="">
+        <span class="material-symbols-outlined">forward_to_inbox</span>
         <a href="#">Help</a>
       </li>
       <li class="flex gap-1 items-center">
-        <img src="assets/images/emailus.png" alt="">
+        <span class="material-symbols-outlined">forward_to_inbox</span>
         <a href="#">Email us</a>
       </li>
       <li class="flex gap-1 items-center">
-        <img src="assets/images/phone.png" alt="">
+        <span class="material-symbols-outlined">forward_to_inbox</span>
         <a href="#">Ring oss</a>
       </li>
       <li class="flex gap-1 items-center">
-        <img src="assets/images/clock.png" alt="">
+        <span class="material-symbols-outlined">forward_to_inbox</span>
         <span>Mon - thu 09:00 - 12:00</span>
       </li>
     </ul>
@@ -241,7 +238,7 @@
     <div class="flex items-center gap-2">
       <span>V{{version}}</span>
       <button class="flex gap-1 text-sm px-2.5 py-1.5 rounded-full">
-        <img src="assets/images/Bhelp.png" alt="">
+        <img [src]="imagesUrl + 'Bhelp.png'" alt="">
         <span>help</span>
       </button>
     </div>

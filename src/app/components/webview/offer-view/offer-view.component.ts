@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -6,28 +7,31 @@ import {ITokenClaims} from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { OfferService } from 'app/services/offer.service';
 import { LogService } from 'app/services/log.service';
-import { catchError, filter, tap } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { finalize, takeUntil, Subject } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
 
 
 @Component({
   selector: 'app-offer-view',
   standalone: true,
  imports: [
-    ...SHARED_IMPORTS,
+    CommonModule,
+    ButtonModule,
     PdfViewerModule
-  ],  templateUrl: './offer-view.component.html'
+  ],
+  templateUrl: './offer-view.component.html'
 })
-export class OfferViewComponent {
-token:string = ''
-wmsId:string = '';
-workshopName:string = ''; 
-offerId:string = '';
-acceptRejectDate: string = '';
-isButtonDisabled:boolean = false;
-pdfUrl:any;
-status:string = 'wait';
-statusText:string = 'Väntar på svar'
+export class OfferViewComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  token: string = ''
+  wmsId: string = '';
+  workshopName: string = '';
+  offerId: string = '';
+  acceptRejectDate: string = '';
+  isButtonDisabled: boolean = false;
+  pdfUrl: any;
+  status: string = 'wait';
+  statusText: string = 'Väntar på svar'
 
   constructor(private logger: LogService,
               private readonly sharedService:SharedService,
@@ -46,91 +50,102 @@ statusText:string = 'Väntar på svar'
     this.loadPdf();
 }
 
-loadOffer()
-{
-      this.sharedService
-    .getClaimsFromToken(this.token)
-    .pipe(
-      tap((response: ITokenClaims) => {
-        if (response) {
-          this.wmsId = response.wmsId;
-          this.workshopName = response.workshopName;
-          this.offerId = response.id;
+  loadOffer() {
+    this.sharedService
+      .getClaimsFromToken(this.token)
+      .pipe(
+        finalize(() => {}),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: ITokenClaims) => {
+          if (response) {
+            this.wmsId = response.wmsId;
+            this.workshopName = response.workshopName;
+            this.offerId = response.id;
+            if (this.wmsId && this.offerId) {
+              this.getOfferStatus();
+            }
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error loading offer:', err);
         }
-      }),
-      filter(() => !!this.wmsId && !!this.offerId), // proceed only when both have values
-      tap(() => this.getOfferStatus()),
-      catchError((err) => {
-        console.log(err);
-        throw err;
-      })
-    )
-    .subscribe();
+      });
+  }
 
-}
-
-
-getOfferStatus(){
-  this.sharedService
-  .getOfferStatus(this.wmsId, Number(this.offerId))
-  .pipe(
-    catchError((err) => {
-      console.log(err);
-      throw err;
-    })
-  )
-  .subscribe((response: any) => {
-    if(response){
-        this.status = response.status;
-        this.acceptRejectDate = response.date;
-        if(this.status === 'accepted')
-        {
-          this.statusText = 'Offert accepterad den ' + this.acceptRejectDate;
+  getOfferStatus() {
+    this.sharedService
+      .getOfferStatus(this.wmsId, Number(this.offerId))
+      .pipe(
+        finalize(() => {}),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.status = response.status;
+            this.acceptRejectDate = response.date;
+            if (this.status === 'accepted') {
+              this.statusText = 'Offert accepterad den ' + this.acceptRejectDate;
+            } else if (this.status === 'rejected') {
+              this.statusText = 'Offert avvisad den ' + this.acceptRejectDate;
+            }
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error getting offer status:', err);
         }
-        else if(this.status === 'rejected')
-        {
-          this.statusText = 'Offert avvisad den ' + this.acceptRejectDate;  
+      });
+  }
+
+  loadPdf() {
+    this.sharedService
+      .printPdfFromToken(this.token)
+      .pipe(
+        finalize(() => {}),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            const newBlob = new Blob([response], { type: 'application/pdf' });
+            this.pdfUrl = window.URL.createObjectURL(newBlob);
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error loading offer PDF:', err);
         }
-      } 
-  });
-}
+      });
+  }
 
-loadPdf(){
-  this.sharedService
-  .printPdfFromToken(this.token)
-  .pipe(
-    catchError((err) => {
-      console.log(err);
-      throw err;
-    })
-  )
-  .subscribe((response: any) => {
-    if(response){
-        var newBlob = new Blob([response], { type: "application/pdf" });
-        this.pdfUrl = window.URL.createObjectURL(newBlob);      }
-  });
-}
-
-generatePdf(){
+  generatePdf() {
     window.open(this.pdfUrl);
   }
-  
-  updateStatus(accepted:boolean)
-  {
+
+  updateStatus(accepted: boolean) {
     this.sharedService
-    .updateCustomerOffer(this.wmsId, Number(this.offerId), accepted)
-    .pipe(
-      catchError((err) => {
-        console.log(err);
-        throw err;
-      })
-    )
-    .subscribe((res: any) => {
-      if (res) {
+      .updateCustomerOffer(this.wmsId, Number(this.offerId), accepted)
+      .pipe(
+        finalize(() => {}),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
             this.loadOffer();
             this.loadPdf();
-      }
-    });
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error updating offer:', err);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

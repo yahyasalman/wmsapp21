@@ -6,10 +6,9 @@
       <p-tablist>
         <p-tab value="0">{{ this.sharedService.T('company') }}</p-tab>
         <p-tab value="1">{{ this.sharedService.T('customers') }}</p-tab>
-        <p-tab value="2">{{ this.sharedService.T('workorders') }}</p-tab>
-        <p-tab value="3">{{ this.sharedService.T('invoices') }}</p-tab>
-        <p-tab value="4">{{ this.sharedService.T('invoiceDetails') }}</p-tab>
-        <p-tab value="5">{{ this.sharedService.T('salesTarget') }}</p-tab>
+        <p-tab value="2">{{ this.sharedService.T('invoices') }}</p-tab>
+        <p-tab value="3">{{ this.sharedService.T('invoiceDetails') }}</p-tab>
+        <p-tab value="4">{{ this.sharedService.T('salesTarget') }}</p-tab>
       </p-tablist>
 
       <p-tabpanels>
@@ -282,123 +281,10 @@
           </div>
         </p-tabpanel>
         
-        <!-- Workorder Tab -->
-        <p-tabpanel value="2">
-          <div class="px-6 mt-4">
-            <!-- Service Form Section -->
-            <form [formGroup]="workshopServiceForm">
-              <div class="p-6 border border-gray-200 rounded-lg mb-8">
-                <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('workshopServices') }}</p>
-                
-                <!-- Service Name, Hours, and Action Buttons Row -->
-                <div class="flex items-end gap-4 mb-6">
-                  <!-- Service Name -->
-                  <div class="w-80">
-                    <label class="mb-2 block text-sm font-medium text-gray-700" for="serviceName">
-                      {{ this.sharedService.T('workshopService') }}
-                    </label>
-                    <input formControlName="serviceName" type="text" placeholder="{{ this.sharedService.T('workshopService') }}" class="w-full"
-                      pInputText />
-                  </div>
-                  
-                  <!-- Estimated Working Time -->
-                  <div class="w-32">
-                    <label class="mb-2 block text-sm font-medium text-gray-700" for="serviceHours">
-                      {{ this.sharedService.T('estimatedWorkingTime') }}
-                    </label>
-                    <input type="number" formControlName="serviceHours" min="0" placeholder="Hours" class="w-full"
-                      pInputText />
-                  </div>
-
-                  <!-- Action Buttons -->
-                  <div class="flex gap-3">
-                    <p-button type="submit" size="large" icon="pi pi-plus"
-                      [label]="isCreateMode ? this.sharedService.T('createService') : this.sharedService.T('updateService')" (click)="saveWorkshopService()">
-                    </p-button>
-                    <p-button size="large" severity="secondary" [label]="this.sharedService.T('cancel')" (onClick)="resetWorkshopService()">
-                    </p-button>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-
-            <!-- Services Table -->
-            <div class="border border-gray-200 rounded-lg overflow-hidden">
-              <p-table 
-              [value]="services" 
-              [showGridlines]="false" 
-              [globalFilterFields]="['serviceName']"
-              [rows]="5"
-              [first]="0"
-              [paginator]="true"
-              [rowsPerPageOptions]="[5, 10, 20]"  
-              [showCurrentPageReport]="true"
-              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
-              sortField="serviceName"
-              [sortOrder]="-1" data-testid="service-table"
-          >
-                <ng-template #header>
-                  <tr class="bg-gray-50 border-b border-gray-200">
-                      <th pSortableColumn="serviceName" style="width:20%">
-                            <div class="flex items-center gap-2">
-                                {{ this.sharedService.T('workshopService') }}
-                                <p-sortIcon field="serviceName"></p-sortIcon>
-                            </div>
-                        </th>
-                      <th pSortableColumn="serviceHours" style="width:20%">
-                            <div class="flex items-center gap-2">
-                                {{ this.sharedService.T('estimatedWorkingTime') }}
-                                <p-sortIcon field="serviceHours"></p-sortIcon>
-                            </div>
-                        </th>
-
-                    <th></th>
-                  </tr>
-                  <tr>
-                        <th><p-columnFilter type="text" field="serviceName" placeholder="{{ this.sharedService.T('searchWorkshopService') }}" ariaLabel="Filter Name" filterOn="input"></p-columnFilter></th>
-                        <th></th>
-                        <th></th>
-                  </tr>
-                </ng-template>
-
-                <ng-template #body let-service>
-                  <tr class="border-b border-gray-200 hover:bg-gray-50">
-                    <td>{{ service.serviceName }}</td>
-                    <td>{{ service.serviceHours }}</td>
-                    <td class="px-6 py-3 flex items-center gap-2">
-                      <p-button size="small" icon="pi pi-pencil" (onClick)="editWorkshopService(service)" 
-                        pTooltip="Edit service" tooltipPosition="top"></p-button>
-                      <p-button size="small" severity="danger" icon="pi pi-trash"
-                         (onClick)="deleteWorkshopService(service)"
-                        pTooltip="Delete service" tooltipPosition="top"></p-button>
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-
-              <!-- Pagination -->
-              <!-- <div *ngIf="pager.totalRecords > 0" class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
-                <div class="flex items-center gap-2">
-                  <span class="text-sm text-gray-700">Show:</span>
-                  <p-select [options]="[10, 20, 30]" [(ngModel)]="pager.pageSize"
-                    [ngModelOptions]="{standalone: true}" 
-                    (onChange)="onSalesPageSizeChange($event)"
-                    styleClass="w-20">
-                  </p-select>
-                </div>
-                <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize"
-                  [totalRecords]="pager.totalRecords" (onPageChange)="onSalesPageChange($event)"
-                  [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-                  currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}">
-                </p-paginator>
-              </div> -->
-            </div>
-        </p-tabpanel>
-        
+       
         
         <!-- Invoice Tab -->
-        <p-tabpanel value="3">
+        <p-tabpanel value="2">
           
             <!-- SECTION 1: Price Mode -->
             <div class="p-6 border border-gray-200 rounded-lg mb-8">
@@ -447,7 +333,7 @@
         <!-- invoice detail templates -->
         
         <!-- SECTION 3: Product Group Templates -->
-        <p-tabpanel value="4">
+        <p-tabpanel value="3">
           
                 <div class="px-0 mt-0">
            
@@ -756,7 +642,7 @@
         
 
         <!-- Sales Target Tab -->
-        <p-tabpanel value="5">
+        <p-tabpanel value="4">
           <div class="px-6 mt-4">
             <!-- Sales Form Section -->
             <form [formGroup]="saleTarget">

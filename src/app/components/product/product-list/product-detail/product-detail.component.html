@@ -155,32 +155,6 @@
                                     (onChange)="onInventoryPageSizeChange($event)">
                                 </p-select>
                             </div>
-
-                            <!-- Paginator -->
-                            <p-paginator [first]="inventoryPager.firstPage" [rows]="inventoryPager.pageSize"
-                                [totalRecords]="inventoryPager.totalRecords"
-                                (onPageChange)="onInventoryPageChange($event)" [showCurrentPageReport]="true"
-                                [showFirstLastIcon]="true"
-                                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-                                styleClass="!bg-transparent">
-                                <ng-template pTemplate="firstpagelinkicon">
-                                    <img src="assets/icons/paginator/previus.svg" alt="">
-                                </ng-template>
-                                <ng-template pTemplate="lastpagelinkicon">
-                                    <img src="assets/icons/paginator/next.svg" alt="">
-                                </ng-template>
-                                <ng-template pTemplate="previouspagelinkicon">
-                                    <div class="flex items-center gap-2">
-                                        <div>{{ this.sharedService.T('previous') }}</div>
-
-                                    </div>
-                                </ng-template>
-                                <ng-template pTemplate="nextpagelinkicon">
-                                    <div class="flex items-center gap-2">
-                                        <div>{{ this.sharedService.T('next') }}</div>
-                                    </div>
-                                </ng-template>
-                            </p-paginator>
                         </div>
                     </div>
                 </p-tabpanel>
@@ -270,31 +244,6 @@
                                     (onChange)="onSalesPageSizeChange($event)">
                                 </p-select>
                             </div>
-
-                            <p-paginator [first]="(salesPager.currentPage - 1) * salesPager.pageSize"
-                                [rows]="salesPager.pageSize" [totalRecords]="salesPager.totalRecords"
-                                (onPageChange)="onSalesPageChange($event)" [showCurrentPageReport]="true"
-                                [showFirstLastIcon]="true"
-                                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-                                styleClass="!bg-transparent">
-
-                                <ng-template pTemplate="firstpagelinkicon">
-                                    <img src="assets/icons/paginator/previus.svg" alt="">
-                                </ng-template>
-                                <ng-template pTemplate="lastpagelinkicon">
-                                    <img src="assets/icons/paginator/next.svg" alt="">
-                                </ng-template>
-                                <ng-template pTemplate="previouspagelinkicon">
-                                    <div class="flex items-center gap-2">
-                                        <div>{{ this.sharedService.T('previous') }}</div>
-                                    </div>
-                                </ng-template>
-                                <ng-template pTemplate="nextpagelinkicon">
-                                    <div class="flex items-center gap-2">
-                                        <div>{{ this.sharedService.T('next') }}</div>
-                                    </div>
-                                </ng-template>
-                            </p-paginator>
                         </div>
                     </div>
                 </p-tabpanel>

@@ -1,24 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
-import { catchError, of} from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { finalize, takeUntil, Subject } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { MessageModule } from 'primeng/message';
 
 
 @Component({
   selector: 'forgetpassword-view',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS
-    // All modules are already in SHARED_IMPORTS
-  ],  providers: [],
-    templateUrl: './forgetpassword-view.component.html',
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule,
+    MessageModule
+  ],
+  providers: [],
+  templateUrl: './forgetpassword-view.component.html',
 
 })
-export class ForgetPasswordViewComponent  {
- 
+export class ForgetPasswordViewComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   forgotPasswordForm: FormGroup;
   successMessage: string | null = null;
 
@@ -33,36 +43,39 @@ export class ForgetPasswordViewComponent  {
       email: ['', [Validators.required, Validators.email]],
     });
   }
+  ngOnInit(): void {
+ }
 
   onForgotPasswordSubmitted() {
     if (this.forgotPasswordForm.valid) {
       const email = this.forgotPasswordForm.get('email')?.value;
-
-      // Simulate sending a reset link
       console.log('Sending reset link to:', email);
 
       this.sharedService
-      .forgotPassword(this.forgotPasswordForm.value)
-      .pipe(
-        catchError((error) => {
-          console.error('Error forgot password:', error);
-          return of(null);
-        })
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.successMessage = 'En återställningslänk har skickats till din e-postadress.';
-        }
-      });
-
-
-      // Display success message
-      
+        .forgotPassword(this.forgotPasswordForm.value)
+        .pipe(
+          finalize(() => {}),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: (res) => {
+            if (res) {
+              this.successMessage = 'En återställningslänk har skickats till din e-postadress.';
+            }
+          },
+          error: (error) => {
+            this.logger.error('Error forgot password:', error);
+          }
+        });
     }
   }
 
   navigateToLogin() {
-    // Navigate to the login page
     console.log('Navigating to login page');
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

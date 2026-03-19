@@ -1,7 +1,7 @@
 <header class="navbar">
   <div class="container-main">
     <nav class="flex justify-between items-center h-20">
-      <img src="assets/images/homelogo.png" class="h-10" />
+      <img [src]="imagesUrl + 'homelogo.png'" class="h-10" />
 
       <div class="hidden md:flex items-center gap-8">
         <a href="#funktioner" class="nav-link">Funktioner</a>
@@ -465,7 +465,7 @@
       <!-- Left Section -->
       <div class="bg-[#CCE0FF33] bg-dialog_background bg-contain bg-bottom bg-no-repeat me-7 rounded-l-xl">
         <div class="m-auto h-full flex justify-center items-center">
-          <img src="assets/images/homelogo.png" alt="Logo">
+          <img [src]="imagesUrl + 'homelogo.png'" alt="Logo">
         </div>
       </div>
 
@@ -553,7 +553,7 @@
           <div class="grid grid-cols-2">
             <div class="bg-[#CCE0FF33] bg-dialog_background bg-contain bg-bottom bg-no-repeat me-7 rounded-l-xl">
               <div class="m-auto h-full flex justify-center items-center">
-                <img src="assets/images/logo.png" alt="">
+                <img [src]="imagesUrl + 'logo.png'" alt="">
               </div>
             </div>
             <div class="pb-9 pe-7 pt-14">

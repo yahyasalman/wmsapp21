@@ -6,7 +6,7 @@ import { environment } from 'environments/environment';
 import { FormGroup } from '@angular/forms';
 import { LogService } from 'app/services/log.service';
 import { SharedService } from './shared.service';
-import { Observable } from 'rxjs/internal/Observable';
+
 
 @Injectable({providedIn: 'root'})
 
@@ -72,24 +72,6 @@ upsertCustomer(customer: ICustomer) {
     return this.http.post<Number>(`${this.baseUrl}/create`, {wmsId:this.sharedService.wmsId,customerName:customerName}, {headers});
   }
   
-  // In customer.service.ts - add this method without removing the old one
-// createCustomerWithDetails(customerData: {
-//   customerName: string;
-//   telephone?: string;
-//   email?: string;
-//   customerType?: any;
-// }): Observable<number> {
-//   const headers = new HttpHeaders({'Content-Type': 'application/json'});
-//   const payload = {
-//     wmsId: this.sharedService.wmsId,
-//     customerName: customerData.customerName,
-//     telephone: customerData.telephone,
-//     email: customerData.email,
-//     customerType: customerData.customerType
-//   };
-//   return this.http.post<number>(`${this.baseUrl}/create`, payload, {headers});
-// }
-
 }
 
 

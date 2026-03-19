@@ -1,30 +1,67 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError } from 'rxjs';
-import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { catchError, finalize, takeUntil, Subject } from 'rxjs';
+import { Form, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
 import { TimesheetService } from 'app/services/timesheet.service';
 import { ITimesheet, IPager, ISelect, IEnums, IEmployee } from 'app/app.model'
-import { SHARED_IMPORTS } from 'app/sharedimports';
 import { SelectChangeEvent } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { EmployeeService } from 'app/services/employee.service';
 import { Popover } from 'primeng/popover';
-
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { InputTextModule } from 'primeng/inputtext';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
+import { PopoverModule } from 'primeng/popover';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DialogModule } from 'primeng/dialog';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, ProgressSpinnerModule
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    SelectModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    InputTextModule,
+    IconFieldModule,
+    InputIconModule,
+    ProgressSpinnerModule,
+    TableModule,
+    PaginatorModule,
+    PopoverModule,
+    DatePickerModule,
+    DialogModule,
+    FloatLabelModule,
+    SelectButtonModule,
+    CheckboxModule,
+    TooltipModule
   ],
   templateUrl: './timesheet-list.component.html',
   styleUrl: './timesheet-list.component.css',
   providers: [ConfirmationService, MessageService]
 })
-export class TimesheetListComponent implements OnInit {
+export class TimesheetListComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   @ViewChild('checkoutPopup') checkoutPopup!: Popover;
   @ViewChild('deletePopup') deletePopup!: Popover;
   @ViewChild('commentsPopup') commentsPopup!: Popover;
@@ -103,19 +140,20 @@ export class TimesheetListComponent implements OnInit {
     this.employeeService
       .getAllEmployees()
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: IEmployee[]) => {
-        if (res) {
-          this.employees = res.map(employee => ({text: employee.fullName,value: employee.employeeId.toString()}));          
-          this.employeeCount = res.length;
+      .subscribe({
+        next: (res: IEmployee[]) => {
+          if (res) {
+            this.employees = res.map(employee => ({text: employee.fullName,value: employee.employeeId.toString()}));          
+            this.employeeCount = res.length;
+          }
+        },
+        error: (err) => {
+          this.logger.error(err);
         }
       });
-      this.isLoading = false;
   }
 
   getTimesheets() {
@@ -123,23 +161,22 @@ export class TimesheetListComponent implements OnInit {
     this.timesheetService
       .getTimesheets(this.filters)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        const objectData: any = res.objectList;
-        this.timesheets = objectData;
-        this.logger.info(this.timesheets);
-        this.pager = res.pager;
-        this.logger.info('Page-Info');
-        this.logger.info(this.pager);
+      .subscribe({
+        next: (res) => {
+          const objectData: any = res.objectList;
+          this.timesheets = objectData;
+          this.logger.info(this.timesheets);
+          this.pager = res.pager;
+          this.logger.info('Page-Info');
+          this.logger.info(this.pager);
+        },
+        error: (err) => {
+          this.logger.error(err);
+        }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   onChangeEmployee(event: SelectChangeEvent) {
@@ -293,45 +330,43 @@ export class TimesheetListComponent implements OnInit {
     const formData = this.timesheet.getRawValue();
     submitTimeSheet.startDate = this.sharedService.getDateString(formData['startDate']);
 
-    this.isLoading = false;
+    this.isLoading = true;
     this.timesheetService
       .checkin(submitTimeSheet)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        if (res.state == false) {
-          this.errorTimesheets = res.overlaps;
-          const overlapDetails = res.overlaps.map(overlap => {
-            const timesheetId = overlap.timesheetId;
-            const timesheetDate = overlap.startDate.split(' ')[0];
-            return `${timesheetId} - ${timesheetDate}`;
-          });
-          const overlapTime = overlapDetails.join('\n');
-          this.logger.info(res); this.messageService.add({
-            severity: 'error',
-            summary: this.sharedService.T('timeOverlapDetected'),
-
-            detail: this.sharedService.T('timeOverlapWithRecords') + `\n${overlapTime}\n\n`,
-            life: 10000
-          });
-
-        } else {
-          this.messageService.add({
-            severity: 'success',
-            detail: this.sharedService.T('timeRegisterSuccess'),
-          });
-          this.getTimesheets();
-          this.resetTimesheetForm();
+      .subscribe({
+        next: (res) => {
+          if (res.state == false) {
+            this.errorTimesheets = res.overlaps;
+            const overlapDetails = res.overlaps.map(overlap => {
+              const timesheetId = overlap.timesheetId;
+              const timesheetDate = overlap.startDate.split(' ')[0];
+              return `${timesheetId} - ${timesheetDate}`;
+            });
+            const overlapTime = overlapDetails.join('\n');
+            this.logger.info(res);
+            this.messageService.add({
+              severity: 'error',
+              summary: this.sharedService.T('timeOverlapDetected'),
+              detail: this.sharedService.T('timeOverlapWithRecords') + `\n${overlapTime}\n\n`,
+              life: 10000
+            });
+          } else {
+            this.messageService.add({
+              severity: 'success',
+              detail: this.sharedService.T('timeRegisterSuccess'),
+            });
+            this.getTimesheets();
+            this.resetTimesheetForm();
+          }
+        },
+        error: (err) => {
+          this.logger.error(err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
   cancelCheckIn() {
     this.resetTimesheetForm();
@@ -374,33 +409,33 @@ export class TimesheetListComponent implements OnInit {
       });
       return;
     }
+    this.isLoading = true;
     this.timesheetService
       .checkout(this.selectedTimeSheetId, this.checkoutTimesheet.get('timeOut')?.value)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        if (res) {
-          this.messageService.add({
-            severity: 'success',
-            detail: this.sharedService.T('timeRegisterSuccess'),
-            life: 3000
-          });
-          this.checkoutTimesheet.patchValue({ timeOut: '' });
-          this.checkoutPopup.toggle(event);
-          this.getTimesheets();
-        }
-        else {
-          this.logger.info('Checkout failed');
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.messageService.add({
+              severity: 'success',
+              detail: this.sharedService.T('timeRegisterSuccess'),
+              life: 3000
+            });
+            this.checkoutTimesheet.patchValue({ timeOut: '' });
+            this.checkoutPopup.toggle(event);
+            this.getTimesheets();
+          }
+          else {
+            this.logger.info('Checkout failed');
+          }
+        },
+        error: (err) => {
+          this.logger.error(err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
 
   }
 
@@ -420,32 +455,32 @@ export class TimesheetListComponent implements OnInit {
       isActive: false,
       deleteComments: this.deleteTimesheet.get('deleteComments')?.value
     };
+    this.isLoading = true;
     this.timesheetService
       .delete(deleteTimesheet as ITimesheet)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        if (res) {
-          this.messageService.add({
-            severity: 'success',
-            detail: this.sharedService.T('sucess'),
-            life: 3000
-          });
-          this.deletePopup.toggle(event);
-          this.getTimesheets();
-        }
-        else {
-          this.logger.info('Deletion failed');
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.messageService.add({
+              severity: 'success',
+              detail: this.sharedService.T('sucess'),
+              life: 3000
+            });
+            this.deletePopup.toggle(event);
+            this.getTimesheets();
+          }
+          else {
+            this.logger.info('Deletion failed');
+          }
+        },
+        error: (err) => {
+          this.logger.error(err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
   openComments(timesheet: ITimesheet, event: Event) {
     this.selectedTimeSheetId = timesheet.timesheetId;
@@ -465,23 +500,24 @@ export class TimesheetListComponent implements OnInit {
 
     this.timesheetService.updateComments(updatePayload)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          this.messageService.add({ severity: 'error', detail: 'Update failed' });
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.isLoading = false;
-        if (res) {
-          this.messageService.add({
-            severity: 'success',
-            detail: this.sharedService.T('commentsUpdated'),
-            life: 3000
-          });
-          this.commentsPopup.hide();
-          this.getTimesheets();
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.messageService.add({
+              severity: 'success',
+              detail: this.sharedService.T('commentsUpdated'),
+              life: 3000
+            });
+            this.commentsPopup.hide();
+            this.getTimesheets();
+          }
+        },
+        error: (err) => {
+          this.logger.error(err);
+          this.messageService.add({ severity: 'error', detail: 'Update failed' });
         }
       });
   }
@@ -560,5 +596,10 @@ export class TimesheetListComponent implements OnInit {
 
   getf(field: string) {
     return this.timesheet.get(field);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,39 +1,70 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { SharedService } from 'app/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from 'app/services/customer.service';
 import { ICustomer, IOffer, IWorkOrder } from 'app/app.model';
 import { IInvoice, IInvoicePayment } from 'app/app.model';
 import { IPager } from 'app/app.model';
-import { catchError } from 'rxjs';
+import { finalize, takeUntil, catchError } from 'rxjs';
+import { Subject } from 'rxjs';
 import { InvoiceService } from 'app/services/invoice.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
 import { OfferService } from 'app/services/offer.service'
 import { LogService } from 'app/services/log.service';
-import { RemovePlaceholderOnFocusDirective } from 'app/directives/remove-placeholder-on-focus.directive'
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { WorkOrderService } from 'app/services/workorder.service';
 import { BookingService } from 'app/services/booking.service';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { TableModule } from 'primeng/table';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
+import { TagModule } from 'primeng/tag';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { TabsModule } from 'primeng/tabs';
 
 @Component({
   selector: 'app-customer-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,
-    RemovePlaceholderOnFocusDirective 
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    TableModule,
+    SelectModule,
+    DatePickerModule,
+    InputNumberModule,
+    DialogModule,
+    TooltipModule,
+    TagModule,
+    ToggleButtonModule,
+    TabsModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './customer-detail.component.html',
   styleUrl: './customer-detail.component.css',
 })
-export class CustomerDetailComponent implements OnInit {
+export class CustomerDetailComponent implements OnInit, OnDestroy {
 
   customer: ICustomer = <ICustomer>{};
   orders: IWorkOrder[] = [];
   offers: IOffer[] = [];
   invoices: IInvoice[] = [];
+  private destroy$ = new Subject<void>();
 
   // Totals
   offerTotal: number = 0;
@@ -58,6 +89,7 @@ export class CustomerDetailComponent implements OnInit {
   workOrderStatus: MenuItem[] = [];
   selectedWorkOrder: IWorkOrder = <IWorkOrder>{};
   constructor(private readonly logger: LogService,
+              private readonly errorHandler: ErrorHandlerService,
               public readonly sharedService:SharedService,
               private router: Router,
                private readonly fb:FormBuilder,
@@ -87,62 +119,70 @@ export class CustomerDetailComponent implements OnInit {
     this.getCustomer(customerId);
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 
   getCustomer(customerId:number) {
     this.isLoading = true;
     this.customerService
       .getCustomer(customerId)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          this.customer = response.data;
-          this.getWorkOrders(this.customer.customerId);
-          this.getOffers(this.customer.customerId);
-          this.getInvoices(this.customer.customerId);
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.customer = response.data;
+            this.logger.info('getCustomer success', { customer: this.customer });
+            this.getWorkOrders(this.customer.customerId);
+            this.getOffers(this.customer.customerId);
+            this.getInvoices(this.customer.customerId);
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getCustomer', 'Failed to load customer. Please try again later.');
         }
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
       });
   }
 
   // WorkOrder Methods
 
   getWorkOrders(customerId:number) {
-    this.isLoading = true;
     this.workOrderService
       .getWorkOrdersByCustomerId(customerId)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.orders = res
-        this.orders.forEach((order) => {
-          order.workOrderDate = new Date(order.workOrderDate).toISOString().split('T')[0];
-          this.workOrderStatus = [];
+      .subscribe({
+        next: (res) => {
+          this.orders = res;
+          this.logger.info('getWorkOrders success', { workOrderCount: this.orders.length, workOrders: this.orders });
+          this.orders.forEach((order) => {
+            order.workOrderDate = new Date(order.workOrderDate).toISOString().split('T')[0];
+            this.workOrderStatus = [];
 
-          if (order.workOrderStatus != 'completed') {
-            this.sharedService.getEnums('workOrderStatus').forEach((status) => {
-              if (status.value != 'booking' && status.value != order.workOrderStatus) {
-                const copiedOrder = { ...order, workOrderStatus: status.value };
-                this.workOrderStatus.push({ label: status.text, command: () => { this.setWorkOrderStatus(copiedOrder); } });
-              }
-            });
-          }
-        });
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
+            if (order.workOrderStatus != 'completed') {
+              this.sharedService.getEnums('workOrderStatus').forEach((status) => {
+                if (status.value != 'booking' && status.value != order.workOrderStatus) {
+                  const copiedOrder = { ...order, workOrderStatus: status.value };
+                  this.workOrderStatus.push({ label: status.text, command: () => { this.setWorkOrderStatus(copiedOrder); } });
+                }
+              });
+            }
+          });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getWorkOrders', 'Failed to load work orders.');
+        }
       });
   }
 
@@ -157,19 +197,21 @@ export class CustomerDetailComponent implements OnInit {
     this.workOrderService
       .upsertWorkOrder(workOrder)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-          this.getWorkOrders(this.customer.customerId);
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.logger.info('setWorkOrderStatus success', { workOrderId: workOrder.workOrderId });
+            this.getWorkOrders(this.customer.customerId);
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'setWorkOrderStatus', 'Failed to update work order status.');
         }
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
       });
   }
 
@@ -224,20 +266,22 @@ export class CustomerDetailComponent implements OnInit {
         this.bookingService
           .deleteBooking(workOrderId)
           .pipe(
-            catchError((err) => {
+            finalize(() => {
               this.isLoading = false;
-              console.log(err);
-              throw err;
-            })
+            }),
+            takeUntil(this.destroy$)
           )
-          .subscribe((res: any) => {
-            if (res) {
-              this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('confirmSaveMessage') });
-              this.getWorkOrders(this.customer.customerId);
+          .subscribe({
+            next: (res: any) => {
+              if (res) {
+                this.logger.info('deleteBooking success', { workOrderId });
+                this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('confirmSaveMessage') });
+                this.getWorkOrders(this.customer.customerId);
+              }
+            },
+            error: (err) => {
+              this.errorHandler.handleError(err, 'deleteBooking', 'Failed to delete booking.');
             }
-            setTimeout(() => {
-              this.isLoading = false;
-            }, 500);
           });
       },
       reject: () => {
@@ -254,55 +298,53 @@ export class CustomerDetailComponent implements OnInit {
   // Offer Methods
 
   getOffers(customerId:number) {
-    this.isLoading = true;
     this.offerService
       .getOffersByCustomerId(customerId)
       .pipe(
-        catchError((err) => {
-          this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.offers = res;
-        this.offers.forEach((offer) => {
-          let offerTypeValue = 'pending';
-          if (offer.isAccepted)
-            offerTypeValue = 'accepted';
-          else if (offer.isRejected)
-            offerTypeValue = 'rejected';
-          offer.selectedOfferType = offerTypeValue;
-        });
-
-        
-        // Nested Call
-        this.offerService
-          .offerSumByCustomer(this.customer.customerId)
-          .pipe(
-            catchError((err) => {
-              this.isLoading = false;
-              this.logger.error(err);
-              throw err;
-            })
-          )
-          .subscribe((res) => {
-            this.offerTotal = res.total;;
-            this.offerAccepted = res.accepted;
-            this.offerRejected = res.rejected;
-            
-            // Turn off loading after everything is done
-            setTimeout(() => {
-              this.isLoading = false;
-            }, 500);
+      .subscribe({
+        next: (res) => {
+          this.offers = res;
+          this.logger.info('getOffers success', { offerCount: this.offers.length, offers: this.offers });
+          this.offers.forEach((offer) => {
+            let offerTypeValue = 'pending';
+            if (offer.isAccepted)
+              offerTypeValue = 'accepted';
+            else if (offer.isRejected)
+              offerTypeValue = 'rejected';
+            offer.selectedOfferType = offerTypeValue;
           });
+
+          // Nested Call
+          this.offerService
+            .offerSumByCustomer(this.customer.customerId)
+            .pipe(
+              finalize(() => {
+                this.isLoading = false;
+              }),
+              takeUntil(this.destroy$)
+            )
+            .subscribe({
+              next: (res) => {
+                this.offerTotal = res.total;;
+                this.offerAccepted = res.accepted;
+                this.offerRejected = res.rejected;
+                this.logger.info('offerSumByCustomer success', { total: this.offerTotal, accepted: this.offerAccepted, rejected: this.offerRejected });
+              },
+              error: (err) => {
+                this.errorHandler.handleError(err, 'offerSumByCustomer', 'Failed to load offer summary.');
+              }
+            });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getOffers', 'Failed to load offers.');
+        }
       });
   }
 
   redirectToOfferDetailComponent(offerId: number, isSent: boolean, isAccepted: boolean, isRejected: boolean, customerId: number, customerEmail: string = '') {
     const disableEdit = isSent || isAccepted || isRejected;
-    this.sharedService.clearState();
-    this.sharedService.setState({ disableEdit: disableEdit.toString(), creditInvoice: '', customerId: customerId, customerEmail: customerEmail });
     this.router.navigate([`sv/offer/details/${offerId}`]);
 
   }
@@ -327,76 +369,82 @@ export class CustomerDetailComponent implements OnInit {
     this.offerService
       .getOffer(offer.offerId, undefined, false)
       .pipe(
-        catchError((err) => {
-          this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        if (selectedValue == 'accepted') {
-          res.isAccepted = true;
+      .subscribe({
+        next: (res) => {
+          if (selectedValue == 'accepted') {
+            res.isAccepted = true;
+          }
+          else if (selectedValue == 'rejected') {
+            res.isRejected = true;
+          }
+          this.logger.info('onOfferTypeChange - offer loaded', { offerId: offer.offerId });
+          
+          // Nested Upsert call
+          this.offerService
+            .upsertOffer(res)
+            .pipe(
+              finalize(() => {
+                this.isLoading = false;
+              }),
+              takeUntil(this.destroy$)
+            )
+            .subscribe({
+              next: (res: any) => {
+                if (res) {
+                  this.logger.info('upsertOffer success', { offerId: offer.offerId });
+                  this.getOffers(this.customer.customerId);
+                }
+              },
+              error: (err) => {
+                this.errorHandler.handleError(err, 'upsertOffer', 'Failed to update offer.');
+              }
+            });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'onOfferTypeChange', 'Failed to load offer.');
         }
-        else if (selectedValue == 'rejected') {
-          res.isRejected = true;
-        }
-        
-        // Nested Upsert call
-        this.offerService
-          .upsertOffer(res)
-          .pipe(
-            catchError((err) => {
-              this.isLoading = false;
-              console.log(err);
-              throw err;
-            })
-          )
-          .subscribe((res: any) => {
-            if (res) {
-              this.getOffers(this.customer.customerId);
-            }
-            setTimeout(() => {
-              this.isLoading = false;
-            }, 500);
-          });
       });
   }
 
 
   // Invoice Methods
   getInvoices(customerId:number) {
-    this.isLoading = true;
     this.invoiceService
       .getInvoicesByCustomerId(customerId)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.invoices = res;
-        // We handle the loading stop here for the main list
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
+      .subscribe({
+        next: (res) => {
+          this.invoices = res;
+          this.logger.info('getInvoicesByCustomerId success', { invoiceCount: this.invoices.length, invoices: this.invoices });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getInvoices', 'Failed to load invoices.');
+        }
       });
 
-    // We don't control main spinner with this secondary call to avoid flickering
+    // Secondary call - no loading control to avoid flickering
     this.invoiceService
       .invoiceSumByCustomer(this.customer.customerId)
       .pipe(
-        catchError((err) => {
-          // No isLoading=false here, let the main list handle it
-          this.logger.error(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.invoiceTotal = res.total;;
-        this.invoicePaid = res.paid;
-        this.invoiceBalance = res.balance;
+      .subscribe({
+        next: (res) => {
+          this.invoiceTotal = res.total;;
+          this.invoicePaid = res.paid;
+          this.invoiceBalance = res.balance;
+          this.logger.info('invoiceSumByCustomer success', { total: this.invoiceTotal, paid: this.invoicePaid, balance: this.invoiceBalance });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'invoiceSumByCustomer', 'Failed to load invoice summary.');
+        }
       });
   }
 
@@ -405,32 +453,32 @@ export class CustomerDetailComponent implements OnInit {
     this.invoiceService
       .getInvoicePayments(invoiceId)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        if (res) {
-          this.selectedPayments = res;
-          this.selectedTotalPaid = this.selectedPayments.reduce((sum: number, item: any) => {
-            const amount = item?.paymentAmount || 0; // Ensure it's a number
-            return sum + amount;
-          }, 0);
-          this.selectedRemainingBalance = this.selectedPriceIncvat - this.selectedTotalPaid;
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.selectedPayments = res;
+            this.logger.info('getInvoicePayments success', { paymentCount: this.selectedPayments.length, payments: this.selectedPayments });
+            this.selectedTotalPaid = this.selectedPayments.reduce((sum: number, item: any) => {
+              const amount = item?.paymentAmount || 0; // Ensure it's a number
+              return sum + amount;
+            }, 0);
+            this.selectedRemainingBalance = this.selectedPriceIncvat - this.selectedTotalPaid;
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getPayments', 'Failed to load payments.');
         }
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
       });
   }
 
   redirectToInvoiceDetailComponent(isSent: boolean, isPaid: boolean, priceIncVat: number, customerId: number, customerEmail: string = '', invoiceId: number) {
     const creditInvoice = priceIncVat > 0 ? false : true;
     const disableEdit = isSent || isPaid || priceIncVat < 0;
-    this.sharedService.clearState();
-    this.sharedService.setState({ disableEdit: disableEdit.toString(), creditInvoice: creditInvoice.toString(), customerId: customerId, customerEmail: customerEmail });
     this.router.navigate([`sv/invoice/details/${invoiceId}`]);
   }
 
@@ -462,23 +510,25 @@ export class CustomerDetailComponent implements OnInit {
           this.invoiceService
             .markAsSent(selectedInvoice.invoiceId)
             .pipe(
-              catchError((err) => {
+              finalize(() => {
                 this.isLoading = false;
-                console.log(err);
-                throw err;
-              })
+              }),
+              takeUntil(this.destroy$)
             )
-            .subscribe((res: any) => {
-              if (res) {
-                this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('sentSuccessMessage') });
-                this.getInvoices(this.customer.customerId);
+            .subscribe({
+              next: (res: any) => {
+                if (res) {
+                  this.logger.info('markAsSent success', { invoiceId: selectedInvoice.invoiceId });
+                  this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('sentSuccessMessage') });
+                  this.getInvoices(this.customer.customerId);
+                }
+                else {
+                  this.messageService.add({ severity: 'error', summary: '', detail: this.sharedService.T('emailSentConfirmMessageError') });
+                }
+              },
+              error: (err) => {
+                this.errorHandler.handleError(err, 'markAsSent', 'Failed to mark invoice as sent.');
               }
-              else {
-                this.messageService.add({ severity: 'error', summary: '', detail: this.sharedService.T('emailSentConfirmMessageError') });
-              }
-              setTimeout(() => {
-                this.isLoading = false;
-              }, 500);
             });
         },
         reject: () => {
@@ -499,20 +549,22 @@ export class CustomerDetailComponent implements OnInit {
     this.sharedService
       .printPdf('offer', selectedOffer.offerId.toString(), 'basic')
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          var newBlob = new Blob([response], { type: "application/pdf" });
-          window.open(window.URL.createObjectURL(newBlob));
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.logger.info('generatePdfOffer success', { offerId: selectedOffer.offerId });
+            var newBlob = new Blob([response], { type: "application/pdf" });
+            window.open(window.URL.createObjectURL(newBlob));
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'generatePdfOffer', 'Failed to generate PDF.');
         }
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
       });
   }
 
@@ -521,20 +573,22 @@ export class CustomerDetailComponent implements OnInit {
     this.sharedService
       .printPdf('invoice', selectedInvoice.invoiceId.toString(), 'basic')
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          var newBlob = new Blob([response], { type: "application/pdf" });
-          window.open(window.URL.createObjectURL(newBlob));
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.logger.info('generatePdfInvoice success', { invoiceId: selectedInvoice.invoiceId });
+            var newBlob = new Blob([response], { type: "application/pdf" });
+            window.open(window.URL.createObjectURL(newBlob));
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'generatePdfInvoice', 'Failed to generate invoice PDF.');
         }
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
       });
   }
 
@@ -604,32 +658,34 @@ export class CustomerDetailComponent implements OnInit {
     this.invoiceService
       .deleteInvoicePayment(invoiceId, paymentId)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          this.messageService.add({ severity: 'error', summary: this.sharedService.T('error'), detail: this.sharedService.T('errorMessage') });
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        let minimunPaymentAmount = 0;
-        this.addPaymentBtnDisabled = true;
-        if (Number(res) > 0) {
-          minimunPaymentAmount = 1;
-          this.addPaymentBtnDisabled = false;
+      .subscribe({
+        next: (res) => {
+          let minimunPaymentAmount = 0;
+          this.addPaymentBtnDisabled = true;
+          if (Number(res) > 0) {
+            minimunPaymentAmount = 1;
+            this.addPaymentBtnDisabled = false;
+          }
+          this.logger.info('deletePayment success', { invoiceId, paymentId, remainingBalance: res });
+          this.payment.controls["paymentAmount"].setValidators([Validators.min(minimunPaymentAmount), Validators.max(Number(res))]);
+          this.payment.patchValue({
+            invoiceId: this.payment.get('invoiceId')?.value,
+            paymentDate: this.sharedService.getDateString(new Date()),
+            paymentAmount: Number(res),
+            paymentNote: '',
+            remainingBalance: Number(res)
+          });
+          this.getPayments(this.payment.get('invoiceId')?.value);
+          this.messageService.add({ severity: 'info', detail: this.sharedService.T('paymentDeleteConfirmMessageSave') });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'deletePayment', 'Failed to delete payment.');
         }
-        this.payment.controls["paymentAmount"].setValidators([Validators.min(minimunPaymentAmount), Validators.max(Number(res))]);
-        this.payment.patchValue({
-          invoiceId: this.payment.get('invoiceId')?.value,
-          paymentDate: this.sharedService.getDateString(new Date()),
-          paymentAmount: Number(res),
-          paymentNote: '',
-          remainingBalance: Number(res)
-        });
-        this.getPayments(this.payment.get('invoiceId')?.value);
-        this.messageService.add({ severity: 'info', detail: this.sharedService.T('paymentDeleteConfirmMessageSave') });
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
       });
   }
 
@@ -649,31 +705,33 @@ export class CustomerDetailComponent implements OnInit {
     this.invoiceService
       .createInvoicePayment(this.payment.value)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        let minimunPaymentAmount = 0;
-        this.addPaymentBtnDisabled = true;
-        if (Number(res) > 0) {
-          minimunPaymentAmount = 1;
-          this.addPaymentBtnDisabled = false;
+      .subscribe({
+        next: (res) => {
+          let minimunPaymentAmount = 0;
+          this.addPaymentBtnDisabled = true;
+          if (Number(res) > 0) {
+            minimunPaymentAmount = 1;
+            this.addPaymentBtnDisabled = false;
+          }
+          this.logger.info('onSave success', { paymentAmount: this.payment.get('paymentAmount')?.value, remainingBalance: res });
+          this.payment.controls["paymentAmount"].setValidators([Validators.min(minimunPaymentAmount), Validators.max(Number(res))]);
+          this.payment.patchValue({
+            invoiceId: this.payment.get('invoiceId')?.value,
+            paymentDate: this.sharedService.getDateString(new Date()),
+            paymentAmount: Number(res),
+            paymentNote: '',
+            remainingBalance: Number(res)
+          });
+          this.getPayments(this.payment.get('invoiceId')?.value);
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'onSave', 'Failed to save payment.');
         }
-        this.payment.controls["paymentAmount"].setValidators([Validators.min(minimunPaymentAmount), Validators.max(Number(res))]);
-        this.payment.patchValue({
-          invoiceId: this.payment.get('invoiceId')?.value,
-          paymentDate: this.sharedService.getDateString(new Date()),
-          paymentAmount: Number(res),
-          paymentNote: '',
-          remainingBalance: Number(res)
-        });
-        this.getPayments(this.payment.get('invoiceId')?.value);
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 500);
       });
   }
 

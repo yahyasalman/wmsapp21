@@ -1,30 +1,40 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { IProduct, IPager, IInventory } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { ProductService } from 'app/services/product.service';
 import { LogService } from 'app/services/log.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { catchError, debounceTime, distinctUntilChanged, firstValueFrom, switchMap } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { catchError, debounceTime, distinctUntilChanged, firstValueFrom, switchMap, finalize, takeUntil, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { MessageModule } from 'primeng/message';
+import { TooltipModule } from 'primeng/tooltip';
+import { DatePickerModule } from 'primeng/datepicker';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [
-    ...SHARED_IMPORTS, IconFieldModule,InputIconModule,ProgressSpinnerModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, ButtonModule, SelectModule, CheckboxModule, TableModule, DialogModule, ToastModule, InputTextModule,InputNumberModule,MessageModule,TooltipModule,DatePickerModule,ConfirmDialogModule],
   styleUrl: './product-list.component.css',
   templateUrl: './product-list.component.html',
   providers: [ConfirmationService, MessageService],
 
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
   products: IProduct[] = [];
   product!: FormGroup;
   filters: FormGroup;
@@ -113,17 +123,18 @@ export class ProductListComponent {
     this.logger.info(this.filters);
     this.productService.getProducts(this.filters)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false; // 🔴 Stop loader on error
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.logger.info('ompleted...');
-        this.products = res;
-        this.logger.info(this.products);
-        this.isLoading = false;
+      .subscribe({
+        next: (res) => {
+          this.logger.info('ompleted...');
+          this.products = res;
+          this.logger.info(this.products);
+        },
+        error: (err) => {
+          this.logger.error(err);
+        }
       });
   }
 
@@ -177,31 +188,38 @@ export class ProductListComponent {
   }
 
   productCrud(productId: number) {
-    this.productService.getProduct(productId).subscribe((response: any) => {
-      this.isNewObject = response.isNewObject;
-      this.showProductDialog = true;
+    this.productService.getProduct(productId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.isNewObject = response.isNewObject;
+          this.showProductDialog = true;
 
-      if (!productId) {
-        this.product.patchValue(response.data);
-        this.originalProductName = '';
+          if (!productId) {
+            this.product.patchValue(response.data);
+            this.originalProductName = '';
 
-        // vat default
-        const vatList = this.sharedService.getEnums('vatPercentage');
-        if (vatList && vatList.length > 0) {
-          this.product.patchValue({ vat: vatList[0].value });
+            // vat default
+            const vatList = this.sharedService.getEnums('vatPercentage');
+            if (vatList && vatList.length > 0) {
+              this.product.patchValue({ vat: vatList[0].value });
+            }
+          } else {
+            // UPDATE CASE
+            const data = response.data;
+            this.originalProductName = data.productName;
+            this.product.patchValue({
+              ...data,
+              category: data.category || this.sharedService.getDefaultEnum('detailCategory')?.value,
+              unit: data.productUnit || this.sharedService.getDefaultEnum('productUnit')?.value,
+              vat: data.vat ? data.vat.toString() : this.sharedService.getDefaultEnum('vatPercentage')?.value,
+            });
+          }
+        },
+        error: (err) => {
+          this.logger.error(err);
         }
-      } else {
-        // UPDATE CASE
-        const data = response.data;
-        this.originalProductName = data.productName;
-        this.product.patchValue({
-          ...data,
-          category: data.category || this.sharedService.getDefaultEnum('detailCategory')?.value,
-          unit: data.productUnit || this.sharedService.getDefaultEnum('productUnit')?.value,
-          vat: data.vat ? data.vat.toString() : this.sharedService.getDefaultEnum('vatPercentage')?.value,
-        });
-      }
-    });
+      });
   }
 
   // deleteProduct(productId: number) {
@@ -278,21 +296,23 @@ export class ProductListComponent {
 
         this.productService.setProductStatus(this.sharedService.wmsId, product.productId, newStatus)
           .pipe(
-            catchError((err) => {
-              this.isLoading = false;
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Operation failed!' });
-              throw err;
-            })
+            finalize(() => { this.isLoading = false; }),
+            takeUntil(this.destroy$)
           )
-          .subscribe((res) => {
-            this.isLoading = false;
-            if (res) {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Status Updated',
-                detail: `Product ${actionText}d successfully!`
-              });
-              this.getProducts(); // List refresh karein
+          .subscribe({
+            next: (res) => {
+              if (res) {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Status Updated',
+                  detail: `Product ${actionText}d successfully!`
+                });
+                this.getProducts(); // List refresh karein
+              }
+            },
+            error: (err) => {
+              this.logger.error(err);
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Operation failed!' });
             }
           });
       },
@@ -335,17 +355,7 @@ export class ProductListComponent {
         }
       }
       const res: any = await firstValueFrom(
-        this.productService.upsertProduct(product).pipe(
-          catchError((err) => {
-            this.isLoading = false;
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to save product!',
-            });
-            throw err;
-          })
-        )
+        this.productService.upsertProduct(product)
       );
 
       // ✅ Success Handling
@@ -365,7 +375,7 @@ export class ProductListComponent {
 
     } catch (error) {
       this.isLoading = false;
-      console.error('Form submission failed:', error);
+      this.logger.error('Form submission failed:', error);
     }
   }
 
@@ -463,23 +473,22 @@ export class ProductListComponent {
           inventoryQuantity: inventoryQuantity,
           inventoryNote: inventoryNote
         };
-
-
         return this.productService.upsertInventory(payload);
-      })
+      }),
+      finalize(() => { this.isLoading = false; }),
+      takeUntil(this.destroy$)
     ).subscribe({
       next: (res) => {
-        console.log('Saved:', res);
+        this.logger.info('Saved:', res);
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
           detail: 'Inventory saved successfully'
         });
         this.showInventoryDialog = false;
-        this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error saving inventory:', err);
+        this.logger.error('Error saving inventory:', err);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -527,5 +536,10 @@ export class ProductListComponent {
     });
     this.sharedService.updateFiltersInNavigation(this.filters);
     this.getProducts();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

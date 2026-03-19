@@ -1,28 +1,55 @@
 import { Component, OnInit, PLATFORM_ID, ChangeDetectorRef, inject, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Form, FormBuilder, FormGroup } from '@angular/forms';
-import { isPlatformBrowser } from '@angular/common';
-import {IInvoice, IMonthSummary, IOffer, IOutStandingBalance, IPager, ITopCustomer, ITopManufacturer, ITopSale, IUnpaidInvoice } from 'app/app.model';
+import {Router } from '@angular/router';
+import {FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {IInvoice,IOffer, IOutStandingBalance, IPager, ITopCustomer, ITopManufacturer, ITopSale, IUnpaidInvoice } from 'app/app.model';
 import { LogService } from 'app/services/log.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
 import { DashboardService } from 'app/services/dashboard.service';
-import {TooltipItem } from 'chart.js';
-
-// RxJS
-import { catchError, concatMap, forkJoin, map, Observable, of, switchMap, tap, Subject } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
 import { InvoiceService } from 'app/services/invoice.service';
-import { SelectChangeEvent } from 'primeng/select';
+import {TooltipItem } from 'chart.js';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { TableModule } from 'primeng/table';
+import { ChartModule } from 'primeng/chart';
+import { CardModule } from 'primeng/card';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
+import { TagModule } from 'primeng/tag';
+
+// RxJS
+import { catchError, forkJoin, Subject, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-list',
   standalone: true,
- imports: [
-    ...SHARED_IMPORTS,ProgressSpinnerModule,ProgressBarModule 
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    SelectModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    TableModule,
+    ChartModule,
+    ProgressSpinnerModule,
+    ProgressBarModule,
+    CardModule,
+    InputNumberModule,
+    DialogModule,
+    TooltipModule,
+    TagModule
   ],
-    templateUrl: './dashboard-list.component.html',
+  templateUrl: './dashboard-list.component.html',
   styleUrl: './dashboard-list.component.css'
 })
 export class DashboardListComponent implements OnInit, OnDestroy {
@@ -37,7 +64,6 @@ progressPercentage:number = 0;
   
   unpaidInvoices: IUnpaidInvoice[] = [];
   waitingOffers:IOffer[] = [];
-  pager:IPager = <IPager>{};
   
   topSales:ITopSale[] = [];
   topCustomers:ITopCustomer[] = [];
@@ -45,7 +71,6 @@ progressPercentage:number = 0;
   outStandingInvoices:IOutStandingBalance = {priceIncVat:0.00,vat:0.00,orderCount:0};
   outStandingOffers:IOutStandingBalance = {priceIncVat:0.00,vat:0.00,orderCount:0};
   
-  invoices: IInvoice[] = [];
   filters:FormGroup;
   currentMonthSale:number = 0;
   currentMonthSaleTarget:number = 0;
@@ -57,19 +82,20 @@ progressPercentage:number = 0;
   selectedMonth:string = '';
   lineChartData: any;
   lineChartOptions: any;
-  userPrompt: string = '';
   platformId = inject(PLATFORM_ID);
   isLoading:boolean = false;
 percentage: number = 0;
 
-  statMonths:any[] = [];
+  noOfPreviousMonthsForChart:any[] = [];
   selectedStatMonths = '3';
   private destroy$ = new Subject<void>();
+  private observers: MutationObserver[] = [];
   
   constructor(private cd: ChangeDetectorRef,
               private readonly router: Router,
               private readonly fb:FormBuilder, 
               private readonly logger: LogService,
+              private readonly errorHandler: ErrorHandlerService,
               public readonly sharedService:SharedService,
               public readonly dashboardService:DashboardService,
               private readonly invoiceService: InvoiceService,
@@ -86,216 +112,145 @@ percentage: number = 0;
    }
 
    ngOnInit() {
-   this.statMonths = [
+   this.noOfPreviousMonthsForChart = [
             { value:'3',text:this.sharedService.T('previous3Months')},
             { value:'6',text:this.sharedService.T('previous6Months')},
             { value:'12',text:this.sharedService.T('previousYear')},
         ];
           
-  this.loadvehicle();
-  const currentDate = new Date();
-  const currentDay = currentDate.getDate();
-  let cyear: number;
-  let cmonth: number;
-  if (currentDay < 10) {
-    cmonth = currentDate.getMonth(); 
-    cyear = currentDate.getFullYear();
-  if (cmonth === 0) {
-      cmonth = 12;
-      cyear -= 1;
-    }
-  } else {
-          cmonth = currentDate.getMonth() + 1; // Current month (1-based index)
-          cyear = currentDate.getFullYear();
-  }
-    const monthName = new Date(cyear, cmonth - 1).toLocaleString('default', { month: 'long' });
-    this.selectedMonth = `${monthName} ${cyear}`;
-    
     this.loadDashboardCards();
-    
-    
-    this.loadCurrentMonthStats(cyear.toString(),cmonth.toString());
+    this.loadCurrentMonthStats();
     this.loadLineChart("3");
     this.getUnpaidInvoices();
     this.getWaitingOffers();
-    
-    // Listen for theme/palette changes and refresh chart
     this.listenForThemeChanges();
-
     
   }
 
-  /**
-   * Listen for theme/palette changes using MutationObserver
-   * When user changes theme in layout, CSS variables update, this triggers chart refresh
-   */
-  private listenForThemeChanges(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    // Find the dynamic style element that contains primary palette CSS
-    const dynamicStyleEl = document.getElementById('dynamic-primary');
-    
-    if (dynamicStyleEl) {
-      // Observe changes to the style element's content (childList includes text nodes)
-      const observer = new MutationObserver(() => {
-        // When theme palette changes, CSS variables update
-        // Refresh the chart to pick up new colors
-        if (this.topSales && this.topSales.length > 0) {
-          // Add a small delay to ensure CSS variables have been updated
-          setTimeout(() => {
-            this.lineChart();
-            this.cd.markForCheck();
-          }, 50);
-        }
-      });
-
-      // Observe text content changes in the style element
-      observer.observe(dynamicStyleEl, {
-        childList: true,    // Watch for child nodes being added/removed
-        characterData: true, // Watch for text node changes
-        subtree: true       // Watch subtree
-      });
-    }
-
-    // Also observe document root for class changes (dark mode toggle)
-    const rootObserver = new MutationObserver(() => {
-      if (this.topSales && this.topSales.length > 0) {
-        setTimeout(() => {
-          this.lineChart();
-          this.cd.markForCheck();
-        }, 50);
-      }
-    });
-
-    rootObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-      subtree: false
-    });
-  }
 
   ngOnDestroy(): void {
+    // Disconnect all DOM observers to prevent memory leaks
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers = [];
+    
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  loadvehicle()
-  {
-    this.sharedService
-      .getVehicleInfo('AAM14L')
-      .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
-      )
-      .subscribe((response: any) => {
-        if (response) {
-          this.logger.info('Vehicle Info:');
-          this.logger.info(response);
-        }
-      });
-  }
-
-loadMonths(): Observable<void> {
-  const months = this.monthKeys.map((key) => ({
+private loadMonths(): void {
+  this.months = this.monthKeys.map((key) => ({
     key,
     value: this.sharedService.T(key) 
   }));
-
-  // Assign the result to this.months and return an Observable<void>
-  return new Observable<void>((observer) => {
-    this.months = months; // Assign the result to this.months
-    observer.next(); // Emit a completion signal
-    observer.complete(); // Mark the observable as complete
-  });
 }
 
-loadCurrentMonthStats(cyear: string, cmonth: string) {
-  // Combine all API calls into a single observable using forkJoin
+loadDashboardCards(): void {
+  this.isLoading = true;
+
   forkJoin({
-    currentMonthSaleTarget: this.dashboardService.getMonthSaleTarget(cyear, cmonth).pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    ),
-    currentMonthSale: this.dashboardService.getMonthSale(cyear, cmonth).pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    ),
-    currentMonthOrders: this.dashboardService.getMonthOrders(cyear, cmonth).pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    ),
-    currentMonthOffers: this.dashboardService.getMonthOffers(cyear, cmonth).pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    ),
-    currentMonthDigitalServices: this.dashboardService.getMonthDigitalServices(cyear, cmonth).pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    ),
-    currentMonthWorkOrders: this.dashboardService.getMonthWorkOrders(cyear, cmonth).pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    ),
-    currentMonthCustomers: this.dashboardService.getMonthCustomers(cyear, cmonth).pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
+    outStandingOffers: this.dashboardService.getOutStandingOffers(),
+    outStandingInvoices: this.dashboardService.getOutStandingInvoices(),
+    topManufacturers: this.dashboardService.getTopManufacturers(),
+    topCustomers: this.dashboardService.getTopCustomers(),
+  })
+    .pipe(
+      finalize(() => {
+        this.isLoading = false; // Ensure loading state is updated
       })
     )
-  }).subscribe({
-    next: (results) => {
-      // Assign the results to the respective properties
-      this.currentMonthSaleTarget = Number(results.currentMonthSaleTarget);
-      this.currentMonthSale = Number(results.currentMonthSale);
-      this.progressPercentage = Math.round(
-  (Number(results.currentMonthSale) / Number(results.currentMonthSaleTarget)) * 100
-);
+    .subscribe({
+      next: (results) => {
+        this.outStandingOffers = results.outStandingOffers;
+        this.outStandingInvoices = results.outStandingInvoices;
+        this.topManufacturers = results.topManufacturers;
+        this.topCustomers = results.topCustomers;
 
-      this.currentMonthOrders = results.currentMonthOrders;
-      this.currentMonthOffers = results.currentMonthOffers;
-      this.currentMonthDigitalServices = results.currentMonthDigitalServices;
-      this.currentMonthWorkOrders = results.currentMonthWorkOrders;
-      this.currentMonthCustomers = results.currentMonthCustomers;
-
-      // Log results for debugging
-      this.logger.info('Current Month Sale Target:', this.currentMonthSaleTarget);
-      this.logger.info('Current Month Sale:', this.currentMonthSale);
-      this.logger.info('Current Month Orders:', this.currentMonthOrders);
-      this.logger.info('Current Month Offers:', this.currentMonthOffers);
-      this.logger.info('Current Month Digital Services:', this.currentMonthDigitalServices);
-      this.logger.info('Current Month Work Orders:', this.currentMonthWorkOrders);
-      this.logger.info('Current Month Customers:', this.currentMonthCustomers);
-
-      // Call dependent methods here
-       if (this.currentMonthSaleTarget > 0) {
-      this.logger.info('Calculating percentage:', this.currentMonthSale, this.currentMonthSaleTarget);
-      this.percentage = Math.min((this.currentMonthSale / this.currentMonthSaleTarget) * 100, 100);
-    } else {
-      // Handle division by zero
-      this.percentage = 0;
-    }
-    },
-    error: (err) => {
-      this.logger.error('Error loading current month stats:', err);
-    }
-  });
+        this.logger.info('Dashboard Cards Loaded', results);
+      },
+      error: (err) => {
+        this.errorHandler.handleError(err, 'loadDashboardCards', 'Failed to load dashboard data. Please try again later.');
+      },
+    });
 }
 
-  
+private getCurrentOrPreviousMonth(): { year: number; month: number; monthName: string } {
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  let year = currentDate.getFullYear();
+  let month = currentDate.getMonth() + 1; // 1-based month
+
+  if (currentDay < 10) {
+    month -= 1; // Go to the previous month
+    if (month === 0) {
+      month = 12; // Wrap around to December
+      year -= 1;
+    }
+  }
+
+  const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long' });
+  return { year, month, monthName };
+}
+
+private calculatePercentage(value: number, total: number): number {
+  if (total > 0) {
+    return Math.min((value / total) * 100, 100); // Cap percentage at 100
+  }
+  return 0; // Handle division by zero
+}
+
+
+loadCurrentMonthStats(): void {
+  const { year, month, monthName } = this.getCurrentOrPreviousMonth();
+  this.selectedMonth = `${monthName} ${year}`;
+  this.isLoading = true;
+  forkJoin({
+    currentMonthSaleTarget: this.dashboardService.getMonthSaleTarget(year.toString(), month.toString()),
+    currentMonthSale: this.dashboardService.getMonthSale(year.toString(), month.toString()),
+    currentMonthOrders: this.dashboardService.getMonthOrders(year.toString(), month.toString()),
+    currentMonthOffers: this.dashboardService.getMonthOffers(year.toString(), month.toString()),
+    currentMonthDigitalServices: this.dashboardService.getMonthDigitalServices(year.toString(), month.toString()),
+    currentMonthWorkOrders: this.dashboardService.getMonthWorkOrders(year.toString(), month.toString()),
+    currentMonthCustomers: this.dashboardService.getMonthCustomers(year.toString(), month.toString()),
+  })
+    .pipe(
+      finalize(() => {
+        this.isLoading = false; // Ensure loading state is updated
+      })
+    )
+    .subscribe({
+      next: (results) => {
+        // Assign results to properties
+        this.currentMonthSaleTarget = Number(results.currentMonthSaleTarget);
+        this.currentMonthSale = Number(results.currentMonthSale);
+        this.currentMonthOrders = results.currentMonthOrders;
+        this.currentMonthOffers = results.currentMonthOffers;
+        this.currentMonthDigitalServices = results.currentMonthDigitalServices;
+        this.currentMonthWorkOrders = results.currentMonthWorkOrders;
+        this.currentMonthCustomers = results.currentMonthCustomers;
+
+        // Calculate progress percentage
+        this.progressPercentage = this.calculatePercentage(
+          this.currentMonthSale,
+          this.currentMonthSaleTarget
+        );
+
+        // Log results in a structured way
+        this.logger.info('Current Month Stats:', {
+          saleTarget: this.currentMonthSaleTarget,
+          sale: this.currentMonthSale,
+          orders: this.currentMonthOrders,
+          offers: this.currentMonthOffers,
+          digitalServices: this.currentMonthDigitalServices,
+          workOrders: this.currentMonthWorkOrders,
+          customers: this.currentMonthCustomers,
+          progressPercentage: this.progressPercentage,
+        });
+      },
+      error: (err) => {
+        this.errorHandler.handleError(err, 'loadCurrentMonthStats', 'Failed to load current month statistics. Please try again later.');
+      },
+    });
+}
 
   getAverageperOrder(): number {
   const sale = Number(this.currentMonthSale);
@@ -303,31 +258,51 @@ loadCurrentMonthStats(cyear: string, cmonth: string) {
   return orders > 0 ? sale / orders : 0;
 }
 
-loadLineChart(noOfPreviousMonths:string){
-  this.dashboardService
-  .getTopSales(noOfPreviousMonths)
-  .pipe(
-    catchError((err) => {
-      this.logger.error(err);
-      throw err;
-    }),
-    switchMap((res) => {
-      this.topSales = res;
-      this.logger.info('Top Sales Data:', this.topSales);
-      return this.loadMonths(); // Assuming loadMonths() returns an Observable
-    })
-  )
-  .subscribe({
-    next: () => {
-      this.logger.info('MONTHS MONTHS', this.months);
-      this.lineChart();
-    },
-    error: (err) => {
-      this.logger.error('Error during execution', err);
-    },
-  });
 
+getUnpaidInvoices(): void {
+  this.isLoading = true;
+
+  this.logger.info('getUnpaidInvoices called', { filters: this.filters.value });
+
+  this.dashboardService
+    .getUnpaidInvoices(this.filters)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false; // Ensure loading state is updated
+      })
+    )
+    .subscribe({
+      next: (res) => {
+        this.unpaidInvoices = res;
+        this.logger.info('getUnpaidInvoices success', { unpaidInvoices: this.unpaidInvoices });
+      },
+      error: (err) => {
+        this.errorHandler.handleError(err, 'getUnpaidInvoices', 'Failed to load unpaid invoices. Please try again later.');
+      },
+    });
 }
+
+  getWaitingOffers(): void {
+  this.isLoading = true;
+  this.logger.info('getWaitingOffers called', { filters: this.filters.value });
+  this.dashboardService
+    .getWaitingOffers()
+    .pipe(
+      finalize(() => {
+        this.isLoading = false; // Ensure loading state is updated
+      })
+    )
+    .subscribe({
+      next: (res) => {
+        this.waitingOffers = res;
+        this.logger.info('getWaitingOffers success', { waitingOffers: this.waitingOffers });
+      },
+      error: (err) => {
+        this.errorHandler.handleError(err, 'getWaitingOffers', 'Failed to load waiting offers. Please try again later.');
+      },
+    });
+}
+
 
 onPeriodChange(event: any): void {
   if (!event.value)
@@ -336,113 +311,22 @@ onPeriodChange(event: any): void {
   this.selectedStatMonths = selectedValue; // Update the selected value
   this.loadLineChart(selectedValue); // Update the chart based on the selected period
 }
-
-  getUnpaidInvoices() {
-     this.isLoading = true;
-    this.logger.info('getUnpaidInvoices',this.filters.value);
-    this.dashboardService
-      .getUnpaidInvoices(this.filters)
-      .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
-      )
-      .subscribe((res) => {
-        this.unpaidInvoices = res;
-        //this.pager = res.pager;
-        this.logger.info('unpaidInvoices',this.unpaidInvoices);
-      });
-
-      setTimeout(() => {
-  this.isLoading = false;
-}, 500);
-    }
-
-  getWaitingOffers() {
-     this.isLoading = true;
-    this.logger.info('getWaitingOffers',this.filters.value);
-    this.dashboardService
-      .getWaitingOffers()
-      .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
-      )
-      .subscribe((res) => {
-        this.waitingOffers = res;
-        //this.pager = res.pager;
-        this.logger.info('waitingOffers',this.waitingOffers);
-      });
-
-      setTimeout(() => {
-  this.isLoading = false;
-}, 500);
-    }
-
- async loadDashboardCards() {
-  this.isLoading = true;
-
-  // Combine all API calls into a single observable using forkJoin
-  forkJoin({
-    outStandingOffers: this.dashboardService.getOutStandingOffers().pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    ),
-    outStandingInvoices: this.dashboardService.getOutStandingInvoices().pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    ),
-    topManufacturers: this.dashboardService.getTopManufacturers().pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    ),
-    topCustomers: this.dashboardService.getTopCustomers().pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err; // Propagate the error
-      })
-    )
-  }).subscribe({
-    next: (results) => {
-      // Assign the results to the respective properties
-      this.outStandingOffers = results.outStandingOffers;
-      this.outStandingInvoices = results.outStandingInvoices;
-      this.topManufacturers = results.topManufacturers;
-      this.topCustomers = results.topCustomers;
-
-      // Log results for debugging
-      this.logger.info('Outstanding Offers:', this.outStandingOffers);
-      this.logger.info('Outstanding Invoices:', this.outStandingInvoices);
-      this.logger.info('Top Manufacturers:', this.topManufacturers);
-      this.logger.info('Top Customers:', this.topCustomers);
-
-      // Call dependent methods here
-     
-
+loadLineChart(noOfPreviousMonths:string){
+  this.dashboardService
+  .getTopSales(noOfPreviousMonths)
+  .subscribe({
+    next: (res) => {
+      this.topSales = res;
+      this.logger.info('Top Sales Data:', this.topSales);
+      this.loadMonths(); // Call synchronous method directly
+      this.lineChart();
     },
     error: (err) => {
-      this.logger.error('Error loading dashboard cards:', err);
+      this.errorHandler.handleError(err, 'loadLineChart', 'Failed to load top sales data. Please try again later.');
     },
-    complete: () => {
-      this.isLoading = false; // Ensure loading state is updated
-    }
   });
-}
 
-  /**
-   * Convert hex color to rgba format
-   */
-  
+}
 
   lineChart() {
     this.logger.info('Initializing chart with top sales data:');
@@ -620,6 +504,44 @@ onPeriodChange(event: any): void {
       this.cd.markForCheck();
     }
   }
+    private listenForThemeChanges(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const dynamicStyleEl = document.getElementById('dynamic-primary');
+    if (dynamicStyleEl) {
+      const observer = new MutationObserver(() => {
+        if (this.topSales && this.topSales.length > 0) {
+          setTimeout(() => { 
+            this.lineChart();
+            this.cd.markForCheck();
+          }, 50);
+        }
+      });
+      // Observe text content changes in the style element
+      observer.observe(dynamicStyleEl, {
+        childList: true,    
+        characterData: true,
+        subtree: true       
+      });
+      // Store observer to disconnect later
+      this.observers.push(observer);
+    }
+    const rootObserver = new MutationObserver(() => {
+      if (this.topSales && this.topSales.length > 0) {
+        setTimeout(() => {
+          this.lineChart();
+          this.cd.markForCheck();
+        }, 50);
+      }
+    });
+    rootObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+      subtree: false
+    });
+    // Store observer to disconnect later
+    this.observers.push(rootObserver);
+  }
+
 
   redirectToOrderCrudComponent() {
     this.router.navigate(['sv/workorder/crud']);

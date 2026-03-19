@@ -1,5 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, ViewChild, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IDigitalService, IWorkOrder, IPager, IInvoice, IEnums } from 'app/app.model';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -9,12 +10,25 @@ import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
 import { Popover } from 'primeng/popover';
-import { SHARED_IMPORTS } from 'app/sharedimports';
-import { catchError, EMPTY, filter, switchMap, take } from 'rxjs';
+import { catchError, EMPTY, filter, switchMap, take, finalize, takeUntil, Subject } from 'rxjs';
 import { InvoiceService } from 'app/services/invoice.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DatePickerModule } from 'primeng/datepicker';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { TableModule } from 'primeng/table';
+import { SelectModule } from 'primeng/select';
+import { PaginatorModule } from 'primeng/paginator';
+import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
+import { ListboxModule } from 'primeng/listbox';
+import { MessageModule } from 'primeng/message';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 interface WorkshopService { name: string };
@@ -22,15 +36,14 @@ interface WorkshopService { name: string };
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [
-    ...SHARED_IMPORTS, ProgressSpinnerModule,IconFieldModule,InputIconModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule],
   providers: [ConfirmationService, MessageService],
   styleUrl: './digitalservice-list.component.css',
   templateUrl: './digitalservice-list.component.html'
 })
 
-export class DigitalServiceListComponent {
+export class DigitalServiceListComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
   digitalServices: IDigitalService[] = [];
   pager: IPager = <IPager>{};
   filters: FormGroup;
@@ -102,7 +115,10 @@ export class DigitalServiceListComponent {
   ngOnInit() {
     this.initializePage();
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
       .subscribe((event: NavigationEnd) => {
         if (event.urlAfterRedirects.startsWith('/sv/digitalservice')) {
           this.initializePage();
@@ -112,15 +128,15 @@ export class DigitalServiceListComponent {
 
   initializePage() {
   console.trace('initializePage called'); 
-  this.route.queryParams.subscribe((params) => {this.sharedService.updateFiltersFromQueryParams(this.filters, params)});
-  this.digitalService.get('serviceDate')?.valueChanges.subscribe(d => {
+  this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {this.sharedService.updateFiltersFromQueryParams(this.filters, params)});
+  this.digitalService.get('serviceDate')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(d => {
       if (!d) return;
       const n = new Date(d);
       n.setFullYear(n.getFullYear() + 1);
       this.digitalService.get('nextServiceDate')
         ?.setValue(n.toISOString().slice(0, 10));
     });
-    this.digitalService.get('vehicleMileage')?.valueChanges.subscribe(v => {
+    this.digitalService.get('vehicleMileage')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(v => {
       this.digitalService.get('nextServiceVehicleMileage')
         ?.setValue(v ? +v + 10000 : '');
     });
@@ -132,23 +148,21 @@ export class DigitalServiceListComponent {
   getDigitalServices(onlyThisWmsId:boolean) {
     this.isLoading = true;
     this.digitalServiceService
-      .getDigitalServices(this.filters,onlyThisWmsId)
+      .getDigitalServices(this.filters, onlyThisWmsId)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-
-        this.logger.info(res.objectList);
-        this.digitalServices = res.objectList;
-        this.pager = res.pager;
+      .subscribe({
+        next: (res) => {
+          this.logger.info(res.objectList);
+          this.digitalServices = res.objectList;
+          this.pager = res.pager;
+        },
+        error: (err) => {
+          this.logger.error(err);
+        }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
 
@@ -356,71 +370,87 @@ export class DigitalServiceListComponent {
     // 1. Basic validation
     this.isLoading = true;
 
-    this.invoiceService.isValidDigitalService(invoiceId).pipe(
-      catchError((err) => {
-        this.isLoading = false;
-        this.messageService.add({ severity: 'error', summary: this.sharedService.T('error'), 
-        detail: this.sharedService.T('errorMessage'), life: 3000 });
-       this.resetDigitalServiceForm();
-        return EMPTY;
-      })
-    ).subscribe((res: any) => {
-
-      // CASE: data === null (Invoice exists hi nahi karti)
-      if (res.data === null) {
-        this.isLoading = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: this.sharedService.T('error'),
-          detail: this.sharedService.T('invoiceInvalid'),
-          life: 3000
-        });
-        this.resetDigitalServiceForm();
-        this.digitalService.patchValue({ invoiceId: invoiceId });
-        this.getf('invoiceId')?.setErrors({ invalid: true });
-        return;
-      }
-      else
-      {
-        this.invoiceService.getInvoice(undefined, undefined, undefined, Number(invoiceId), false).subscribe({
-          next: (invoiceRes: any) => {
-            this.isLoading = false;
-
-            // Double check if invoice data exists in second API
-            if (!invoiceRes || !invoiceRes.data) {
-              this.messageService.add({
-                severity: 'error',
-                summary: this.sharedService.T('error'),
-                detail: this.sharedService.T('invoiceInvalid'),
-                life: 3000
-              });
-              this.resetDigitalServiceForm();
-              return;
-            } 
-
-            // Success logic
+    this.invoiceService.isValidDigitalService(invoiceId)
+      .pipe(
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res: any) => {
+          // CASE: data === null (Invoice exists hi nahi karti)
+          if (res.data === null) {
             this.messageService.add({
-              severity: 'success',
-              summary: this.sharedService.T('success'),
-              detail: this.sharedService.T('invoiceValidAndAttached'),
+              severity: 'error',
+              summary: this.sharedService.T('error'),
+              detail: this.sharedService.T('invoiceInvalid'),
               life: 3000
             });
-
-            this.digitalService.patchValue({
-              invoiceId: invoiceRes.data.invoiceId,
-              vehiclePlate: invoiceRes.data.vehiclePlate,
-              vehicleManufacturer: invoiceRes.data.vehicleManufacturer,
-              vehicleModel: invoiceRes.data.vehicleModel,
-              vehicleYear: invoiceRes.data.vehicleYear,
-              vehicleMileage: invoiceRes.data.vehicleMileage,
-              isValidInvoice: true
-            });
-
-            this.getf('invoiceId')?.setErrors(null);
+            this.resetDigitalServiceForm();
+            this.digitalService.patchValue({ invoiceId: invoiceId });
+            this.getf('invoiceId')?.setErrors({ invalid: true });
+            return;
           }
-        });
-      }
-    });
+          else {
+            this.invoiceService.getInvoice(undefined, undefined, undefined, Number(invoiceId), false)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (invoiceRes: any) => {
+                  // Double check if invoice data exists in second API
+                  if (!invoiceRes || !invoiceRes.data) {
+                    this.messageService.add({
+                      severity: 'error',
+                      summary: this.sharedService.T('error'),
+                      detail: this.sharedService.T('invoiceInvalid'),
+                      life: 3000
+                    });
+                    this.resetDigitalServiceForm();
+                    return;
+                  }
+
+                  // Success logic
+                  this.messageService.add({
+                    severity: 'success',
+                    summary: this.sharedService.T('success'),
+                    detail: this.sharedService.T('invoiceValidAndAttached'),
+                    life: 3000
+                  });
+
+                  this.digitalService.patchValue({
+                    invoiceId: invoiceRes.data.invoiceId,
+                    vehiclePlate: invoiceRes.data.vehiclePlate,
+                    vehicleManufacturer: invoiceRes.data.vehicleManufacturer,
+                    vehicleModel: invoiceRes.data.vehicleModel,
+                    vehicleYear: invoiceRes.data.vehicleYear,
+                    vehicleMileage: invoiceRes.data.vehicleMileage,
+                    isValidInvoice: true
+                  });
+
+                  this.getf('invoiceId')?.setErrors(null);
+                },
+                error: (err) => {
+                  this.logger.error(err);
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: this.sharedService.T('error'),
+                    detail: this.sharedService.T('errorMessage'),
+                    life: 3000
+                  });
+                  this.resetDigitalServiceForm();
+                }
+              });
+          }
+        },
+        error: (err) => {
+          this.logger.error(err);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('errorMessage'),
+            life: 3000
+          });
+          this.resetDigitalServiceForm();
+        }
+      });
   }
   getf(controlName: string) {
     return this.digitalService.get(controlName);
@@ -434,18 +464,24 @@ export class DigitalServiceListComponent {
       vehiclePlate: vehiclePlate
     };
     this.isLoading = true;
-    this.digitalServiceService.getPdf(requestBody).subscribe({
-      next: (_) => {
-        this.router.navigate(['sv/digitalservice/details', vehiclePlate]);
-      },
-      error: (err) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: this.sharedService.T('error'),
-          detail: this.sharedService.T('errorMessage'),
-        });
-      }
-    });
+    this.digitalServiceService.getPdf(requestBody)
+      .pipe(
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (_) => {
+          this.router.navigate(['sv/digitalservice/details', vehiclePlate]);
+        },
+        error: (err) => {
+          this.logger.error(err);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('errorMessage'),
+          });
+        }
+      });
   }
   filterManufacturers(event: any): void {
     this.manufacturers = this.sharedService.getVehicleManufacturers(event.query.toUpperCase());
@@ -579,30 +615,39 @@ export class DigitalServiceListComponent {
         };
         this.logger.info('Digital Service Payload');
         this.logger.info(payload);
-        this.digitalServiceService.createDigitalService(payload).subscribe({
-          next: (res: any) => {
-            if (res) {
-              this.isEmailSent = true;
-              this.closeDigitalServiceDialog();
-              this.filters.patchValue({
-                vehiclePlate: '',
-                currentPage: 1
-              });
-               this.sharedService.updateFiltersInNavigation(this.filters);
-              this.getDigitalServices(this.onlyThisWmsid);
+        this.digitalServiceService.createDigitalService(payload)
+          .pipe(
+            finalize(() => { this.isLoading = false; }),
+            takeUntil(this.destroy$)
+          )
+          .subscribe({
+            next: (res: any) => {
+              if (res) {
+                this.isEmailSent = true;
+                this.closeDigitalServiceDialog();
+                this.filters.patchValue({
+                  vehiclePlate: '',
+                  currentPage: 1
+                });
+                this.sharedService.updateFiltersInNavigation(this.filters);
+                this.getDigitalServices(this.onlyThisWmsid);
+                this.messageService.add({
+                  severity: 'success',
+                  detail: this.sharedService.T('createdSuccessfully'),
+                  life: 3000
+                });
+              }
+            },
+            error: (err) => {
+              this.logger.error(err);
               this.messageService.add({
-                severity: 'success',
-                detail: this.sharedService.T('createdSuccessfully'),
+                severity: 'error',
+                summary: this.sharedService.T('error'),
+                detail: this.sharedService.T('errorMessage'),
                 life: 3000
               });
             }
-            this.isLoading = false;
-          },
-          error: (err) => {
-            console.error(err);
-            this.isLoading = false;
-          }
-        });
+          });
       },
 
       reject: () => {
@@ -624,5 +669,10 @@ export class DigitalServiceListComponent {
         <td class="px-4 py-3 text-[0.95rem] text-slate-900 break-words">${value || '-'}</td>
       </tr>
     `;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

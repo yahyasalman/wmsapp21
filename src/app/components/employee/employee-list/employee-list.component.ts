@@ -1,24 +1,28 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IEmployee, IPager } from 'app/app.model'
 import { SharedService } from 'app/services/shared.service';
-import { catchError } from 'rxjs';
+import { catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { LogService } from 'app/services/log.service';
 import { EmployeeService } from 'app/services/employee.service';
-import { SHARED_IMPORTS } from 'app/sharedimports';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
+import { SelectModule } from 'primeng/select';
+import { InputTextModule } from 'primeng/inputtext';
 // import { GenericLoaderComponent } from '../shared/generic-loader/generic-loader.component';
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [
-    ...SHARED_IMPORTS,
-    ProgressSpinnerModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, ButtonModule, AutoCompleteModule, TableModule, PaginatorModule, SelectModule, InputTextModule],
   templateUrl: './employee-list.component.html'
 })
-export class EmployeeListComponent {
+export class EmployeeListComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
   employees: IEmployee[] = [];
   filters: FormGroup;
   pager: IPager = <IPager>{};
@@ -56,17 +60,18 @@ export class EmployeeListComponent {
     this.employeeService
       .getEmployees(this.filters)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        const objectData: any = res.objectList;
-        this.employees = objectData;
-        this.pager = res.pager;
-        this.isLoading = false;
+      .subscribe({
+        next: (res) => {
+          const objectData: any = res.objectList;
+          this.employees = objectData;
+          this.pager = res.pager;
+        },
+        error: (err) => {
+          this.logger.error(err);
+        }
       });
   }
 
@@ -102,15 +107,16 @@ export class EmployeeListComponent {
     this.employeeService
       .upsertEmployee(toDeactivate)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.getEmployees();
-        this.isLoading = false;
+      .subscribe({
+        next: (res) => {
+          this.getEmployees();
+        },
+        error: (err) => {
+          this.logger.error(err);
+        }
       });
   }
 
@@ -151,5 +157,10 @@ export class EmployeeListComponent {
     this.filters.patchValue({ employeeName: '' });
      this.sharedService.updateFiltersInNavigation(this.filters);
     this.getEmployees();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

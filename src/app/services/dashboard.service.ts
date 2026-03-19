@@ -108,27 +108,4 @@ export class DashboardService {
     return this.http.get<string>(`${this.baseUrl}/month-customers?${queryParams}`);
   }
 
-
-  // getTopModels() {
-  //   const queryParams = new URLSearchParams();
-  //   queryParams.append("wmsId", this.sharedService.wmsId);
-  //   return this.http.get<ITopModel[]>(`${this.baseUrl}/top-models?${queryParams}`);
-  // }
-
-  // getTopWorkOrders() {
-  //   const queryParams = new URLSearchParams();
-  //   queryParams.append("wmsId", this.sharedService.wmsId);
-  //   return this.http.get<ITopDashboardItem[]>(`${this.baseUrl}/top-workorders?${queryParams}`);
-  // }
-  //   getTopInvoices() {
-  //   const queryParams = new URLSearchParams();
-  //   queryParams.append("wmsId", this.sharedService.wmsId);
-  //   return this.http.get<ITopDashboardItem[]>(`${this.baseUrl}/top-invoices?${queryParams}`);
-  // }
-  //   getTopOffers() {
-  //   const queryParams = new URLSearchParams();
-  //   queryParams.append("wmsId", this.sharedService.wmsId);
-  //   return this.http.get<ITopDashboardItem[]>(`${this.baseUrl}/top-offers?${queryParams}`);
-  // }
-
 }

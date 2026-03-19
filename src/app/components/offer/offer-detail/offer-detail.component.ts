@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { IOffer, IOfferHistory } from 'app/app.model';
@@ -8,27 +9,48 @@ import { SharedService } from 'app/services/shared.service';
 import { OfferService } from 'app/services/offer.service';
 import { LogService } from 'app/services/log.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { catchError, firstValueFrom } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { catchError, firstValueFrom, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TimelineModule } from 'primeng/timeline';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { TableModule } from 'primeng/table';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
+import { DialogModule } from 'primeng/dialog';
 @Component({
   selector: 'app-offer-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, TimelineModule, ProgressSpinnerModule,
-    PdfViewerModule
-  ], providers: [ConfirmationService, MessageService],
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    TableModule,
+    TimelineModule,
+    ProgressSpinnerModule,
+    PdfViewerModule,
+    InputNumberModule,
+    SelectModule,
+    DialogModule
+  ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './offer-detail.component.html',
   styleUrls: ['./offer-detail.component.css']
 })
-export class OfferDetailComponent {
+export class OfferDetailComponent implements OnInit, OnDestroy {
+  @Output() invoiceEvent = new EventEmitter<string>();
+  private destroy$ = new Subject<void>();
 
   offerId: number = 0;
   stateInfo:any;
-  // disableEdit: boolean = this.stateInfo ? this.stateInfo.disableEdit === 'true' : false;
-  // customerId: number = this.stateInfo ? this.stateInfo.customerId : 0;
-  // customerEmail: string = this.stateInfo ? this.stateInfo.customerEmail : '';
 
   pdfUrl: any;
   offerHistory: IOfferHistory[] = [];
@@ -61,7 +83,6 @@ async ngOnInit(): Promise<void> {
   try {
     // Wait for the offer to load
     this.offerId  = Number(this.route.snapshot.paramMap.get('id'));
-    this.stateInfo = this.sharedService.getState();
     await this.getOffer();
     this.logger.info('Offer Loaded:', this.offer);
     this.loadPdf();
@@ -104,43 +125,44 @@ async getOffer(): Promise<void> {
     this.sharedService
       .printPdf('offer', this.offerId.toString(), 'basic')
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          var newBlob = new Blob([response], { type: "application/pdf" });
-          this.pdfUrl = window.URL.createObjectURL(newBlob);
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            var newBlob = new Blob([response], { type: "application/pdf" });
+            this.pdfUrl = window.URL.createObjectURL(newBlob);
+          }
+        },
+        error: (err) => {
+          this.logger.error('loadPdf error', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
-
   }
   loadHistory() {
     this.isLoading = true;
     this.offerService
       .getOfferHistory(this.offerId)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          this.logger.info(response);
-          this.offerHistory = response;
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.logger.info(response);
+            this.offerHistory = response;
+          }
+        },
+        error: (err) => {
+          this.logger.error('loadHistory error', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
   confirmDuplicate(event: Event) {
     this.confirmationService.confirm({
@@ -209,26 +231,25 @@ async getOffer(): Promise<void> {
     this.sharedService
       .sendEmail('offer', this.offerId, emailTo, message)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.isEmailSent = true;
+            this.loadHistory();
+            this.closeEmailDialog();
+          }
+        },
+        error: (err) => {
           this.isEmailSent = false;
           this.closeEmailDialog();
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 500);
-          throw err;
-        })
-      )
-      .subscribe((response: any) => {
-        if (response) {
-          this.isEmailSent = true;
-          this.loadHistory();
-          this.closeEmailDialog();
+          this.logger.error('sendEmail error', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-
-    }, 500);
   }
 
 
@@ -236,5 +257,10 @@ async getOffer(): Promise<void> {
 
   closeEmailDialog() {
     this.showEmailDialog = false;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,5 +1,6 @@
-import { Component, DestroyRef, HostListener, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LogService } from 'app/services/log.service';
@@ -7,8 +8,10 @@ import { SharedService } from 'app/services/shared.service';
 import { WmsUser } from 'app/app.model';
 import { MessageService } from 'primeng/api';
 import { environment } from 'environments/environment';
-import { catchError, map, of, tap, finalize } from "rxjs";
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { finalize, takeUntil, Subject } from "rxjs";
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { MessageModule } from 'primeng/message';
 
 interface Feature {
   icon: string;
@@ -26,7 +29,12 @@ interface FaqItem {
   selector: 'app-home',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    ToastModule,
+    MessageModule
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -34,7 +42,8 @@ interface FaqItem {
 })
 
 
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   private baseUrl: string = environment.BASE_URL;
   loginForm!: FormGroup;
   signupForm!: FormGroup;
@@ -42,7 +51,7 @@ export class HomeComponent {
   invalidMessage: string = '';
   isDialogVisible: boolean = false;
   isLoading: boolean = false; // Loader control variable
-
+  imagesUrl = environment.production ? `${environment.CDN_URL}/images/` : 'assets/images/';
   
   
   mobileMenuOpen = false;
@@ -117,11 +126,9 @@ export class HomeComponent {
     private logger: LogService,
     private http: HttpClient,
     private readonly formBuilder: FormBuilder,
-    private readonly destroyRef: DestroyRef,
     private router: Router,
     private messageService: MessageService,
-    private sharedService: SharedService,
-    
+    private sharedService: SharedService
   ) {}
 
   ngOnInit() {
@@ -167,51 +174,44 @@ export class HomeComponent {
   }
 
   onLoginFormSubmitted() {
-    // Mark form as touched to show validation errors
     this.loginForm.markAllAsTouched();
     
-    // Check if form is valid
     if (this.loginForm.invalid) {
       this.invalidMessage = 'Vänligen fyll alla obligatoriska fält.';
       return;
     }
 
-    // Show loader
     this.isLoading = true;
-    this.invalidMessage = ''; // Clear previous error messages
+    this.invalidMessage = '';
 
     this.sharedService
       .login(this.loginForm.value as WmsUser)
       .pipe(
-        catchError((error) => {
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res) => {
+          this.logger.info(res);
+          if (!res) return;
+
+          sessionStorage.setItem('userName', res.userName);
+          sessionStorage.setItem('accessToken', res.token);
+          sessionStorage.setItem('wmsId', res.wmsId);
+          sessionStorage.setItem('workshopName', res.displayName);
+          sessionStorage.setItem('country', res.country);
+          sessionStorage.setItem('lang', 'sv');
+          // ResourcesLoadedGuard will handle loading resources on /sv route
+          this.router.navigate(['/sv/dashboard']);
+        },
+        error: (error) => {
           if (error.status === 400) {
-            this.invalidMessage = 'Ogiltigt användarnamn eller lösenord';  
+            this.invalidMessage = 'Ogiltigt användarnamn eller lösenord';
           } else {
             this.invalidMessage = 'Ett oväntat fel uppstod.';
           }
-          return of(null);
-        }),
-        finalize(() => {
-          // Hide loader whether request succeeds or fails
-          this.isLoading = false;
-        })
-      )
-      .subscribe((res) => {
-        this.logger.info(res);
-        if (!res) return;
-
-        // Store user data in session storage
-        sessionStorage.setItem('userName', res.userName); 
-        sessionStorage.setItem('accessToken', res.token);
-        sessionStorage.setItem('wmsId', res.wmsId);
-        sessionStorage.setItem('workshopName', res.displayName);
-        sessionStorage.setItem('country', res.country);
-        // setting user preferred language
-        sessionStorage.setItem('lang', 'sv');
-        // Navigate to dashboard
-        this.sharedService.loadResources();
-        this.router.navigate(['/sv/dashboard']); 
-        
+          this.logger.error('Login error:', error);
+        }
       });
   }
 
@@ -234,43 +234,38 @@ export class HomeComponent {
   }
 
   onSignupSubmit(): void {
-    // Mark form as touched to show validation errors
     this.signupForm.markAllAsTouched();
 
-    // Check if form is valid
     if (this.signupForm.invalid) {
       this.messageService.add({ severity: 'error', summary: 'Fel', detail: 'Vänligen fyll alla obligatoriska fält korrekt.' });
       return;
     }
 
-    // Show loader
     this.isSigningUp = true;
 
-    // Call the signup API
     this.sharedService
       .signup(this.signupForm.value)
       .pipe(
-        catchError((error) => {
+        finalize(() => { this.isSigningUp = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.logger.info('Signup successful:', response);
+            this.signupSuccess = true;
+            this.messageService.add({ severity: 'success', summary: 'Framgång', detail: 'Din registrering är genomförd. Ditt konto aktiveras snart.' });
+            
+            setTimeout(() => {
+              this.signupSuccess = false;
+              this.signupForm.reset();
+            }, 5000);
+          }
+        },
+        error: (error) => {
           this.logger.error('Signup error:', error);
           const errorMessage = error?.error?.message || 'Ett oväntat fel uppstod under registreringen.';
           this.messageService.add({ severity: 'error', summary: 'Registreringsfel', detail: errorMessage });
-          return of(null);
-        }),
-        finalize(() => {
-          this.isSigningUp = false;
-        })
-      )
-      .subscribe((response: any) => {
-        if (response) {
-          this.logger.info('Signup successful:', response);
-          this.signupSuccess = true;
-          this.messageService.add({ severity: 'success', summary: 'Framgång', detail: 'Din registrering är genomförd. Ditt konto aktiveras snart.' });
-          
-          // Optional: Reset form after 5 seconds
-          setTimeout(() => {
-            this.signupSuccess = false;
-            this.signupForm.reset();
-          }, 5000);
         }
       });
   }
@@ -291,42 +286,37 @@ export class HomeComponent {
   }
 
   onDemoSubmit(): void {
-    // Mark form as touched to show validation errors
     this.demoForm.markAllAsTouched();
 
-    // Check if form is valid
     if (this.demoForm.invalid) {
       this.messageService.add({ severity: 'error', summary: 'Fel', detail: 'Vänligen fyll alla obligatoriska fält korrekt.' });
       return;
     }
 
-    // Show loader
     this.isDemoSubmitting = true;
 
-    // Call the bookDemo API
     this.sharedService
       .bookDemo(this.demoForm.value)
       .pipe(
-        catchError((error) => {
+        finalize(() => { this.isDemoSubmitting = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.logger.info('Demo booking successful:', response);
+            this.demoSuccess = true;
+            this.messageService.add({ severity: 'success', summary: 'Framgång', detail: 'Vi kontaktar dig snart på e-postadressen du angav för att boka in tid för demo.' });
+            
+            setTimeout(() => {
+              this.closeDemo();
+            }, 5000);
+          }
+        },
+        error: (error) => {
           this.logger.error('Demo booking error:', error);
           const errorMessage = error?.error?.message || 'Ett oväntat fel uppstod vid bokning av demo.';
           this.messageService.add({ severity: 'error', summary: 'Bokningsfel', detail: errorMessage });
-          return of(null);
-        }),
-        finalize(() => {
-          this.isDemoSubmitting = false;
-        })
-      )
-      .subscribe((response: any) => {
-        if (response) {
-          this.logger.info('Demo booking successful:', response);
-          this.demoSuccess = true;
-          this.messageService.add({ severity: 'success', summary: 'Framgång', detail: 'Vi kontaktar dig snart på e-postadressen du angav för att boka in tid för demo.' });
-          
-          // Optional: Close modal after 5 seconds
-          setTimeout(() => {
-            this.closeDemo();
-          }, 5000);
         }
       });
   }
@@ -342,5 +332,9 @@ export class HomeComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 }

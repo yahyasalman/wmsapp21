@@ -1,45 +1,86 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule, Location } from '@angular/common';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SupplierService } from 'app/services/supplier.service';
 import { BookingService } from 'app/services/booking.service';
 import { ProductService } from 'app/services/product.service';
 import { MessageService } from 'primeng/api';
-import { firstValueFrom, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { firstValueFrom, of, Subject } from 'rxjs';
+import { catchError, map, switchMap, tap, finalize, takeUntil } from 'rxjs/operators';
 import { SelectChangeEvent } from 'primeng/select';
-import { RemovePlaceholderOnFocusDirective } from 'app/directives/remove-placeholder-on-focus.directive';
 import { CustomerService } from 'app/services/customer.service';
 import { Popover } from 'primeng/popover';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { TabsModule } from 'primeng/tabs';
+import { CheckboxModule } from 'primeng/checkbox';
+import { PanelModule } from 'primeng/panel';
+import { DialogModule } from 'primeng/dialog';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { FileUploadModule } from 'primeng/fileupload';
+import { PopoverModule } from 'primeng/popover';
+import { TagModule } from 'primeng/tag';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TextareaModule } from 'primeng/textarea';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-order-crud',
   standalone: true,
 
   imports: [
-    ...SHARED_IMPORTS,
-    RemovePlaceholderOnFocusDirective,
-    ProgressSpinnerModule,IconFieldModule,InputIconModule  
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ProgressSpinnerModule,
+    IconFieldModule,
+    InputIconModule,
+    ButtonModule,
+    InputTextModule,
+    AutoCompleteModule,
+    InputNumberModule,
+    SelectModule,
+    DatePickerModule,
+    TabsModule,
+    CheckboxModule,
+    PanelModule,
+    DialogModule,
+    MessageModule,
+    ToastModule,
+    ConfirmDialogModule,
+    FileUploadModule,
+    PopoverModule,
+    TagModule,
+    MultiSelectModule,
+    TextareaModule,
+    TooltipModule
   ],
   templateUrl: './workorder-crud.component.html',
   styleUrls: ['./workorder-crud.component.css'],
   providers: [MessageService]
 })
 
-export class WorkOrderCrudComponent implements OnInit {
+export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   @ViewChild('nextInput') nextInput!: ElementRef;
   @ViewChild('customerPopup') customerPopup!: Popover;
+  private destroy$ = new Subject<void>();
   uploadedFiles: any[] = [];
   customers: ICustomer[] = [];
 
@@ -176,7 +217,9 @@ export class WorkOrderCrudComponent implements OnInit {
           this.isLoading = false;
           return of(null);
         })
-      ).subscribe((response: any) => {
+      )
+      .pipe(finalize(() => { this.isLoading = false; }))
+      .subscribe((response: any) => {
         if (response.data) {
           if (param.bookingDate)
             response.data.bookingDate = param.bookingDate;
@@ -211,48 +254,56 @@ export class WorkOrderCrudComponent implements OnInit {
         }
         this.cdr.detectChanges();
       });
-    this.loadCustomerTags();
-    this.loadCustomerTypes();
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
+      
+      
   }
 
   loadCustomerTags() {
     this.isLoading = true;
     this.workshopService
       .getCustomerTags()
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response) {
-          this.customerTags = response;
-          if (!(this.customer.get('customerTag') && Number(this.customer.get('customerTag')) > 0))
-            this.customer.patchValue({ 'customerTag': this.customerTags[0].customerTagId });
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.customerTags = response;
+            if (!(this.customer.get('customerTag') && Number(this.customer.get('customerTag')) > 0))
+              this.customer.patchValue({ 'customerTag': this.customerTags[0].customerTagId });
+          }
+        },
+        error: (err) => {
+          this.logger.error('loadCustomerTags error', err);
         }
-
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   loadCustomerTypes() {
     this.isLoading = true;
     this.workshopService
       .getCustomerTypes()
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response) {
-          this.customerTypes = response;
-          if (!(this.customer.get('customerType') && Number(this.customer.get('customerType')) > 0))
-            this.customer.patchValue({ 'customerType': this.customerTypes[0].customerTypeId });
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.customerTypes = response;
+            if (!(this.customer.get('customerType') && Number(this.customer.get('customerType')) > 0))
+              this.customer.patchValue({ 'customerType': this.customerTypes[0].customerTypeId });
+          }
+        },
+        error: (err) => {
+          this.logger.error('loadCustomerTypes error', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
   onChangeCustomerType(event: SelectChangeEvent) {
     this.customer.patchValue({ customerType: event.value });
@@ -266,20 +317,22 @@ export class WorkOrderCrudComponent implements OnInit {
     this.supplierService
       .getAllSuppliers()
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-          this.suppliers = res;
-          this.logger.info('Printing Suppliers', this.suppliers);
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.suppliers = res;
+            this.logger.info('Printing Suppliers', this.suppliers);
+          }
+        },
+        error: (err) => {
+          this.logger.error('getSuppliers error', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   getAllEmployees() {
@@ -287,20 +340,22 @@ export class WorkOrderCrudComponent implements OnInit {
     this.employeeService
       .getAllEmployees()
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-          this.employees = res;
-          this.logger.info('Printing Employees', this.employees);
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.employees = res;
+            this.logger.info('Printing Employees', this.employees);
+          }
+        },
+        error: (err) => {
+          this.logger.error('getAllEmployees error', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   getBookings(bookingDate: string) {
@@ -309,19 +364,20 @@ export class WorkOrderCrudComponent implements OnInit {
     this.bookingService
       .getDayBookings(bookingDate)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-
-        this.logger.info(res);
-        this.dayBookings = res;
+      .subscribe({
+        next: (res) => {
+          this.logger.info(res);
+          this.dayBookings = res;
+        },
+        error: (err) => {
+          this.logger.error('getBookings error', err);
+        }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   onChangeCustomer($event: any) {
@@ -359,31 +415,41 @@ export class WorkOrderCrudComponent implements OnInit {
     this.supplierService
       .getSuppliersByprefix(event.query.toUpperCase())
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-          this.suppliers = res;
-          this.logger.info('Printing Suppliers', this.suppliers);
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.suppliers = res;
+            this.logger.info('Printing Suppliers', this.suppliers);
+          }
+        },
+        error: (err) => {
+          this.logger.error('filterSuppliers error', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   filterProducts(event: any): void {
     this.isLoading = true;
     this.productService.getProductsByprefix(event.query.toUpperCase())
-      .subscribe((products: IProduct[]) => {
-        this.products = products.map(product => product.productName);
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (products: IProduct[]) => {
+          this.products = products.map(product => product.productName);
+        },
+        error: (err) => {
+          this.logger.error('filterProducts error', err);
+        }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   filterModels(event: any): void {
@@ -461,19 +527,21 @@ export class WorkOrderCrudComponent implements OnInit {
     this.workOrderService
       .upsertWorkOrder(submittedWorkOrder)
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-          this.router.navigate(['sv/workorder/details', this.workOrder.get('workOrderId')?.value]);
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.router.navigate(['sv/workorder/details', this.workOrder.get('workOrderId')?.value]);
+          }
+        },
+        error: (err) => {
+          this.logger.error('onFormSubmit error', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
 
@@ -761,14 +829,19 @@ export class WorkOrderCrudComponent implements OnInit {
     this.customerService
       .getCustomerByPrefix(query)
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        finalize(() => {
+          // loading state is not set here since this is just filtering
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-          this.customers = res;
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.customers = res;
+          }
+        },
+        error: (err) => {
+          this.logger.error('filterCustomer error', err);
         }
       });
   }
@@ -791,6 +864,11 @@ export class WorkOrderCrudComponent implements OnInit {
       customerEmail: '',
     });
     this.selectedCustomerName = null;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

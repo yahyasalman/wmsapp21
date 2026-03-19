@@ -1,33 +1,42 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute,NavigationEnd, Router } from '@angular/router';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { RemovePlaceholderOnFocusDirective } from 'app/directives/remove-placeholder-on-focus.directive';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { IPager, IInvoice, IInvoicePayment } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { InvoiceService } from 'app/services/invoice.service';
 import { LogService } from 'app/services/log.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { MenuItem, ConfirmationService, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
-import { catchError, filter, firstValueFrom, map, switchMap } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { catchError, filter, firstValueFrom, map, switchMap, Subject, finalize, takeUntil } from 'rxjs';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { DialogModule } from 'primeng/dialog';
+import { PopoverModule } from 'primeng/popover';
 
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [
-    ...SHARED_IMPORTS,
-    RemovePlaceholderOnFocusDirective,
-    IconFieldModule,InputIconModule,ProgressSpinnerModule
-  ],  
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, ButtonModule, SelectModule, DatePickerModule, AutoCompleteModule, InputNumberModule, ToastModule, ConfirmDialogModule, TableModule, TooltipModule, InputTextModule, MessageModule,ToggleButtonModule,DialogModule, PopoverModule],  
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css',
   providers: [ConfirmationService,MessageService]
 })
-export class InvoiceListComponent implements OnInit {
+export class InvoiceListComponent implements OnInit, OnDestroy {
    
   sortField = 'invoiceId';
   sortOrder = -1;
@@ -54,8 +63,10 @@ export class InvoiceListComponent implements OnInit {
   checked:boolean = true;
   emailsent:any = new FormArray([]);
   addPaymentBtnDisabled:boolean = false;
+  private destroy$ = new Subject<void>();
 
   constructor(private logger: LogService,
+              private readonly errorHandler: ErrorHandlerService,
               public readonly sharedService:SharedService,
               private router: Router,
               private readonly route: ActivatedRoute,
@@ -89,7 +100,12 @@ const oneYearBack = new Date(currentDate.getFullYear() - 1,currentDate.getMonth(
       remainingBalance:''
     });
 
-  }  
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 ngOnInit(){
   this.initializePage();
@@ -111,27 +127,27 @@ ngOnInit(){
 
   getInvoices() {
     this.logger.info('getInvoices',this.filters.value);
-     this.isLoading=true;
+    this.isLoading = true;
     this.invoiceService
       .getInvoices(this.filters)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        //const objectData:any = res.objectList;
-        this.invoices = res.objectList;
-        this.logger.info('invoices',this.invoices);
-        //this.pager = res.pager;
-        this.totalRecords = res.pager.totalRecords;
-        this.totalSum = res.totalSum;
-        this.totalNet = res.totalNet;
-        this.totalVat = res.totalVat;
-         setTimeout(() => {
-        this.isLoading = false;
-      }, 800);
+      .subscribe({
+        next: (res) => {
+          this.invoices = res.objectList;
+          this.logger.info('getInvoices success', { invoiceCount: this.invoices.length, invoices: this.invoices });
+          this.totalRecords = res.pager.totalRecords;
+          this.totalSum = res.totalSum;
+          this.totalNet = res.totalNet;
+          this.totalVat = res.totalVat;
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getInvoices', 'Failed to load invoices.');
+        }
       });
   }
 
@@ -139,20 +155,22 @@ ngOnInit(){
     this.invoiceService
       .getInvoicePayments(invoiceId)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        if(res)
-        {
-          this.selectedPayments = res;
-          this.selectedTotalPaid = this.selectedPayments.reduce((sum: number, item: any) => {
-            const amount = item?.paymentAmount || 0; // Ensure it's a number
-            return sum + amount;
-          }, 0);
-          this.selectedRemainingBalance = this.selectedPriceIncvat -this.selectedTotalPaid;
+      .subscribe({
+        next: (res) => {
+          if(res) {
+            this.selectedPayments = res;
+            this.selectedTotalPaid = this.selectedPayments.reduce((sum: number, item: any) => {
+              const amount = item?.paymentAmount || 0;
+              return sum + amount;
+            }, 0);
+            this.selectedRemainingBalance = this.selectedPriceIncvat - this.selectedTotalPaid;
+            this.logger.info('getPayments success', { paymentCount: this.selectedPayments.length });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getPayments', 'Failed to load payments.');
         }
       });
   }
@@ -198,9 +216,16 @@ ngOnInit(){
     if(event?.value)
     {
       this.invoiceService.getVehiclePlates(event?.value)
-      .subscribe((response)=>{
-        this.vehiclePlates = response;
-      });    
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.vehiclePlates = response;
+            this.logger.info('keyupNumberPlate success', { plateCount: this.vehiclePlates.length });
+          },
+          error: (err) => {
+            this.errorHandler.handleError(err, 'keyupNumberPlate', 'Failed to load vehicle plates.');
+          }
+        });    
     }
   }
   
@@ -238,19 +263,23 @@ ngOnInit(){
             this.invoiceService
                 .markAsSent(selectedInvoice.invoiceId)
                 .pipe(
-                  catchError((err) => {
-                    console.log(err);
-                    throw err;
-                  })
+                  finalize(() => {
+                    // No need to reset loading here as it's only for this operation
+                  }),
+                  takeUntil(this.destroy$)
                 )
-                .subscribe((res: any) => {
-                  if (res) {
-                    this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('sentConfirmMessage') });
-                    this.getInvoices();
-                  }
-                  else 
-                  {
-                    this.messageService.add({ severity: 'error', summary: '', detail: this.sharedService.T('sentErrorMessage') });
+                .subscribe({
+                  next: (res: any) => {
+                    if (res) {
+                      this.logger.info('markAsSent success', { invoiceId: selectedInvoice.invoiceId });
+                      this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('sentConfirmMessage') });
+                      this.getInvoices();
+                    } else {
+                      this.messageService.add({ severity: 'error', summary: '', detail: this.sharedService.T('sentErrorMessage') });
+                    }
+                  },
+                  error: (err) => {
+                    this.errorHandler.handleError(err, 'markAsSent', 'Failed to mark invoice as sent.');
                   }
                 });
         },
@@ -361,33 +390,40 @@ sortColumn(e: any) {
       });
     }
   
-  deletePayment(invoiceId:number,paymentId:number)
-   {   
+  deletePayment(invoiceId:number,paymentId:number) {   
     this.invoiceService
-    .deleteInvoicePayment(invoiceId,paymentId)
-    .pipe(
-      catchError((err) => {
-        this.messageService.add({ severity: 'error', summary: this.sharedService.T('error'), detail: this.sharedService.T('errormessage') }); 
-        throw err;
-      })
-    )
-    .subscribe((res) => {
-      let minimunPaymentAmount = 0;
-      this.addPaymentBtnDisabled = true;
-      if(Number(res) > 0 )
-      {
-        minimunPaymentAmount = 1;
-        this.addPaymentBtnDisabled = false;
-      }
-      this.payment.controls["paymentAmount"].setValidators([Validators.min(minimunPaymentAmount), Validators.max(Number(res))]);
-      this.payment.patchValue({invoiceId:this.payment.get('invoiceId')?.value,
-                               paymentDate:this.sharedService.getDateString(new Date()),
-                               paymentAmount: Number(res),
-                               paymentNote:'',
-                               remainingBalance:Number(res) });
-                              this.getPayments(this.payment.get('invoiceId')?.value);
-      this.messageService.add({ severity: 'info', detail: this.sharedService.T('paymentDeleteConfirmMessage') });                              
-    });
+      .deleteInvoicePayment(invoiceId,paymentId)
+      .pipe(
+        finalize(() => {
+          // Reset any loading state if needed
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res) => {
+          let minimunPaymentAmount = 0;
+          this.addPaymentBtnDisabled = true;
+          if(Number(res) > 0) {
+            minimunPaymentAmount = 1;
+            this.addPaymentBtnDisabled = false;
+          }
+          this.logger.info('deletePayment success', { invoiceId, paymentId, remainingBalance: res });
+          this.payment.controls["paymentAmount"].setValidators([Validators.min(minimunPaymentAmount), Validators.max(Number(res))]);
+          this.payment.patchValue({
+            invoiceId:this.payment.get('invoiceId')?.value,
+            paymentDate:this.sharedService.getDateString(new Date()),
+            paymentAmount: Number(res),
+            paymentNote:'',
+            remainingBalance:Number(res) 
+          });
+          this.getPayments(this.payment.get('invoiceId')?.value);
+          this.messageService.add({ severity: 'info', detail: this.sharedService.T('paymentDeleteConfirmMessage') });                              
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'deletePayment', 'Failed to delete payment.');
+          this.messageService.add({ severity: 'error', summary: this.sharedService.T('error'), detail: this.sharedService.T('errormessage') });
+        }
+      });
   }
 
   redirectToCustomerDetailComponent(selectedInvoice:any)
@@ -397,53 +433,61 @@ sortColumn(e: any) {
   }
  
   generatePdf(selectedInvoice:any){
-    
     this.sharedService
-    .printPdf('invoice',selectedInvoice.invoiceId.toString(),'basic')
-    .pipe(
-      catchError((err) => {
-        console.log(err);
-        throw err;
-      })
-    )
-    .subscribe((response: any) => {
-      if(response){
-        var newBlob = new Blob([response], { type: "application/pdf" });
-        window.open(window.URL.createObjectURL(newBlob));
-      }
-    });
+      .printPdf('invoice',selectedInvoice.invoiceId.toString(),'basic')
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if(response){
+            var newBlob = new Blob([response], { type: "application/pdf" });
+            window.open(window.URL.createObjectURL(newBlob));
+            this.logger.info('generatePdf success', { invoiceId: selectedInvoice.invoiceId });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'generatePdf', 'Failed to generate PDF.');
+        }
+      });
   }
   onSave(){
-
     if (this.payment.invalid) {
       this.payment.markAllAsTouched();
       return;
-  }    
+    }    
     this.addPaymentBtnDisabled = true;
     this.invoiceService
-    .createInvoicePayment(this.payment.value)
-    .pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        throw err;
-      })
-    )
-    .subscribe((res) => {
-      let minimunPaymentAmount = 0;
-      this.addPaymentBtnDisabled = true;
-      if(Number(res) > 0 )
-      {
-        minimunPaymentAmount = 1;
-        this.addPaymentBtnDisabled = false;
-      }
-      this.payment.controls["paymentAmount"].setValidators([Validators.min(minimunPaymentAmount), Validators.max(Number(res))]);
-      this.payment.patchValue({invoiceId:this.payment.get('invoiceId')?.value,
-                               paymentDate:this.sharedService.getDateString(new Date()),
-                               paymentAmount: Number(res),
-                               paymentNote:'',
-                               remainingBalance:Number(res) });
-                              this.getPayments(this.payment.get('invoiceId')?.value);
-    });
+      .createInvoicePayment(this.payment.value)
+      .pipe(
+        finalize(() => {
+          // No additional action needed on finalize
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res) => {
+          let minimunPaymentAmount = 0;
+          this.addPaymentBtnDisabled = true;
+          if(Number(res) > 0) {
+            minimunPaymentAmount = 1;
+            this.addPaymentBtnDisabled = false;
+          }
+          this.logger.info('onSave success', { paymentAmount: this.payment.get('paymentAmount')?.value });
+          this.payment.controls["paymentAmount"].setValidators([Validators.min(minimunPaymentAmount), Validators.max(Number(res))]);
+          this.payment.patchValue({
+            invoiceId:this.payment.get('invoiceId')?.value,
+            paymentDate:this.sharedService.getDateString(new Date()),
+            paymentAmount: Number(res),
+            paymentNote:'',
+            remainingBalance:Number(res) 
+          });
+          this.getPayments(this.payment.get('invoiceId')?.value);
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'onSave', 'Failed to save payment.');
+        }
+      });
   } 
   
   onCancel(){
@@ -456,21 +500,30 @@ sortColumn(e: any) {
   }
 
   downloadExcel() {
-    this.logger.info('downloadExcel called' + this.selectedMonth); // Debugging: Trace when this is called
+    this.logger.info('downloadExcel called' + this.selectedMonth);
     const date = new Date(this.selectedMonth);
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
     this.isLoading = true;
-    this.invoiceService.exportInvoicesToExcel(year, month).subscribe((response) => {
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `invoices_${year}_${month}.xlsx`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      this.isLoading = false;
-    });
+    this.invoiceService.exportInvoicesToExcel(year, month)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `invoices_${year}_${month}.xlsx`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          this.isLoading = false;
+          this.logger.info('downloadExcel success', { year, month });
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorHandler.handleError(err, 'downloadExcel', 'Failed to download invoices.');
+        }
+      });
   }
   onPageChange(e: any) {
   const currentPage = (e.first / e.rows) + 1;
@@ -483,9 +536,7 @@ sortColumn(e: any) {
   this.filters.patchValue({currentPage: pageToSet,pageSize: e.rows,sortBy: this.sortField,sortDir: this.sortOrder});
   this.sharedService.updateFiltersInNavigation(this.filters);
   this.cdr.detectChanges();
-     setTimeout(() => {
-      this.getInvoices();
-     }, 0);
+  this.getInvoices();
   }
 
 }

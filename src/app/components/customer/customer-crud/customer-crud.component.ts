@@ -1,32 +1,43 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ICustomerTag, ICustomerType, IEnum } from 'app/app.model';
 import { CustomerService } from 'app/services/customer.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
 import { SelectChangeEvent } from 'primeng/select';
-import { catchError, firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { LogService } from 'app/services/log.service';
-import { RemovePlaceholderOnFocusDirective } from 'app/directives/remove-placeholder-on-focus.directive'
 import { WorkshopService } from 'app/services/workshop.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { SHARED_IMPORTS } from 'app/sharedimports';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { ToastModule } from 'primeng/toast';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 @Component({
   selector: 'app-customer-crud',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,
-   RemovePlaceholderOnFocusDirective,ProgressSpinnerModule
-
-
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    SelectModule,
+    ToastModule,
+    InputTextModule,
+    ProgressSpinnerModule,
+    ConfirmDialogModule
   ],
   templateUrl: './customer-crud.component.html',
   //styleUrl: './customer-crud.component.css',
   providers: [ConfirmationService, MessageService],
 })
-export class CustomerCrudComponent {
+export class CustomerCrudComponent implements OnInit, OnDestroy {
 
   customer: FormGroup;
   creditDays: number[] = [0, 7, 14, 21, 30];
@@ -35,8 +46,10 @@ export class CustomerCrudComponent {
   countries: IEnum[] = [];
   isNewObject: boolean = true;
   isLoading: boolean = false;
+  private destroy$ = new Subject<void>();
   constructor(
     private logger: LogService,
+    private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
     private router: Router,
     private readonly fb: FormBuilder,
@@ -73,38 +86,55 @@ export class CustomerCrudComponent {
     this.customerService
       .getCustomer(param.customerId)
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          this.isNewObject = response.isNewObject;
-          this.customer.patchValue(response.data);
-          this.logger.info('Loaded customer data');
-          this.loadCustomerTypes();
-          this.loadCustomerTags();
-          this.logger.info('Tags and Types loaded');
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.isNewObject = response.isNewObject;
+            this.customer.patchValue(response.data);
+            this.logger.info('Loaded customer data', { isNewObject: this.isNewObject, customerId: response.data?.customerId });
+            this.loadCustomerTypes();
+            this.loadCustomerTags();
+            this.logger.info('Tags and Types loaded');
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'ngOnInit', 'Failed to load customer. Please try again later.');
         }
       });
+  }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadCustomerTags() {
     this.isLoading = true;
     this.workshopService
       .getCustomerTags()
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response) {
-          this.customerTags = response;
-          if (!(this.customer.get('customerTag') && Number(this.customer.get('customerTag')) > 0))
-            this.customer.patchValue({ 'customerTag': this.customerTags[0].customerTagId });
-
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.customerTags = response;
+            this.logger.info('loadCustomerTags success', { customerTags: this.customerTags });
+            if (!(this.customer.get('customerTag') && Number(this.customer.get('customerTag')) > 0))
+              this.customer.patchValue({ 'customerTag': this.customerTags[0].customerTagId });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'loadCustomerTags', 'Failed to load customer tags.');
         }
-        this.isLoading = false;
       });
   }
 
@@ -112,66 +142,74 @@ export class CustomerCrudComponent {
     this.isLoading = true;
     this.workshopService
       .getCustomerTypes()
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response) {
-          this.customerTypes = response;
-          if (!(this.customer.get('customerType') && Number(this.customer.get('customerType')) > 0))
-            this.customer.patchValue({ 'customerType': this.customerTypes[0].customerTypeId });
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.customerTypes = response;
+            this.logger.info('loadCustomerTypes success', { customerTypes: this.customerTypes });
+            if (!(this.customer.get('customerType') && Number(this.customer.get('customerType')) > 0))
+              this.customer.patchValue({ 'customerType': this.customerTypes[0].customerTypeId });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'loadCustomerTypes', 'Failed to load customer types.');
         }
-        this.isLoading = false;
       });
-
   }
-fetchCompanyInfo()
-{
-  const companyId = this.customer.get('organizationNo')?.value;
-   this.sharedService
+  fetchCompanyInfo() {
+    const companyId = this.customer.get('organizationNo')?.value;
+    this.isLoading = true;
+    this.sharedService
       .getCompanyInfo(companyId)
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-      this.logger.info(response);  
-      if(response)
-      {
-        const name = response.organisationer[0].organisationsnamn.organisationsnamnLista[0].namn;
-        const careOf = response.organisationer[0].postadressOrganisation.postadress.coAdress;
-        const postnr = response.organisationer[0].postadressOrganisation.postadress.postnummer;
-        const city = response.organisationer[0].postadressOrganisation.postadress.postort;
-        const address = response.organisationer[0].postadressOrganisation.postadress.utdelningsadress;
-        const country = response.organisationer[0].postadressOrganisation.postadress.land;
-        this.customer.patchValue({
-        customerName:name,
-        careOf: careOf,
-        customerAddress: address,
-        customerPostNo: postnr,
-        customerCity: city,
-        country:country
-        });
-        
-        this.messageService.add({
-        severity: 'sucess',
-        summary: this.sharedService.T('success'),
-        detail: this.sharedService.T('information added'),
-        life: 3000
+      .subscribe({
+        next: (response: any) => {
+          this.logger.info('fetchCompanyInfo success', { companyId });
+          if (response) {
+            const name = response.organisationer[0].organisationsnamn.organisationsnamnLista[0].namn;
+            const careOf = response.organisationer[0].postadressOrganisation.postadress.coAdress;
+            const postnr = response.organisationer[0].postadressOrganisation.postadress.postnummer;
+            const city = response.organisationer[0].postadressOrganisation.postadress.postort;
+            const address = response.organisationer[0].postadressOrganisation.postadress.utdelningsadress;
+            const country = response.organisationer[0].postadressOrganisation.postadress.land;
+            this.customer.patchValue({
+              customerName: name,
+              careOf: careOf,
+              customerAddress: address,
+              customerPostNo: postnr,
+              customerCity: city,
+              country: country
+            });
+            this.messageService.add({
+              severity: 'success',
+              summary: this.sharedService.T('success'),
+              detail: this.sharedService.T('information added'),
+              life: 3000
+            });
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              summary: this.sharedService.T('error'),
+              detail: this.sharedService.T('No records exists for this organization#'),
+              life: 3000
+            });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'fetchCompanyInfo', 'Failed to fetch company information.');
+        }
       });
-    }
-    else 
-    {
-      this.messageService.add({
-        severity: 'error',
-        summary: this.sharedService.T('error'),
-        detail: this.sharedService.T('No records exists for this organization#'),
-        life: 3000
-      });
-    }
-  });
-
   }
 
   onChangeCustomerType(event: SelectChangeEvent) {
@@ -185,15 +223,13 @@ fetchCompanyInfo()
     try {
       const response = await firstValueFrom(
         this.customerService.isCustomerExists(customerName).pipe(
-          catchError((err) => {
-            console.log(err);
-            throw err;
-          })
+          takeUntil(this.destroy$)
         )
       );
+      this.logger.info('checkIfCustomerExists success', { customerName });
       return response; 
     } catch (error) {
-      console.error('Error checking if customer exists:', error);
+      this.errorHandler.handleError(error, 'checkIfCustomerExists', '');
       return false;
     }
   }
@@ -202,15 +238,13 @@ fetchCompanyInfo()
     try {
       const response = await firstValueFrom(
         this.customerService.getCustomerName(customerId).pipe(
-          catchError((err) => {
-            console.log(err);
-            throw err;
-          })
+          takeUntil(this.destroy$)
         )
       );
+      this.logger.info('getCustomerName success', { customerId });
       return response.customerName; 
     } catch (error) {
-      console.error('Error checking if customer exists:', error);
+      this.errorHandler.handleError(error, 'getCustomerName', '');
       return ''; 
     }
   }
@@ -276,7 +310,9 @@ async onFormSubmit() {
 
     if (digitalServiceIdValue) {
       try {
-        const isValidUser = await firstValueFrom(this.sharedService.isValidAppUser(digitalServiceIdValue));
+        const isValidUser = await firstValueFrom(this.sharedService.isValidAppUser(digitalServiceIdValue).pipe(
+          takeUntil(this.destroy$)
+        ));
         if (!isValidUser) {
           digitalWorkShopid?.setErrors({ invalidUser: true });
           this.messageService.add({
@@ -289,7 +325,7 @@ async onFormSubmit() {
           return;
         }
       } catch (error) {
-        console.error('Error validating App User', error);
+        this.errorHandler.handleError(error, 'onFormSubmit', 'Could not validate Digital Service ID. Please try again.');
         this.messageService.add({
           severity: 'error',
           summary: 'Validation Error',
@@ -347,25 +383,17 @@ async onFormSubmit() {
       // API call
       const res: any = await firstValueFrom(
         this.customerService.upsertCustomer(this.customer.value).pipe(
-          catchError((err) => {
-            // Note: Spinner will be stopped in the main catch block below
-            console.error(err);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Something went wrong while saving the customer!',
-              life: 6000,
-            });
-            throw err;
-          })
+          finalize(() => {
+            this.isLoading = false;
+          }),
+          takeUntil(this.destroy$)
         )
       );
+      
+      this.logger.info('onFormSubmit success', { customerId: this.customer.get('customerId')?.value });
 
       // Success / Update Message
       if (res === true || res?.success === true) {
-        
-        this.isLoading = false;
-
         const message = this.isNewObject
           ? `${customerName} has been successfully created!`
           : `${customerName} has been successfully updated!`;
@@ -377,11 +405,9 @@ async onFormSubmit() {
           life: 6000,
         });
 
-        setTimeout(() => {
-          this.router.navigate(['sv/customer/details', this.customer.get('customerId')?.value]);
-        }, 1000);
+        // Navigate immediately after confirming success
+        this.router.navigate(['sv/customer/details', this.customer.get('customerId')?.value]);
       } else {
-        this.isLoading = false; 
         this.messageService.add({
           severity: 'warn',
           summary: 'Unexpected Response',
@@ -391,7 +417,7 @@ async onFormSubmit() {
       }
     } catch (error) {
       this.isLoading = false; 
-      console.error('Form submission failed:', error);
+      this.errorHandler.handleError(error, 'onFormSubmit', 'Failed to save customer. Please try again later.');
       this.messageService.add({
         severity: 'error',
         summary: 'Error',

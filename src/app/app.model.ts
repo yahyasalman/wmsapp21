@@ -37,16 +37,6 @@ export interface IPageList<T> {
   totalNet: number,
   totalVat: number
 }
-export interface IVehicleInfo {
-  vehicleplate: string;
-  vehicleManufacturer: string;
-  vehicleModel: string;
-  vehicleYear: number;
-}
-
-export interface IHtmlContent {
-  content: string;
-}
 export interface IPager {
   currentPage: number;
   totalPages: number;

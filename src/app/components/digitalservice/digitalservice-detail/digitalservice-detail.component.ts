@@ -1,29 +1,47 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { SHARED_IMPORTS } from 'app/sharedimports';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { finalize, takeUntil, Subject } from 'rxjs';
 
 
 @Component({
   selector: 'app-order-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,ProgressSpinnerModule,
-    // Only add modules that are NOT in SHARED_IMPORTS
-    PdfViewerModule
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    TableModule,
+    ProgressSpinnerModule,
+    PdfViewerModule,
+    DialogModule
   ],
   providers: [ConfirmationService, MessageService],
   styleUrl: './digitalservice-detail.component.css',
   templateUrl: './digitalservice-detail.component.html'
 })
-export class DigitalServiceDetailComponent {
- vehiclePlate: string = '';
+export class DigitalServiceDetailComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
+  vehiclePlate: string = '';
   pdfUrl: any;
   showEmailDialog: boolean = false;
   emailForm: FormGroup;
@@ -51,7 +69,7 @@ export class DigitalServiceDetailComponent {
   }
 
   getPdf() {
-   this.isLoading = true;
+    this.isLoading = true;
     const requestBody = {
       country: 'se',
       lang: 'sv',
@@ -60,22 +78,25 @@ export class DigitalServiceDetailComponent {
       vehiclePlate: this.vehiclePlate
     };
     this.logger.info('Request body for PDF', requestBody);
-    this.digitalServiceService.getPdf(requestBody).subscribe({
-      next: (response: any) => {
-        const newBlob = new Blob([response], { type: 'application/pdf' });
-        this.pdfUrl = window.URL.createObjectURL(newBlob);
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading PDF', err);
-        this.isLoading = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Unable to load PDF'
-        });
-      }
-    });
+    this.digitalServiceService.getPdf(requestBody)
+      .pipe(
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          const newBlob = new Blob([response], { type: 'application/pdf' });
+          this.pdfUrl = window.URL.createObjectURL(newBlob);
+        },
+        error: (err) => {
+          this.logger.error('Error loading PDF', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Unable to load PDF'
+          });
+        }
+      });
   }
 
   redirectToCustomerDetailComponent() {
@@ -115,4 +136,8 @@ export class DigitalServiceDetailComponent {
     //   });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

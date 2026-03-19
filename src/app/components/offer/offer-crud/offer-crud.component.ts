@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule, Location } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ICustomer, IEnums, IInvoiceDetailPrompt, IOffer, IProduct } from 'app/app.model';
 import { CustomerService } from 'app/services/customer.service';
@@ -10,29 +10,59 @@ import { OfferService } from 'app/services/offer.service';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { ProductService } from 'app/services/product.service';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem, MessageService,ConfirmationService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
-import { catchError } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { AiService } from 'app/services/ai.service';
-
-
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TextareaModule } from 'primeng/textarea';
+import { TooltipModule } from 'primeng/tooltip';
+import { MessageModule } from 'primeng/message';
+import { DialogModule } from 'primeng/dialog';
+import { SplitButtonModule } from 'primeng/splitbutton';
 @Component({
   selector: 'app-create-offer',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, ProgressSpinnerModule,
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ProgressSpinnerModule,
     DragDropModule,
-   IconFieldModule, InputIconModule
+    IconFieldModule,
+    InputIconModule,
+    ButtonModule,
+    InputTextModule,
+    AutoCompleteModule,
+    InputNumberModule,
+    SelectModule,
+    DatePickerModule,
+    ToastModule,
+    ConfirmDialogModule,
+    CheckboxModule,
+    TextareaModule,
+    TooltipModule,
+    MessageModule,
+    DialogModule,
+    SplitButtonModule
   ], templateUrl: './offer-crud.component.html',
   styleUrl: './offer-crud.component.css',
-  providers: [MessageService]
+  providers: [MessageService, ConfirmationService]
 })
 
-export class OfferCrudComponent implements OnInit {
+export class OfferCrudComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
 
   offer: FormGroup;
   details: any = new FormArray([])
@@ -116,20 +146,25 @@ export class OfferCrudComponent implements OnInit {
     this.isLoading = true;
     this.offerService
       .getOffer(param.offerId, param.customerId, param.duplicate)
-      .pipe(catchError((err) => {
-        this.isLoading = false;
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        this.defaultCustomerId = response.data.customerId;
-        this.defaultCustomerName = response.data.customerName;
-        this.priceMode = response.data.priceMode;
-        this.isNewObject = response.isNewObject;
-        this.loadOfferToEdit(response.data, 'editinvoice');
-        this.getTemplates();
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.defaultCustomerId = response.data.customerId;
+          this.defaultCustomerName = response.data.customerName;
+          this.priceMode = response.data.priceMode;
+          this.isNewObject = response.isNewObject;
+          this.loadOfferToEdit(response.data, 'editinvoice');
+          this.getTemplates();
+        },
+        error: (err) => {
+          this.logger.error('ngOnInit getOffer error', err);
+        }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
   trackByFn(index: number, detail: AbstractControl | null | undefined): number {
     if (detail && detail.get('rowIndex')) {
@@ -165,21 +200,23 @@ export class OfferCrudComponent implements OnInit {
     this.productService
       .getDetailTemplates()
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        if (res) {
-          res.forEach(selectOption => {
-            this.templates.push({ label: selectOption.productTemplateName, command: () => { this.addTemplate(selectOption.productTemplateId); } });
-          });
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            res.forEach(selectOption => {
+              this.templates.push({ label: selectOption.productTemplateName, command: () => { this.addTemplate(selectOption.productTemplateId); } });
+            });
+          }
+        },
+        error: (err) => {
+          this.logger.error('getTemplates error', err);
         }
-
       });
-    this.isLoading = false;
   }
   onDragStart(event: any, detail: any) {
     detail.isDragging = true;
@@ -223,15 +260,23 @@ export class OfferCrudComponent implements OnInit {
       let category = detail.get('category').value;
       this.logger.info(category);
       let query = event.query;
-      this.productService.getProductsByprefix(query).subscribe((response) => {
-  
-        this.products = response
-          .filter((product: any) => product.category === category)
-          .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
-        this.logger.info(this.products);
-        this.isSpinnerLoading = false;
-      })
-  
+      this.productService.getProductsByprefix(query)
+        .pipe(
+          finalize(() => { this.isSpinnerLoading = false; }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: (response) => {
+            this.products = response
+              .filter((product: any) => product.category === category)
+              .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
+            this.logger.info(this.products);
+          },
+          error: (err) => {
+            this.logger.error('Error loading products', err);
+            this.isSpinnerLoading = false;
+          }
+        });
     }
   
 
@@ -375,53 +420,55 @@ export class OfferCrudComponent implements OnInit {
     this.productService
       .getDetailTemplate(templateId)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
-      ).subscribe((response: any) => {
-        this.logger.info('salman-response', response);
-        response.forEach((element: any) => {
-          this.logger.info('element', element);
-          var productRow: any = {};
-          productRow.offerId = this.offer.get('offerId')?.value;
-          productRow.rowIndex = this.details.length;
-          if (element.isTextRow) {
-            productRow.textContent = element.textContent;
-            productRow.isTextRow = true;
-            productRow.category = '';
-            productRow.isProductValid = true;
-            productRow.isUnitPriceValid = true;
-          }
-          else {
-            productRow.category = element.category;
-            productRow.productId = element.productId;
-            productRow.product = element.product;
-            productRow.isProductValid = true;
-            productRow.description = element.description;
-            productRow.quantity = element.quantity;
-            productRow.unit = element.unit;
-            productRow.unitPrice = (this.priceMode == 0) ? element.priceIncVat : element.unitPrice;
-            productRow.isUnitPriceValid = true;
-            productRow.vatPercentage = element.vatPercentage;
-            productRow.discountPercentage = 0;
-            productRow.price = element.price;
-            productRow.vat = element.vat;
-            productRow.priceIncVat = element.priceIncVat;
-            productRow.textContent = undefined;
-            productRow.isTextRow = false;
-          }
-          this.details.push(this.fb.group(productRow));
-          let lastIndex = this.details.length - 1;
-          this.updateDetailRow(this.details.controls[lastIndex] as FormGroup);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.logger.info('salman-response', response);
+          response.forEach((element: any) => {
+            this.logger.info('element', element);
+            var productRow: any = {};
+            productRow.offerId = this.offer.get('offerId')?.value;
+            productRow.rowIndex = this.details.length;
+            if (element.isTextRow) {
+              productRow.textContent = element.textContent;
+              productRow.isTextRow = true;
+              productRow.category = '';
+              productRow.isProductValid = true;
+              productRow.isUnitPriceValid = true;
+            }
+            else {
+              productRow.category = element.category;
+              productRow.productId = element.productId;
+              productRow.product = element.product;
+              productRow.isProductValid = true;
+              productRow.description = element.description;
+              productRow.quantity = element.quantity;
+              productRow.unit = element.unit;
+              productRow.unitPrice = (this.priceMode == 0) ? element.priceIncVat : element.unitPrice;
+              productRow.isUnitPriceValid = true;
+              productRow.vatPercentage = element.vatPercentage;
+              productRow.discountPercentage = 0;
+              productRow.price = element.price;
+              productRow.vat = element.vat;
+              productRow.priceIncVat = element.priceIncVat;
+              productRow.textContent = undefined;
+              productRow.isTextRow = false;
+            }
+            this.details.push(this.fb.group(productRow));
+            let lastIndex = this.details.length - 1;
+            this.updateDetailRow(this.details.controls[lastIndex] as FormGroup);
 
-        });
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Data Saved' });
+          });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Data Saved' });
+        },
+        error: (err) => {
+          this.logger.error('addTemplate error', err);
+        }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   onEnter(event: any): void {
@@ -446,30 +493,30 @@ export class OfferCrudComponent implements OnInit {
     this.aiService
       .getInvoiceDescription({ context: selectectContextValue, items: items })
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        this.isLoading = false;
-        if (res) {
-          textareaControl.setValue(res.text);
-          this.messageService.add({
-            severity: 'success',
-            detail: this.sharedService.T('aiTextAdded'),
-          });
-
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            textareaControl.setValue(res.text);
+            this.messageService.add({
+              severity: 'success',
+              detail: this.sharedService.T('aiTextAdded'),
+            });
+          }
+          else {
+            this.messageService.add({
+              severity: 'error',
+              detail: this.sharedService.T('errorMessage'),
+            });
+          }
+        },
+        error: (err) => {
+          this.logger.error('GenerateInvoiceDescription error', err);
         }
-        else {
-          this.messageService.add({
-            severity: 'error',
-            detail: this.sharedService.T('errorMessage'),
-          });
-        }
-        //this.selectedContext = null;
-
       });
   }
   onBlurProduct(event: any, detail: AbstractControl): void {
@@ -511,26 +558,24 @@ export class OfferCrudComponent implements OnInit {
       this.isLoading = false;
       return;
     }
-    this.isLoading = true;
     this.offerService
       .upsertOffer(offer)
       .pipe(
-        catchError((err) => {
-          this.isLoading = true;
-          console.log(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-          this.sharedService.clearState();
-          this.sharedService.setState({ disableEdit: 'false', creditInvoice: 'false', customerId: offer.customerId, customerEmail: offer.customerEmail });
-          this.router.navigate([`sv/offer/details/${offer.offerId}`]);
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.router.navigate([`sv/offer/details/${offer.offerId}`]);
+          }
+        },
+        error: (err) => {
+          this.logger.error('onFormSubmit error', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
   }
 
   onCancelForm() {
@@ -544,14 +589,16 @@ export class OfferCrudComponent implements OnInit {
     this.customerService
       .getCustomerByPrefix(query)
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-          this.customers = res;
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.customers = res;
+          }
+        },
+        error: (err) => {
+          this.logger.error('filterCustomer error', err);
         }
       });
   }
@@ -569,5 +616,10 @@ export class OfferCrudComponent implements OnInit {
       customerName: null,
     });
     this.selectedCustomerName = null;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }    

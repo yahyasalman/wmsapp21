@@ -1,23 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedService } from 'app/services/shared.service';
 import { InvoiceService } from 'app/services/invoice.service';
 import { LogService } from 'app/services/log.service';
-import { BehaviorSubject, catchError, Observable, switchMap, tap, throwError } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
- 
+import { finalize, takeUntil, Subject } from 'rxjs';
+ import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'digitalservice-view',
   standalone: true,
  imports: [
-    ...SHARED_IMPORTS,
-    PdfViewerModule
-  ],  templateUrl: './digitalservice-view.component.html'
+    CommonModule,
+    PdfViewerModule,
+    ButtonModule
+  ],
+  templateUrl: './digitalservice-view.component.html'
 })
-export class DigitalServiceViewComponent {
-  pdfUrl:any;
+export class DigitalServiceViewComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  pdfUrl: any;
 
   constructor(private logger: LogService,
               private readonly sharedService:SharedService,
@@ -29,24 +32,15 @@ export class DigitalServiceViewComponent {
   }
 
   ngOnInit(): void {
-  const invoiceId = this.route.snapshot.queryParamMap.get('id');
-  if (invoiceId)
-  this.sharedService
-  .printPdfDigitalService('invoice',invoiceId.toString(),'basic')
-  .pipe(
-    catchError((err) => {
-      console.log(err);
-      throw err;
-    })
-  )
-  .subscribe((response: any) => {
-    if(response){
-        var newBlob = new Blob([response], { type: "application/pdf" });
-        this.pdfUrl = window.URL.createObjectURL(newBlob);      }
-  });
-  }      
-  
-   generatePdf(){
+    // Component initialization
+  }
+
+  generatePdf() {
     window.open(this.pdfUrl);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,30 +1,64 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { IEmployee, IWorkOrder, IWeeklyCalendar } from 'app/app.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { IEmployee, IWorkOrder } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { BookingService } from 'app/services/booking.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { LogService } from 'app/services/log.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
-import { catchError, firstValueFrom } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { firstValueFrom, Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CarouselModule } from 'primeng/carousel';
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { ToastModule } from 'primeng/toast';
+import { MessageModule } from 'primeng/message';
+import { InputTextModule } from 'primeng/inputtext';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { CheckboxModule } from 'primeng/checkbox';
+import { BadgeModule } from 'primeng/badge';
+import { PanelModule } from 'primeng/panel';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
 @Component({
   selector: 'app-booking-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,CarouselModule
-  ], templateUrl: './booking-list.component.html',
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    SelectModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    InputTextModule,
+    IconFieldModule,
+    InputIconModule,
+    DatePickerModule,
+    CheckboxModule,
+    CarouselModule,
+    BadgeModule,
+    PanelModule,
+    DialogModule,
+    TableModule
+  ],
+  templateUrl: './booking-list.component.html',
   providers: [ConfirmationService, MessageService, ConfirmDialogModule],
   styleUrls: ['./booking-list.component.css']
 })
-export class BookingListComponent {
+export class BookingListComponent implements OnInit, OnDestroy {
 
   @ViewChild('op') popover: any;
   days: string[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  private destroy$ = new Subject<void>();
 
   hoveredSlot: { day: string; time: string } | null = null; 
   filters: FormGroup;
@@ -66,11 +100,10 @@ export class BookingListComponent {
   selectedEmployees: IEmployee[] = [];
   selectedBooking : IWorkOrder = {} as IWorkOrder;
   isDialogVisible:boolean = false;
-  //bookingsLabel = ''
-  //noBookingsLabel = ''
-  openMenuKey: string | null = null;
+   openMenuKey: string | null = null;
 
   constructor(private logger: LogService,
+    private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
@@ -84,7 +117,7 @@ export class BookingListComponent {
     //this.selectedWeek = this.sharedService.getCurrentWeekNumber(new Date());
     this.selectedYear = new Date().getFullYear();
 
-    var currentWeek = this.sharedService.getWeekInfo(new Date(), 'current');
+    var currentWeek = this.getWeekInfo(new Date(), 'current');
     this.selectedStartDate = currentWeek.startDate;
     this.selectedEndDate = currentWeek.endDate;
     this.selectedWeek = currentWeek.weekNumber;
@@ -116,61 +149,51 @@ export class BookingListComponent {
   }
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 async getEmployees(): Promise<void> {
   try {
     const response = await firstValueFrom(this.employeeService.getAllEmployees());
-    this.employees = response; 
+    this.employees = response;
+    this.logger.info('getEmployees success', { employees: this.employees });
   } catch (error) {
-    this.logger.error('Failed to fetch employees:', error);
+    this.errorHandler.handleError(error, 'getEmployees', 'Failed to fetch employees');
   }
 }
-
-// getEmployees() {
-//   this.isLoading = true;
-//     this.employeeService
-//       .getAllEmployees()
-//       .pipe(
-//         catchError((err) => {
-//            this.isLoading = false;
-//           console.log(err);
-//           throw err;
-//         })
-//       )
-//       .subscribe((res: any) => {
-//         if (res) {
-//           this.employees = res;
-//           this.selectedEmployees = [...this.employees];
-//           this.filters.patchValue({ employeeIds: this.selectedEmployees.map(employee => employee.employeeId).join(',') });
-//           this.getBookings();
-//       }
-//       });
-// setTimeout(() => {
-//    this.isLoading = false;
-// }, 500);  }
 getKeys(obj: any): string[] {
     return Object.keys(obj);
   }
+
+  calculateFreeHours(day: string): number {
+    const busyHours = this.serviceHoursCount[day] || 0;
+    const freeHours = 8 - busyHours;
+    return Math.round(freeHours * 10) / 10;
+  }
   getBookings() {
     this.isLoading = true;
-    this.bookingService
-      .getWeeklyBookings(this.selectedStartDate, this.selectedEndDate, this.filters)
-      .pipe(
-        catchError((err) => {
-           this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
-      )
-      .subscribe((res) => {
+  this.logger.info('getBookings called', { filters: this.filters.value });
+  this.bookingService
+    .getWeeklyBookings(this.selectedStartDate, this.selectedEndDate, this.filters)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
+      }),
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
+      next: (res) => {
         if (res) {
           this.weekCalendar = res;
-          this.logger.info(this.weekCalendar);
+          this.logger.info('getBookings success', { weekCalendar: this.weekCalendar });
           this.bookingsCount['monday'] = this.weekCalendar.reduce(
             (total, row) => total + (row.mondayBookings?.length ?? 0),
             0
           );
 
-          this.serviceHoursCount['monday'] = this.weekCalendar.reduce((total, row) => {
+          this.serviceHoursCount['monday'] = Math.round(this.weekCalendar.reduce((total, row) => {
           if (row.mondayBookings) {
                                    const bookingServiceHours = row.mondayBookings.reduce((bookingTotal:any, booking:any) => {
                                    return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
@@ -178,9 +201,9 @@ getKeys(obj: any): string[] {
            return total + bookingServiceHours;
                                             }
                                             return total;
-                                          }, 0);
+                                          }, 0) * 10) / 10;
 
-          this.serviceHoursCount['tuesday'] = this.weekCalendar.reduce((total, row) => {
+          this.serviceHoursCount['tuesday'] = Math.round(this.weekCalendar.reduce((total, row) => {
           if (row.tuesdayBookings) {
                                    const bookingServiceHours = row.tuesdayBookings.reduce((bookingTotal:any, booking:any) => {
                                    return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
@@ -188,9 +211,9 @@ getKeys(obj: any): string[] {
            return total + bookingServiceHours;
                                             }
                                             return total;
-                                          }, 0);
+                                          }, 0) * 10) / 10;
 
-          this.serviceHoursCount['wednesday'] = this.weekCalendar.reduce((total, row) => {
+          this.serviceHoursCount['wednesday'] = Math.round(this.weekCalendar.reduce((total, row) => {
           if (row.wednesdayBookings) {
                                    const bookingServiceHours = row.wednesdayBookings.reduce((bookingTotal:any, booking:any) => {
                                    return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
@@ -198,9 +221,9 @@ getKeys(obj: any): string[] {
            return total + bookingServiceHours;
                                             }
                                             return total;
-                                          }, 0);
+                                          }, 0) * 10) / 10;
 
-          this.serviceHoursCount['thursday'] = this.weekCalendar.reduce((total, row) => {
+          this.serviceHoursCount['thursday'] = Math.round(this.weekCalendar.reduce((total, row) => {
           if (row.thursdayBookings) {
                                    const bookingServiceHours = row.thursdayBookings.reduce((bookingTotal:any, booking:any) => {
                                    return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
@@ -208,9 +231,9 @@ getKeys(obj: any): string[] {
            return total + bookingServiceHours;
                                             }
                                             return total;
-                                          }, 0);
+                                          }, 0) * 10) / 10;
 
-          this.serviceHoursCount['friday'] = this.weekCalendar.reduce((total, row) => {
+          this.serviceHoursCount['friday'] = Math.round(this.weekCalendar.reduce((total, row) => {
           if (row.fridayBookings) {
                                    const bookingServiceHours = row.fridayBookings.reduce((bookingTotal:any, booking:any) => {
                                    return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
@@ -218,9 +241,9 @@ getKeys(obj: any): string[] {
            return total + bookingServiceHours;
                                             }
                                             return total;
-                                          }, 0);
+                                          }, 0) * 10) / 10;
 
-          this.serviceHoursCount['saturday'] = this.weekCalendar.reduce((total, row) => {
+          this.serviceHoursCount['saturday'] = Math.round(this.weekCalendar.reduce((total, row) => {
           if (row.saturdayBookings) {
                                    const bookingServiceHours = row.saturdayBookings.reduce((bookingTotal:any, booking:any) => {
                                    return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
@@ -228,9 +251,9 @@ getKeys(obj: any): string[] {
            return total + bookingServiceHours;
                                             }
                                             return total;
-                                          }, 0);
+                                          }, 0) * 10) / 10;
 
-          this.serviceHoursCount['sunday'] = this.weekCalendar.reduce((total, row) => {
+          this.serviceHoursCount['sunday'] = Math.round(this.weekCalendar.reduce((total, row) => {
           if (row.sundayBookings) {
                                    const bookingServiceHours = row.sundayBookings.reduce((bookingTotal:any, booking:any) => {
                                    return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
@@ -238,7 +261,7 @@ getKeys(obj: any): string[] {
            return total + bookingServiceHours;
                                             }
                                             return total;
-                                          }, 0);
+                                          }, 0) * 10) / 10;
 
           this.bookingsCount['tuesday'] = this.weekCalendar.reduce(
             (total, row) => total + (row.tuesdayBookings?.length ?? 0),
@@ -264,21 +287,20 @@ getKeys(obj: any): string[] {
             (total, row) => total + (row.sundayBookings?.length ?? 0),
             0
           );
-          this.logger.info('Bookings count:');
-          this.logger.info(this.bookingsCount);
-          this.logger.info('Service hours count:');
-          this.logger.info(this.serviceHoursCount);
+          this.logger.info('Bookings count calculated:', this.bookingsCount);
+          this.logger.info('Service hours count calculated:', this.serviceHoursCount);
         }
-      });
-       setTimeout(() => {
-         this.isLoading = false;
-       }, 500);
+      },
+      error: (err) => {
+        this.errorHandler.handleError(err, 'getBookings', 'Failed to load bookings. Please try again later.');
+      }
+    });
   }
 
   onSelectMonth(d: Date) {
     let selectedDate = new Date(d.getFullYear(), d.getMonth(), 1);
 
-    let selectedWeek = this.sharedService.getWeekInfo(selectedDate, 'current');
+    let selectedWeek = this.getWeekInfo(selectedDate, 'current');
     this.selectedStartDate = selectedWeek.startDate;
     this.selectedEndDate = selectedWeek.endDate;
     this.selectedWeek = selectedWeek.weekNumber;
@@ -291,7 +313,7 @@ getKeys(obj: any): string[] {
 
   onClickPreviousWeek() {
     const previousstartDateObject = new Date(this.selectedStartDate);
-    let selectedWeek = this.sharedService.getWeekInfo(previousstartDateObject, 'previous');
+    let selectedWeek = this.getWeekInfo(previousstartDateObject, 'previous');
     this.selectedStartDate = selectedWeek.startDate;
     this.selectedEndDate = selectedWeek.endDate;
     this.selectedWeek = selectedWeek.weekNumber;
@@ -309,7 +331,7 @@ getKeys(obj: any): string[] {
 
   onClickNextWeek() {
     const previousstartDateObject = new Date(this.selectedStartDate);
-    let selectedWeek = this.sharedService.getWeekInfo(previousstartDateObject, 'next');
+    let selectedWeek = this.getWeekInfo(previousstartDateObject, 'next');
     this.selectedStartDate = selectedWeek.startDate;
     this.selectedEndDate = selectedWeek.endDate;
     this.selectedWeek = selectedWeek.weekNumber;
@@ -365,15 +387,6 @@ onChangeEmployee() {
     this.getBookings();
   }
 
-  onPageChange(e: any) {
-    this.logger.info('e.page');
-    this.logger.info(e.page);
-
-    this.filters.patchValue({ currentPage: e.page + 1 });
-     this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getBookings();
-  }
-
   showBookingInfo(booking: IWorkOrder) {
     this.logger.info('inside');
     this.logger.info(booking);
@@ -414,15 +427,18 @@ onChangeEmployee() {
     this.sharedService
       .printPdf('workorder', booking.workOrderId.toString(), 'basic')
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          var newBlob = new Blob([response], { type: "application/pdf" });
-          window.open(window.URL.createObjectURL(newBlob));
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.logger.info('printBooking success', { bookingId: booking.workOrderId });
+            var newBlob = new Blob([response], { type: "application/pdf" });
+            window.open(window.URL.createObjectURL(newBlob));
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'printBooking', 'Failed to generate PDF. Please try again later.');
         }
       });
   }
@@ -531,49 +547,48 @@ onChangeEmployee() {
 
 
   printBookings(selectedDate: any) {
-
-    //let today = new Date().toISOString().split('T')[0];
-    this.logger.info('Inside');
-    this.logger.info(selectedDate);
+    this.logger.info('printBookings called', { selectedDate });
     this.bookingService
       .getWorkOrdersByBookingTime(selectedDate, '')
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          let workorders: IWorkOrder[] = response;
-          let workOrderIds = '';
-          workorders.forEach(function (workOrder) {
-            workOrderIds += workOrder.workOrderId.toString() + ",";
-          });
-          workOrderIds = workOrderIds.substring(0, workOrderIds.length - 1);
-          this.logger.info('ids...' + workOrderIds);
-          this.sharedService
-            .printPdf('workorder', workOrderIds, 'basic')
-            .pipe(
-              catchError((err) => {
-                console.log(err);
-                throw err;
-              })
-            )
-            .subscribe((response: any) => {
-              if (response) {
-                var newBlob = new Blob([response], { type: "application/pdf" });
-                window.open(window.URL.createObjectURL(newBlob));
-              }
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            let workorders: IWorkOrder[] = response;
+            let workOrderIds = '';
+            workorders.forEach(function (workOrder) {
+              workOrderIds += workOrder.workOrderId.toString() + ",";
             });
-
+            workOrderIds = workOrderIds.substring(0, workOrderIds.length - 1);
+            this.logger.info('printBookings - workOrder ids generated', { ids: workOrderIds });
+            this.sharedService
+              .printPdf('workorder', workOrderIds, 'basic')
+              .pipe(
+                takeUntil(this.destroy$)
+              )
+              .subscribe({
+                next: (response: any) => {
+                  if (response) {
+                    this.logger.info('printBookings PDF generated successfully');
+                    var newBlob = new Blob([response], { type: "application/pdf" });
+                    window.open(window.URL.createObjectURL(newBlob));
+                  }
+                },
+                error: (err) => {
+                  this.errorHandler.handleError(err, 'printBookings', 'Failed to generate PDF. Please try again later.');
+                }
+              });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'printBookings', 'Failed to fetch work orders for printing. Please try again later.');
         }
       });
-
   }
   deleteBooking(workOrderId: number, event: any) {
-    this.logger.info('inside....');
-    this.logger.info(workOrderId);
+    this.logger.info('deleteBooking called', { workOrderId });
 
     this.confirmationService.confirm({
       target: event.target as EventTarget,
@@ -593,16 +608,19 @@ onChangeEmployee() {
         this.bookingService
           .deleteBooking(workOrderId)
           .pipe(
-            catchError((err) => {
-              console.log(err);
-              throw err;
-            })
+            takeUntil(this.destroy$)
           )
-          .subscribe((res: any) => {
-            if (res) {
-              this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('workorder-list.confirm.save.message') });
-              this.getBookings();
-              this.getEmployees();
+          .subscribe({
+            next: (res: any) => {
+              if (res) {
+                this.logger.info('deleteBooking success', { workOrderId });
+                this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('workorder-list.confirm.save.message') });
+                this.getBookings();
+                this.getEmployees();
+              }
+            },
+            error: (err) => {
+              this.errorHandler.handleError(err, 'deleteBooking', 'Failed to delete booking. Please try again later.');
             }
           });
 
@@ -629,6 +647,44 @@ onChangeEmployee() {
     this.isDialogVisible = false;
   }
 
+  getWeekInfo(date: Date, flag: 'current' | 'previous' | 'next'): { weekNumber: number, startDate: string, endDate: string } {
+  const currentDate = new Date(date.getTime());
+
+  // Adjust the date based on the flag
+  if (flag === 'previous') {
+    currentDate.setDate(currentDate.getDate() - 7); // Go back one week
+  } else if (flag === 'next') {
+    currentDate.setDate(currentDate.getDate() + 7); // Go forward one week
+  }
+
+  // Calculate the week number
+  const d = new Date(currentDate.getTime());
+  d.setDate(d.getDate() + 4 - (d.getDay() || 7)); // Adjust to Thursday in current week
+  const yearStart = new Date(d.getFullYear(), 0, 1);
+  const weekNumber = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+
+  // Calculate the start and end dates of the week
+  const dayOfWeek = currentDate.getDay() || 7; // Sunday is 0, so make it 7
+  const startOfWeek = new Date(currentDate);
+  const endOfWeek = new Date(currentDate);
+
+  startOfWeek.setDate(currentDate.getDate() - dayOfWeek + 1); // Monday
+  endOfWeek.setDate(currentDate.getDate() + (7 - dayOfWeek)); // Sunday
+
+  // Format dates to yyyy-mm-dd
+  const formatDate = (d: Date) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Ensure 2 digits
+    const day = String(d.getDate()).padStart(2, '0'); // Ensure 2 digits
+    return `${year}-${month}-${day}`;
+  };
+
+  return {
+    weekNumber,
+    startDate: formatDate(startOfWeek),
+    endDate: formatDate(endOfWeek),
+  };
+}
 }
 
 

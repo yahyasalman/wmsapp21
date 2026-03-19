@@ -1,8 +1,5 @@
 import { Component, isDevMode } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { PrimeNG } from 'primeng/config';
-import Aura from '@primeng/themes/aura';
-
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -10,16 +7,9 @@ import Aura from '@primeng/themes/aura';
   templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'wmsapp19';
-  //mySubscription;
+  title = 'Digital Workshop';
   
   constructor(private router: Router, private activatedRoute: ActivatedRoute){
-    // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    // this.mySubscription = this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationEnd) {
-    //      this.router.navigated = false;
-    //   }
-    // }); 
  }
  ngOnInit(){
   if (isDevMode()) {
@@ -28,10 +18,4 @@ export class AppComponent {
     console.log('Production!');
   } 
 }
-//  ngOnDestroy(){
-//   if (this.mySubscription) {
-//     this.mySubscription.unsubscribe();
-//   }
-// }
-
 }

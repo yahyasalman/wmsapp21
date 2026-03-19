@@ -1,22 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
-import {catchError, of} from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { finalize, takeUntil, Subject } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { MessageModule } from 'primeng/message';
 
 
 @Component({
   selector: 'password-view',
   standalone: true,
  imports: [
-    ...SHARED_IMPORTS
-  ],  providers: [],
-    templateUrl: './resetpassword-view.component.html',
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule,
+    MessageModule
+  ],
+  providers: [],
+  templateUrl: './resetpassword-view.component.html',
 
 })
-export class ResetPasswordViewComponent implements OnInit {
+export class ResetPasswordViewComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   passwordResetForm!: FormGroup;
   successMessage: string | null = null;
 
@@ -64,19 +76,27 @@ export class ResetPasswordViewComponent implements OnInit {
     this.sharedService
       .resetPassword(this.passwordResetForm.value)
       .pipe(
-        catchError((error) => {
-          console.error('Error resetting password:', error);
-          return of(null);
-        })
+        finalize(() => {}),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        if (res) {
-          this.successMessage = 'Lyckat! Ditt lösenord har återställts.';
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.successMessage = 'Lyckat! Ditt lösenord har återställts.';
+          }
+        },
+        error: (error) => {
+          this.logger.error('Error resetting password:', error);
         }
       });
   }
 
   navigateToLogin(): void {
     this.router.navigate(['/login']);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

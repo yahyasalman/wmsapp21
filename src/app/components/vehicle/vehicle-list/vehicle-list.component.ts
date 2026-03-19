@@ -1,15 +1,20 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { catchError, filter, of, switchMap } from 'rxjs';
-import { SHARED_IMPORTS } from '../../../sharedimports';
-import { ICustomer, ICustomerTag, ICustomerType, IEnum, IPager, VehicleSearch, VehicleSearchResponse } from 'app/app.model';
-import { SharedService, LogService } from 'app/services';
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { finalize, takeUntil, Subject } from 'rxjs';
+import { ICustomer, VehicleSearch} from 'app/app.model';
+import { LogService } from 'app/services/log.service';
+import { SharedService } from 'app/services/shared.service';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TreeTableModule } from 'primeng/treetable';
-import { CommonModule } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextModule } from 'primeng/inputtext';
 
 interface TreeNode {
     data: { [key: string]: any }; // Contains the row data
@@ -21,12 +26,12 @@ interface TreeNode {
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [CommonModule, ...SHARED_IMPORTS, IconFieldModule, InputIconModule, TreeTableModule,ProgressSpinnerModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TreeTableModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, AutoCompleteModule, ToastModule, ConfirmDialogModule, InputTextModule],
   templateUrl: './vehicle-list.component.html'
 })
 
-export class VehicleListComponent {
-
+export class VehicleListComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
   vehiclePlates: VehicleSearch[] = [];
   vehicleInformation:string = '';
   vehicleColor: string = '';
@@ -165,22 +170,23 @@ startTyping() {
   keyupVehicle(event: any) {
     if (event?.value) {
       this.sharedService
-      .getVehicleList(event.value)
-      .pipe(
-        catchError((err) => {
-          this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
-      )
-      .subscribe((response: any) => {
-        this.isLoading = false;
-        if (response) {
-          this.logger.info('Vehicle Info:');
-          this.logger.info(response);
-          this.vehiclePlates = response;
-        }
-      });
+        .getVehicleList(event.value)
+        .pipe(
+          finalize(() => { this.isLoading = false; }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.logger.info('Vehicle Info:');
+              this.logger.info(response);
+              this.vehiclePlates = response;
+            }
+          },
+          error: (err) => {
+            this.logger.error('Error loading vehicles:', err);
+          }
+        });
     }
   }
     onClearVehicle() {
@@ -217,162 +223,159 @@ startTyping() {
     }
     }
   }
-  loadvehicle(vehiclePlate: string)
-  {
+  loadvehicle(vehiclePlate: string) {
     this.isLoading = true;
     this.sharedService
       .getVehicleInfo(vehiclePlate)
       .pipe(
-        catchError((err) => {
-          this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        this.isLoading = false;
-        if (response) {
-// Assuming response is now an array of objects
-const responseArray = response; // response is an array
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            // Assuming response is now an array of objects
+            const responseArray = response; // response is an array
 
-// Iterate over the array and sum the values
-responseArray.forEach((item: any) => {
-  this.partsSale += item.partsSale || 0; // Add partsSale, default to 0 if undefined
-  this.labourSale += item.labourSale || 0; // Add labourSale, default to 0 if undefined
-  this.totalTurnover += item.totalInvoiceAmount || 0; // Add totalInvoiceAmount, default to 0 if undefined
+            // Iterate over the array and sum the values
+            responseArray.forEach((item: any) => {
+              this.partsSale += item.partsSale || 0; // Add partsSale, default to 0 if undefined
+              this.labourSale += item.labourSale || 0; // Add labourSale, default to 0 if undefined
+              this.totalTurnover += item.totalInvoiceAmount || 0; // Add totalInvoiceAmount, default to 0 if undefined
 
-  // Collect suppliers (avoid duplicates if necessary)
-  if (Array.isArray(item.suppliers)) {
-    this.suppliers = [...new Set([...this.suppliers, ...item.suppliers])]; // Merge and deduplicate suppliers
-  }
-  this.setVehicleColor(item.dataPayload.invoices);
-});
+              // Collect suppliers (avoid duplicates if necessary)
+              if (Array.isArray(item.suppliers)) {
+                this.suppliers = [...new Set([...this.suppliers, ...item.suppliers])]; // Merge and deduplicate suppliers
+              }
+              this.setVehicleColor(item.dataPayload.invoices);
+            });
 
-// Calculate percentages and determine service type
-if (this.totalTurnover > 0) {
-  this.partsPercentage = Math.round((this.partsSale / this.totalTurnover) * 100);
-  this.labourPercentage = Math.round((this.labourSale / this.totalTurnover) * 100);
-  this.differencePercentage = Math.abs(this.labourPercentage - this.partsPercentage);
-} else {
-  this.partsPercentage = 0;
-  this.labourPercentage = 0;
-  this.differencePercentage = 0;
-}
+            // Calculate percentages and determine service type
+            if (this.totalTurnover > 0) {
+              this.partsPercentage = Math.round((this.partsSale / this.totalTurnover) * 100);
+              this.labourPercentage = Math.round((this.labourSale / this.totalTurnover) * 100);
+              this.differencePercentage = Math.abs(this.labourPercentage - this.partsPercentage);
+            } else {
+              this.partsPercentage = 0;
+              this.labourPercentage = 0;
+              this.differencePercentage = 0;
+            }
 
-// Determine service type and main driver
-if (this.labourPercentage >= 70) {
-  this.serviceType = 'service-oriented';
-  this.mainDriver = 'labour work';
-} else if (this.partsPercentage >= 70) {
-  this.serviceType = 'parts-oriented';
-  this.mainDriver = 'parts replacement';
-} else {
-  this.serviceType = 'balanced';
-  this.mainDriver = 'both labour and parts';
-}
+            // Determine service type and main driver
+            if (this.labourPercentage >= 70) {
+              this.serviceType = 'service-oriented';
+              this.mainDriver = 'labour work';
+            } else if (this.partsPercentage >= 70) {
+              this.serviceType = 'parts-oriented';
+              this.mainDriver = 'parts replacement';
+            } else {
+              this.serviceType = 'balanced';
+              this.mainDriver = 'both labour and parts';
+            }
 
-// Call prepareStory after calculations
-this.prepareStory();
+            // Call prepareStory after calculations
+            this.prepareStory();
 
-        this.logger.info('Response Received for vehicle info:');
-        this.logger.info(response);
-        const jsonDataArray = response; // Assuming this is an array of JSON objects
-        this.vehiclesData = []; // Initialize an empty array
-// Loop through each entry in the JSON data array
-jsonDataArray.forEach((jsonData: any) => {
-  this.refreshedAt = jsonData.refreshedAt; // Capture refreshedAt for potential use in the story or elsewhere
-  const vehicleData = {
-    data: {
-      label: this.sharedService.T('customer'),
-      customerId: jsonData.customerId,
-      customerName: jsonData.customerName
-    },
-    children: [
-      {
-        data: { 
-          label: 'invoices',
-          totalInvoiceCount: jsonData.totalInvoiceCount || 0,
-          totalInvoiceAmount: jsonData.totalInvoiceAmount || 0,
-          paidInvoiceAmount: jsonData.paidInvoiceAmount || 0,
-          unpaidInvoiceAmount: jsonData.unpaidInvoiceAmount || 0
-        },
-        children: Array.isArray(jsonData.dataPayload.invoices) ? jsonData.dataPayload.invoices.map((invoice: any) => ({
-          data: {
-            label: this.sharedService.T('invoice'),
-            invoiceId: invoice.invoiceId,
-            invoiceDate: this.getDateString(invoice.invoiceDate),
-            dueDate: this.getDateString(invoice.dueDate),
-            totalInvoiceAmount: invoice.totalInvoiceAmount,
-            labourAmount: invoice.labourSale,
-            partsAmount: invoice.partsSale,
-            paymentDate: this.getDateString(invoice.paymentDate),
-            paymentAmount: invoice.paymentAmount,
-            remainingBalance: invoice.remainingBalance
+            this.logger.info('Response Received for vehicle info:');
+            this.logger.info(response);
+            const jsonDataArray = response; // Assuming this is an array of JSON objects
+            this.vehiclesData = []; // Initialize an empty array
+            // Loop through each entry in the JSON data array
+            jsonDataArray.forEach((jsonData: any) => {
+              this.refreshedAt = jsonData.refreshedAt; // Capture refreshedAt for potential use in the story or elsewhere
+              const vehicleData = {
+                data: {
+                  label: this.sharedService.T('customer'),
+                  customerId: jsonData.customerId,
+                  customerName: jsonData.customerName
+                },
+                children: [
+                  {
+                    data: { 
+                      label: 'invoices',
+                      totalInvoiceCount: jsonData.totalInvoiceCount || 0,
+                      totalInvoiceAmount: jsonData.totalInvoiceAmount || 0,
+                      paidInvoiceAmount: jsonData.paidInvoiceAmount || 0,
+                      unpaidInvoiceAmount: jsonData.unpaidInvoiceAmount || 0
+                    },
+                    children: Array.isArray(jsonData.dataPayload.invoices) ? jsonData.dataPayload.invoices.map((invoice: any) => ({
+                      data: {
+                        label: this.sharedService.T('invoice'),
+                        invoiceId: invoice.invoiceId,
+                        invoiceDate: this.getDateString(invoice.invoiceDate),
+                        dueDate: this.getDateString(invoice.dueDate),
+                        totalInvoiceAmount: invoice.totalInvoiceAmount,
+                        labourAmount: invoice.labourSale,
+                        partsAmount: invoice.partsSale,
+                        paymentDate: this.getDateString(invoice.paymentDate),
+                        paymentAmount: invoice.paymentAmount,
+                        remainingBalance: invoice.remainingBalance
+                      }
+                    })) : [] // Default to an empty array if invoices is null or not an array
+                  },
+                  {
+                    data: { 
+                      label: 'workorders',
+                      totalWorkOrderCount: jsonData.totalWorkOrderCount || 0,
+                      lastWorkOrderDate: this.getDateString(jsonData.lastWorkOrderDate),
+                      totalWOPurchaseCount: jsonData.totalWOPurchaseCount || 0
+                    },
+                    children: Array.isArray(jsonData.dataPayload.workOrders) ? jsonData.dataPayload.workOrders.map((workOrder: any) => ({
+                      data: {
+                        label: this.sharedService.T('workorder'),
+                        workOrderId: workOrder.workOrderId,
+                        bookingDate: this.getDateString(workOrder.bookingDate),
+                        bookingTime: workOrder.bookingTime,
+                        employeeName: workOrder.employeeName,                       
+                        workOrderStatus: workOrder.workOrderStatus,
+                        supplierPurchaseDetails: workOrder.supplierPurchaseDetails
+                      }
+                    })) : [] // Default to an empty array if workOrders is null or not an array
+                  },
+                  {
+                    data: { 
+                      label: 'offers',
+                      totalOfferCount: jsonData.totalOfferCount || 0
+                    },
+                    children: Array.isArray(jsonData.dataPayload.offers) ? jsonData.dataPayload.offers.map((offer: any) => ({
+                      data: {
+                        label: this.sharedService.T('offer'),
+                        offerId: offer.offerId,
+                        offerDate: this.getDateString(offer.offerDate),
+                        priceIncVat: offer.priceIncVat,
+                        isAccepted: offer.isAccepted
+                      }
+                    })) : [] // Default to an empty array if offers is null or not an array
+                  },
+                  {
+                    data: { 
+                      label: 'digitalServiceRecord',
+                      totalDigitalServiceCount: jsonData.totalDigitalServiceCount || 0,
+                      lastDigitalServiceDate: this.getDateString(jsonData.lastDigitalServiceDate)
+                    },
+                    children: Array.isArray(jsonData.dataPayload.digitalServices) ? jsonData.dataPayload.digitalServices.map((service: any) => ({
+                      data: {
+                        label: this.sharedService.T('digitalServiceRecord'),
+                        digitalServiceId: service.digitalServiceId,
+                        serviceDate: this.getDateString(service.serviceDate),
+                        serviceType: service.serviceType,
+                        vehicleMileage: service.vehicleMileage
+                      }
+                    })) : [] // Default to an empty array if digitalServices is null or not an array
+                  }
+                ]
+              };
+
+              // Push the constructed vehicle data into the vehiclesData array
+              this.vehiclesData.push(vehicleData);
+            });
+
+            this.logger.info('Transformed Vehicles Data:', JSON.stringify(this.vehiclesData, null, 2));
           }
-        })) : [] // Default to an empty array if invoices is null or not an array
-      },
-      {
-        data: { 
-          label: 'workorders',
-          totalWorkOrderCount: jsonData.totalWorkOrderCount || 0,
-          lastWorkOrderDate: this.getDateString(jsonData.lastWorkOrderDate),
-          totalWOPurchaseCount: jsonData.totalWOPurchaseCount || 0
         },
-        children: Array.isArray(jsonData.dataPayload.workOrders) ? jsonData.dataPayload.workOrders.map((workOrder: any) => ({
-          data: {
-            label: this.sharedService.T('workorder'),
-            workOrderId: workOrder.workOrderId,
-            bookingDate: this.getDateString(workOrder.bookingDate),
-            bookingTime: workOrder.bookingTime,
-            employeeName: workOrder.employeeName,                       
-            workOrderStatus: workOrder.workOrderStatus,
-            supplierPurchaseDetails: workOrder.supplierPurchaseDetails
-          }
-        })) : [] // Default to an empty array if workOrders is null or not an array
-      },
-      {
-        data: { 
-          label: 'offers',
-          totalOfferCount: jsonData.totalOfferCount || 0
-        },
-        children: Array.isArray(jsonData.dataPayload.offers) ? jsonData.dataPayload.offers.map((offer: any) => ({
-          data: {
-            label: this.sharedService.T('offer'),
-            offerId: offer.offerId,
-            offerDate: this.getDateString(offer.offerDate),
-            priceIncVat: offer.priceIncVat,
-            isAccepted: offer.isAccepted
-          }
-        })) : [] // Default to an empty array if offers is null or not an array
-      },
-      {
-        data: { 
-          label: 'digitalServiceRecord',
-          totalDigitalServiceCount: jsonData.totalDigitalServiceCount || 0,
-          lastDigitalServiceDate: this.getDateString(jsonData.lastDigitalServiceDate)
-        },
-        children: Array.isArray(jsonData.dataPayload.digitalServices) ? jsonData.dataPayload.digitalServices.map((service: any) => ({
-          data: {
-            label: this.sharedService.T('digitalServiceRecord'),
-            digitalServiceId: service.digitalServiceId,
-            serviceDate: this.getDateString(service.serviceDate),
-            serviceType: service.serviceType,
-            vehicleMileage: service.vehicleMileage
-          }
-        })) : [] // Default to an empty array if digitalServices is null or not an array
-      }
-    ]
-  };
-
-  // Push the constructed vehicle data into the vehiclesData array
-  this.vehiclesData.push(vehicleData);
-});
-
-        
-        
-        
+        error: (err) => {
+          this.logger.error('Error loading vehicle info:', err);
         }
-        console.log('Transformed Vehicles Data:', JSON.stringify(this.vehiclesData, null, 2));
       });
   }
 
@@ -412,5 +415,10 @@ jsonDataArray.forEach((jsonData: any) => {
       return this.cols.filter(c => ['label', 'digitalServiceId', 'serviceDate', 'serviceType', 'vehicleMileage'].includes(c.field));
     }
     return this.cols;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

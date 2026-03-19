@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -6,25 +7,57 @@ import { IWorkOrder, IFileUploadRequest, IFileUploadResponse, IInvoice } from 'a
 import { SharedService } from 'app/services/shared.service';
 import { WorkOrderService } from 'app/services/workorder.service';
 import { LogService } from 'app/services/log.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { catchError, concatMap, from, of, switchMap, tap } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { catchError, concatMap, from, of, switchMap, tap, finalize, takeUntil, Subject } from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { CardModule } from 'primeng/card';
+import { TableModule } from 'primeng/table';
+import { PanelModule } from 'primeng/panel';
+import { BadgeModule } from 'primeng/badge';
+import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
+
+
 interface WorkshopService { name: string };
 @Component({
   selector: 'app-order-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, ProgressSpinnerModule,
-    PdfViewerModule
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    IconFieldModule,
+    InputIconModule,
+    ProgressSpinnerModule,
+    CardModule,
+    TableModule,
+    PdfViewerModule,
+    PanelModule,
+    BadgeModule,
+    TagModule,
+    TooltipModule 
   ],
   providers: [ConfirmationService, MessageService],
   styleUrl: './workorder-detail.component.css',
   templateUrl: './workorder-detail.component.html'
 })
-export class WorkOrderDetailComponent implements OnInit {
+export class WorkOrderDetailComponent implements OnInit, OnDestroy {
   @Output() invoiceEvent = new EventEmitter<string>();
+  private destroy$ = new Subject<void>();
 
   workOrderId: number = 0 ;
   workOrder: IWorkOrder = <IWorkOrder>{};
@@ -79,15 +112,20 @@ export class WorkOrderDetailComponent implements OnInit {
     this.sharedService
       .printPdf('workorder', this.workOrderId.toString(), 'basic')
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        finalize(() => {
+          // pdf loading complete
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          var newBlob = new Blob([response], { type: "application/pdf" });
-          this.pdfUrl = window.URL.createObjectURL(newBlob);
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            var newBlob = new Blob([response], { type: "application/pdf" });
+            this.pdfUrl = window.URL.createObjectURL(newBlob);
+          }
+        },
+        error: (err) => {
+          this.logger.error('printPdf error', err);
         }
       });
 
@@ -97,19 +135,24 @@ export class WorkOrderDetailComponent implements OnInit {
   private getFiles(): void {
     this.sharedService.listFiles(this.workOrderId)
       .pipe(
-        catchError(error => {
+        finalize(() => {
+          // file loading complete
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (files) => {
+          this.existingFiles = files; // Store all files in the list
+          this.uploadedFile = null;   // Reset current upload file
+        },
+        error: (error) => {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to load file list'
           });
-          console.error('Error loading file list:', error);
-          return of([]);
-        })
-      )
-      .subscribe(files => {
-        this.existingFiles = files; // Store all files in the list
-        this.uploadedFile = null;   // Reset current upload file
+          this.logger.error('Error loading file list:', error);
+        }
       });
   }
 
@@ -176,22 +219,24 @@ export class WorkOrderDetailComponent implements OnInit {
 
   getOrder() {
     this.isLoading = true;
-    this.workOrderService.getWorkOrder(undefined, undefined, this.workOrderId).pipe(
-      catchError((err) => {
-        console.log(err);
-        this.isLoading = false;
-        throw err;
-      })
-    )
-      .subscribe((response: any) => {
-        if (response) {
-          this.workOrder = response.data;
-          this.logger.info('Workoder::',this.workOrder);  
+    this.workOrderService.getWorkOrder(undefined, undefined, this.workOrderId)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.workOrder = response.data;
+            this.logger.info('Workorder::', this.workOrder);  
+          }
+        },
+        error: (err) => {
+          this.logger.error('getOrder error', err);
         }
       });
-setTimeout(() => {
-  this.isLoading = false;
-}, 500);
   }
 
   uploadFile(event: any) {
@@ -213,18 +258,13 @@ setTimeout(() => {
             id: this.workOrderId,
             file: file
           };
-this.isLoading = true;
+          this.isLoading = true;
           this.sharedService.uploadFile(uploadRequest).pipe(
             switchMap(() => this.sharedService.listFiles(this.workOrderId)),
-            catchError(error => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Upload Failed',
-                detail: `Failed to upload ${file.name}: ${error.message}`
-              });
+            finalize(() => {
               this.isLoading = false;
-              return of([]);
-            })
+            }),
+            takeUntil(this.destroy$)
           ).subscribe({
             next: (files: IFileUploadResponse[]) => {
               this.uploadedFiles = files; // Update the list of all files
@@ -237,18 +277,14 @@ this.isLoading = true;
               this.getFiles();
             },
             error: (error) => {
-              console.error('Upload process failed:', error);
+              this.logger.error('Upload process failed:', error);
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
                 detail: 'Upload process failed'
               });
             }
-            
           });
-          setTimeout(() => {
-  this.isLoading = false;
-}, 500);
         }
       });
     }
@@ -258,7 +294,6 @@ this.isLoading = true;
         summary: 'Warning',
         detail: 'Please select a file to upload'
       });
-      this.isLoading = false;
       return;
     }
   }
@@ -270,32 +305,38 @@ this.isLoading = true;
     if (file.type === 'application/pdf' && this.pdfUrl) {
       this.pdfUrl = null;
     }
-this.isLoading = true;
+    this.isLoading = true;
     this.sharedService.deleteFile(file.key).pipe(
-      catchError(error => {
+      finalize(() => {
+        this.isLoading = false;
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (result) => {
+        // Remove the file from both lists
+        this.existingFiles = this.existingFiles.filter(f => f.key !== file.key);
+        this.uploadedFiles = this.uploadedFiles.filter(f => f.key !== file.key);
+
+        this.messageService.add({
+          severity: 'info',
+          summary: 'File Removed',
+          detail: `${file.fileName || file.name} has been removed`
+        });
+        this.getFiles();
+      },
+      error: (error) => {
+        this.logger.error('removeFile error', error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: `Failed to delete file: ${file.fileName || file.name}`
         });
-        this.isLoading = false;
-        return of(null);
-      })
-    ).subscribe((result) => {
-      // Remove the file from both lists
-      this.existingFiles = this.existingFiles.filter(f => f.key !== file.key);
-      this.uploadedFiles = this.uploadedFiles.filter(f => f.key !== file.key);
-
-      this.messageService.add({
-        severity: 'info',
-        summary: 'File Removed',
-        detail: `${file.fileName || file.name} has been removed`
-      });
-      this.getFiles();
+      }
     });
-    setTimeout(() => {
-  this.isLoading = false;
-}, 500);
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

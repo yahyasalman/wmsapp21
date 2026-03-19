@@ -1,30 +1,41 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, ViewChild, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { catchError, filter, of, switchMap } from 'rxjs';
-import { SHARED_IMPORTS } from '../../../sharedimports';
-import { ICustomer, ICustomerTag, ICustomerType, IEnum, IPager } from 'app/app.model';
-import { SharedService, CustomerService, LogService, WorkshopService } from 'app/services';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { filter, Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { ICustomer, ICustomerTag, ICustomerType } from 'app/app.model';
+import { SharedService } from 'app/services/shared.service';
+import { CustomerService } from 'app/services/customer.service';
+import { LogService } from 'app/services/log.service';
+import { WorkshopService } from 'app/services/workshop.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { Table } from 'primeng/table';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [...SHARED_IMPORTS, IconFieldModule, InputIconModule, ProgressSpinnerModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, ButtonModule, SelectModule, TableModule, ToastModule, TooltipModule, InputTextModule],
   templateUrl: './customer-list.component.html'
 })
 
-export class CustomerListComponent {
+export class CustomerListComponent implements OnInit, OnDestroy {
 
   // @ViewChild('dt') dataTable!: Table;
 
   customers: ICustomer[] = [];
   customerTags: ICustomerTag[] = [];
   customerTypes: ICustomerType[] = [];
+  private destroy$ = new Subject<void>();
 
   customerCities: string[] = [];
   filters: FormGroup;
@@ -37,6 +48,7 @@ export class CustomerListComponent {
     private readonly router: Router,
     private readonly fb: FormBuilder,
     private readonly logger: LogService,
+    private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
     private readonly customerService: CustomerService,
     private readonly route: ActivatedRoute,
@@ -53,7 +65,10 @@ export class CustomerListComponent {
   ngOnInit() {
     this.initializePage();
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
       .subscribe((event: NavigationEnd) => {
         if (event.urlAfterRedirects.startsWith('/sv/customer')) {
           this.initializePage();
@@ -61,11 +76,18 @@ export class CustomerListComponent {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   initializePage() {
-    this.route.queryParams.subscribe((params) => { 
-      this.sharedService.updateFiltersFromQueryParams(this.filters, params);
-      this.logger.info('Query params applied, filters:', this.filters.value);
-    });
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => { 
+        this.sharedService.updateFiltersFromQueryParams(this.filters, params);
+        this.logger.info('Query params applied, filters:', this.filters.value);
+      });
     this.getCustomers();
     this.loadCustomerTags();
     this.loadCustomerTypes();
@@ -78,62 +100,83 @@ export class CustomerListComponent {
     this.customerService
       .getCustomers(this.filters)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-       
-        this.customers = res;
-        this.logger.info(this.customers);
-        this.logger.info(`Fetched ${this.customers.length} customers.`);
-        this.isLoading = false;
+      .subscribe({
+        next: (res: any) => {
+          this.customers = res;
+          this.logger.info('getCustomers success', { count: this.customers.length, customers: this.customers });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getCustomers', 'Failed to load customers. Please try again later.');
+        }
       });
   }
 
   loadCustomerTags() {
-    this.isLoading = true;
     this.workshopService
       .getCustomerTags()
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response)
-          this.customerTags = response;
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.customerTags = response;
+            this.logger.info('loadCustomerTags success', { customerTags: this.customerTags });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'loadCustomerTags', 'Failed to load customer tags.');
+        }
       });
-    this.isLoading = false;
   }
   loadCustomerTypes() {
-    this.isLoading = true;
     this.workshopService
       .getCustomerTypes()
-      .pipe(catchError((err) => {
-        this.isLoading = false;
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response)
-          this.customerTypes = response;
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.customerTypes = response;
+            this.logger.info('loadCustomerTypes success', { customerTypes: this.customerTypes });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'loadCustomerTypes', 'Failed to load customer types.');
+        }
       });
-    this.isLoading = false;
   }
 
   getCustomerCities() {
-    this.isLoading = true;
     this.customerService
       .getCustomerCities(this.filters)
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          this.logger.error(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.customerCities = res;
+      .subscribe({
+        next: (res) => {
+          this.customerCities = res;
+          this.logger.info('getCustomerCities success', { cities: this.customerCities });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getCustomerCities', 'Failed to load cities.');
+        }
       });
-    this.isLoading = false;
   }
 
   onPageChange(e: any) {
@@ -150,11 +193,7 @@ export class CustomerListComponent {
     const pageToSet = isSortChanged ? 1 : currentPage;
     this.filters.patchValue({currentPage: pageToSet, pageSize: e.rows,sortBy: this.sortField,sortDir: this.sortOrder });
     this.sharedService.updateFiltersInNavigation(this.filters);
-    
-
-     setTimeout(() => {
-      this.getCustomers();
-     }, 0);
+    this.getCustomers();
   }
   
   onChangeCustomerType(event: any) {

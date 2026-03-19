@@ -1,32 +1,70 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
 import { ICustomerTag, ICustomerType, IWorkshop, ISelect, IPager,IInvoiceDetailPrompt, IWorkShopService, IProductTemplate, IProduct, IEnums } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { catchError, Observable } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { catchError, Observable, finalize, takeUntil, Subject } from 'rxjs';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ProductService } from 'app/services/product.service';
 import { SaleService } from 'app/services/sale.service ';
 import { SplitterModule } from 'primeng/splitter';
 import { AiService } from 'app/services/ai.service';
-
+import { TabsModule } from 'primeng/tabs';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { ImageModule } from 'primeng/image';
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { InputTextModule } from 'primeng/inputtext';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { ToastModule } from 'primeng/toast';
+import { MessageModule } from 'primeng/message';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TableModule } from 'primeng/table';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TooltipModule } from 'primeng/tooltip';
+import { CheckboxModule } from 'primeng/checkbox';
+import { PopoverModule } from 'primeng/popover';
+import { DatePickerModule } from 'primeng/datepicker';
+import { RadioButtonModule } from 'primeng/radiobutton';
 @Component({
   selector: 'app-customer-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,SplitterModule,DragDropModule
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TabsModule,
+    SelectButtonModule,
+    ImageModule,
+    ButtonModule,
+    SelectModule,
+    InputTextModule,
+    AutoCompleteModule,
+    ToastModule,
+    MessageModule,
+    DragDropModule,
+    SplitterModule,
+    ConfirmDialogModule,
+    TableModule,
+    InputNumberModule,
+     TooltipModule,
+     CheckboxModule,
+     PopoverModule,
+     DatePickerModule,
+     RadioButtonModule 
   ],
   templateUrl: './setting-crud.component.html',
   styleUrl: './setting-crud.component.css',
   providers: [ConfirmationService, MessageService],
 })
-export class SettingCrudComponent implements OnInit {
-selectedTemplateIndex: number  = 0;
+export class SettingCrudComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  selectedTemplateIndex: number  = 0;
   langCode: string = 'en';
   
   palettes = [
@@ -47,8 +85,8 @@ selectedTemplateIndex: number  = 0;
  workshopServiceForm: FormGroup;
   saleTarget: FormGroup;
   salesList: any[] = [];
-    isEditMode: boolean = false;
-  services: IWorkShopService[] = [];
+  isEditMode: boolean = false;
+  
   latestServiceId: string = '';
   editingService: IWorkShopService | null = null;
   isLoading: boolean = false;
@@ -151,27 +189,29 @@ selectedTemplateIndex: number  = 0;
     this.workshopService
       .getWorkshop()
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        finalize(() => {}),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (!response) return;
-        this.logger.info(response);
-        if (typeof response.isFskat === 'string') {
-          response.isFskat = response.isFskat === 'true';
+      .subscribe({
+        next: (response: any) => {
+          if (!response) return;
+          this.logger.info(response);
+          if (typeof response.isFskat === 'string') {
+            response.isFskat = response.isFskat === 'true';
+          }
+          this.workshop.patchValue(response);
+          this.selectedPriceMode = this.sharedService.getEnumByValue('priceMode', response.priceMode);
+          this.selectedInvoiceTemplate = this.invoiceTemplates.find(template => template.value === response.defaultInvoiceTemplate);
+          this.logger.info('priceMode and Template:', this.selectedPriceMode, this.selectedInvoiceTemplate);
+        },
+        error: (err) => {
+          this.logger.error('Error loading workshop:', err);
         }
-        this.workshop.patchValue(response);
-        this.selectedPriceMode = this.sharedService.getEnumByValue('priceMode', response.priceMode);
-        this.selectedInvoiceTemplate = this.invoiceTemplates.find(template => template.value === response.defaultInvoiceTemplate);
-        this.logger.info('priceMode and Template:', this.selectedPriceMode, this.selectedInvoiceTemplate);
       });
       
 
     this.loadCustomerTags();
     this.loadCustomerTypes();
-    this.loadWorkshopServices(); // This will load workshop services
     this.loadLogo();
     this.loadProductTemplates();
     this.loadSaleTargets(this.selectedSaleYear);
@@ -202,54 +242,61 @@ selectedTemplateIndex: number  = 0;
     this.workshopService
     .updateWorkshop(editedWorkshop)
     .pipe(
-        catchError((err) => {
-          this.isLoading = true;
-          console.log(err);
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-         this.messageService.add({
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+           this.messageService.add({
         severity: 'success',
         summary: 'Success',
         detail: 'Workshop updated successfully!',
       });
       this.router.navigate(['sv/setting']);
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error updating workshop:', err);
         }
       });
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
     
   }
 
   loadLogo() {
     this.isLoading = true;
     this.workshopService.listFiles()
+      .pipe(
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
       .subscribe({
         next: (files) => {
           if (files?.length) {
             this.fileKey = files[0].key;
             this.showFile(this.fileKey);
           }
-          this.isLoading = false;
         },
         error: (err) => {
-          console.error(err);
-          this.isLoading = false;
+          this.logger.error('Error loading logo:', err);
         }
       });
   }
   showFile(key: string) {
-    this.workshopService.downloadFile(key).subscribe(blob => {
-
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imageUrl = e.target.result;
-      };
-      reader.readAsDataURL(blob);
-    });
+    this.workshopService.downloadFile(key)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (blob) => {
+          const reader = new FileReader();
+          reader.onload = (e: any) => {
+            this.imageUrl = e.target.result;
+          };
+          reader.readAsDataURL(blob);
+        },
+        error: (err) => {
+          this.logger.error('Error downloading file:', err);
+        }
+      });
   }
   downloadFile(key: string) {
     this.logger.log('Downloading file with key:', key);
@@ -264,28 +311,28 @@ selectedTemplateIndex: number  = 0;
     this.isLoading = true;
     this.workshopService.uploadFile(file)
       .pipe(
-        catchError(err => {
-          this.isLoading = false;
-          console.error('File upload failed:', err);
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Image uploaded successfully!',
+            life: 4000
+          });
+          if (response?.key) this.fileKey = response.key;
+        },
+        error: (err) => {
+          this.logger.error('File upload failed:', err);
           this.messageService.add({
             severity: 'error',
             summary: 'Upload Error',
             detail: 'Failed to upload image. Please try again.',
             life: 5000
           });
-          throw err;
-        })
-      )
-      .subscribe((response: any) => {
-        this.isLoading = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Image uploaded successfully!',
-          life: 4000
-        });
-
-        if (response?.key) this.fileKey = response.key;
+        }
       });
   }
 
@@ -293,11 +340,18 @@ selectedTemplateIndex: number  = 0;
   loadCustomerTags() {
     this.workshopService
       .getCustomerTags()
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response)
-          this.customerTags = response;
+      .pipe(
+        finalize(() => {}),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response)
+            this.customerTags = response;
+        },
+        error: (err) => {
+          this.logger.error('Error loading customer tags:', err);
+        }
       });
   }
   saveCustomerTag(): void {
@@ -334,35 +388,31 @@ selectedTemplateIndex: number  = 0;
       this.workshopService
         .upsertCustomerTag(this.newCustomerTag)
         .pipe(
-          catchError(err => {
-            this.isLoading = false;
-            console.error(err);
-
+          finalize(() => { this.isLoading = false; }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.loadCustomerTags();
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: isUpdate ? 'Tag updated successfully!' : 'Tag added successfully!',
+                life: 2000
+              });
+            }
+            this.resetCustomerTag();
+          },
+          error: (err) => {
+            this.logger.error('Error saving tag:', err);
             this.messageService.add({
               severity: 'error',
               summary: 'Save Failed',
               detail: 'Unable to save tag. Please try again.',
               life: 3000
             });
-
-            throw err;
-          })
-        )
-        .subscribe((response: any) => {
-          this.isLoading = false;
-
-          if (response) {
-            this.loadCustomerTags();
-
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: isUpdate ? 'Tag updated successfully!' : 'Tag added successfully!',
-              life: 2000
-            });
           }
-
-          this.resetCustomerTag();
         });
     }
   }
@@ -400,16 +450,8 @@ selectedTemplateIndex: number  = 0;
     this.workshopService
       .deleteCustomerTag(tag.customerTagId)
       .pipe(
-        catchError(err => {
-          this.isLoading = false;
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Delete Failed',
-            detail: 'Unable to delete tag. Please try again.',
-            life: 3000
-          });
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: () => {
@@ -417,14 +459,20 @@ selectedTemplateIndex: number  = 0;
           if (this.isTagEditing && this.editingTagIndex === index) {
             this.resetCustomerTag();
           }
-
-          this.isLoading = false;
-
           this.messageService.add({
             severity: 'success',
             summary: 'Tag Deleted',
             detail: 'Customer Tag deleted successfully.',
             life: 2000
+          });
+        },
+        error: (err) => {
+          this.logger.error('Error deleting tag:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Delete Failed',
+            detail: 'Unable to delete tag. Please try again.',
+            life: 3000
           });
         }
       });
@@ -433,11 +481,18 @@ selectedTemplateIndex: number  = 0;
    loadCustomerTypes() {
     this.workshopService
       .getCustomerTypes()
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response)
-          this.customerTypes = response;
+      .pipe(
+        finalize(() => {}),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response)
+            this.customerTypes = response;
+        },
+        error: (err) => {
+          this.logger.error('Error loading customer types:', err);
+        }
       });
   }
   saveCustomerType(): void {
@@ -474,35 +529,31 @@ selectedTemplateIndex: number  = 0;
       this.workshopService
         .upsertCustomerType(this.newCustomerType)
         .pipe(
-          catchError(err => {
-            this.isLoading = false;
-            console.error(err);
-
+          finalize(() => { this.isLoading = false; }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.loadCustomerTypes();
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: isUpdate ? 'Type updated successfully!' : 'Type added successfully!',
+                life: 2000
+              });
+            }
+            this.resetCustomerType();
+          },
+          error: (err) => {
+            this.logger.error('Error saving type:', err);
             this.messageService.add({
               severity: 'error',
               summary: 'Save Failed',
               detail: 'Unable to save Type. Please try again.',
               life: 3000
             });
-
-            throw err;
-          })
-        )
-        .subscribe((response: any) => {
-          this.isLoading = false;
-
-          if (response) {
-            this.loadCustomerTypes();
-
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: isUpdate ? 'Type updated successfully!' : 'Type added successfully!',
-              life: 2000
-            });
           }
-
-          this.resetCustomerType();
         });
     }
   }
@@ -540,16 +591,8 @@ selectedTemplateIndex: number  = 0;
 
     this.workshopService.deleteCustomerType(type.customerTypeId)
       .pipe(
-        catchError(err => {
-          this.isLoading = false;
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Delete Failed',
-            detail: 'Unable to delete type. Please try again.',
-            life: 3000
-          });
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: () => {
@@ -557,14 +600,20 @@ selectedTemplateIndex: number  = 0;
           if (this.isTypeEditing && this.editingTypeIndex === index) {
             this.resetCustomerType();
           }
-
-          this.isLoading = false;
-
           this.messageService.add({
             severity: 'success',
             summary: 'Type Deleted',
             detail: 'Customer Type deleted successfully.',
             life: 2000
+          });
+        },
+        error: (err) => {
+          this.logger.error('Error deleting type:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Delete Failed',
+            detail: 'Unable to delete type. Please try again.',
+            life: 3000
           });
         }
       });
@@ -575,185 +624,28 @@ selectedTemplateIndex: number  = 0;
     return !this.editingService;
   }
 
-  loadWorkshopServices(search:string = '') {
-    this.workshopService
-      .getServices(search)
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response){
-          this.services = response || [];
-          this.logger.info('Services Loaded', this.services);
-
-          }
-      });
-  }
-
-  saveWorkshopService(): void {
-    this.workshopServiceForm.markAllAsTouched();
-
-    if (this.workshopServiceForm.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Validation Error',
-        detail: 'Please fill in all required fields',
-        life: 6000
-      });
-      return;
-    }
-
-    const serviceData: IWorkShopService = {
-      wmsId: this.editingService?.wmsId || '', // optional but good practice
-      serviceName: this.workshopServiceForm.get('serviceName')?.value,
-      serviceHours: this.workshopServiceForm.get('serviceHours')?.value,
-      // 👇 create k liye 0, edit k liye existing value
-      workshopServiceId: this.editingService?.workshopServiceId || 0
-    };
-
-    this.isLoading = true;
-    if (!this.editingService) {
-      this.workshopService.isWorkshopServiceExists(serviceData.serviceName)
-        .subscribe({
-          next: (exists: boolean) => {
-            if (exists) {
-              this.isLoading = false;
-
-              this.messageService.add({
-                severity: 'warn',
-                summary: 'Duplicate Service',
-                detail: `Service "${serviceData.serviceName}" already exists!`,
-                life: 6000
-              });
-            } else {
-              this.workshopService.upsertWorkshopService(serviceData)
-                  .pipe(catchError((err) => {
-                      console.log(err); throw err;
-                    })).subscribe((response: any) => {
-                      if (response){
-                          const isUpdate = !!serviceData.workshopServiceId && serviceData.workshopServiceId !== 0;
-                          this.messageService.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: `Service "${serviceData.serviceName}" has been successfully ${isUpdate ? 'updated' : 'added'}!`,
-                          });
-                          this.loadWorkshopServices();
-                          this.resetWorkshopService();
-                          this.latestServiceId = response?.wmsId || '';
-                        }
-                  });
-            }
-          },
-          error: () => {
-            this.isLoading = false;
-
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Unable to verify service existence. Please try again.',
-              life: 6000
-            });
-          }
-        });
-    } else {
-      this.workshopService.upsertWorkshopService(serviceData)
-    .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response){
-            const isUpdate = !!serviceData.workshopServiceId && serviceData.workshopServiceId !== 0;
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: `Service "${serviceData.serviceName}" has been successfully ${isUpdate ? 'updated' : 'added'}!`,
-            });
-            this.loadWorkshopServices();
-            this.resetWorkshopService();
-            this.latestServiceId = response?.wmsId || '';
-          }
-    });
-    }
-  }
-
-  editWorkshopService(service: IWorkShopService): void {
-    this.editingService = { ...service }; // Create a copy to track original values
-    this.workshopServiceForm.patchValue({
-      serviceName: service.serviceName,
-      serviceHours: service.serviceHours
-    });
-
-    // Scroll to form for better UX
-    setTimeout(() => {
-      const formElement = document.querySelector('.service-form-section');
-      if (formElement) {
-        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
-  }
-
-  deleteWorkshopService(service: IWorkShopService): void {
-    this.confirmationService.confirm({
-      message: `Are you sure you want to delete "${service.serviceName}"?`,
-      header: 'Confirm Delete',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.isLoading = true; // show loader
-
-        this.workshopService.deleteWorkshopService(service.wmsId!, service.workshopServiceId!)
-          .pipe(
-            catchError((err) => {
-              this.isLoading = false;
-              console.error('Error deleting service:', err);
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to delete service',
-                life: 5000
-              });
-              throw err;
-            })
-          )
-          .subscribe({
-            next: () => {
-              this.isLoading = false;
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: `Service "${service.serviceName}" deleted successfully`,
-                life: 4000
-              });
-              this.loadWorkshopServices();
-            },
-            error: () => {
-              this.isLoading = false;
-            }
-          });
-      }
-    });
-  }
-
-  resetWorkshopService(): void {
-    this.workshopServiceForm.reset({
-      serviceName: '',
-      serviceHours: 0
-    });
-    this.editingService = null;
-    this.latestServiceId = '';
-  }
- 
   // Invoice Template
 
 
   loadProductTemplates() {
     this.workshopService
       .getProductTemplates()
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        if (response)
-          this.ProductTemplates = response;
-          this.logger.info('Product Templates Loaded', this.ProductTemplates);
-          this.selectedTemplateIndex = 0;
-          this.showProductTemplate(0);
+      .pipe(
+        finalize(() => {}),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.ProductTemplates = response;
+            this.logger.info('Product Templates Loaded', this.ProductTemplates);
+            this.selectedTemplateIndex = 0;
+            this.showProductTemplate(0);
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error loading product templates:', err);
+        }
       });
   }
   
@@ -769,40 +661,32 @@ selectedTemplateIndex: number  = 0;
 
   saveProductTemplate(): void {
      this.logger.info('Saving Product Template:', this.newProductTemplate);
-    // if (!this.newProductTemplate.productTemplateName?.trim()) {
-    //   this.messageService.add({
-    //     severity: 'warn',
-    //     summary: 'Validation',
-    //     detail: 'Template name is required',
-    //     life: 2000
-    //   });
-    //   return;
-    // }
-
-
      this.workshopService
       .upsertProductTemplates(this.newProductTemplate)
       .pipe(
-        catchError(err => {
-          this.isLoading = false;
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.logger.info('Save Product Template Response:', response);
+          if (response) {
+            this.loadProductTemplates();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Template added successfully!',
+              life: 2000
+            });
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error saving template:', err);
           this.messageService.add({
             severity: 'error',
             summary: 'Save Failed',
             detail: 'Unable to save template. Please try again.',
             life: 3000
-          });
-          throw err;
-        })
-      )
-      .subscribe((response: any) => {
-        this.logger.info('Save Product Template Response:', response);
-        if (response) {
-          this.loadProductTemplates();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Template added successfully!',
-            life: 2000
           });
         }
       });
@@ -850,27 +734,28 @@ selectedTemplateIndex: number  = 0;
     this.workshopService
       .upsertProductTemplates(selectedTemplate)
       .pipe(
-        catchError(err => {
-          this.isLoading = false;
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.loadProductTemplates();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Template updated successfully!',
+              life: 2000
+            });
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error updating template:', err);
           this.messageService.add({
             severity: 'error',
             summary: 'Save Failed',
             detail: 'Unable to save template. Please try again.',
             life: 3000
-          });
-          throw err;
-        })
-      )
-      .subscribe((response: any) => {
-        this.isLoading = false;
-
-        if (response) {
-          this.loadProductTemplates();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Template updated successfully!',
-            life: 2000
           });
         }
       });
@@ -882,11 +767,20 @@ selectedTemplateIndex: number  = 0;
     header: 'Confirm Deletion',
     accept: () => {
       this.isLoading = true;
-      this.workshopService.deleteProductTemplate(templateId).subscribe(() => {
-        this.isLoading = false;
-        this.messageService.add({ severity: 'success', detail: 'Deleted successfully!' });
-        this.loadProductTemplates();
-      });
+      this.workshopService.deleteProductTemplate(templateId)
+        .pipe(
+          finalize(() => { this.isLoading = false; }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', detail: 'Deleted successfully!' });
+            this.loadProductTemplates();
+          },
+          error: (err) => {
+            this.logger.error('Error deleting template:', err);
+          }
+        });
     }
   });
   }
@@ -894,56 +788,55 @@ selectedTemplateIndex: number  = 0;
   showProductTemplate(index: number): void {
     this.selectedTemplateIndex = index;
     const productTemplateId = this.ProductTemplates[this.selectedTemplateIndex].productTemplateId;
-    this.productService.getProductTemplateDetail(productTemplateId).subscribe({
-      next: (response: any) => {
-        this.details.clear();
+    this.productService.getProductTemplateDetail(productTemplateId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.details.clear();
 
-        if (response && response.length > 0) {
-          response.sort((a: any, b: any) => a.rowIndex - b.rowIndex);
+          if (response && response.length > 0) {
+            response.sort((a: any, b: any) => a.rowIndex - b.rowIndex);
 
-          response.forEach((item: any, idx: number) => {
-            let productObj = null;
-            if (item.product) {
-              productObj = {
-                productName: item.product,
-                productId: item.productId || 0
-              };
-            }
+            response.forEach((item: any, idx: number) => {
+              let productObj = null;
+              if (item.product) {
+                productObj = {
+                  productName: item.product,
+                  productId: item.productId || 0
+                };
+              }
 
-            const detailRow = this.fb.group({
-              rowIndex: [idx],
-              isTextRow: [item.isTextRow],
-              textContent: [item.textContent],
-              category: [item.category],
+              const detailRow = this.fb.group({
+                rowIndex: [idx],
+                isTextRow: [item.isTextRow],
+                textContent: [item.textContent],
+                category: [item.category],
 
-              product: [productObj],
-              productId: [item.productId],
+                product: [productObj],
+                productId: [item.productId],
 
-              description: [item.description],
-              quantity: [item.quantity],
-              unit: [item.unit],
-              unitPrice: [item.unitPrice],
-              isUnitPriceValid: [true],
+                description: [item.description],
+                quantity: [item.quantity],
+                unit: [item.unit],
+                unitPrice: [item.unitPrice],
+                isUnitPriceValid: [true],
 
-              vatPercentage: [item.vatPercentage ? item.vatPercentage.toString() : '25'],
-              discountPercentage: [item.discountPercentage],
+                vatPercentage: [item.vatPercentage ? item.vatPercentage.toString() : '25'],
+                discountPercentage: [item.discountPercentage],
 
-              price: [item.price || 0],
-              vat: [item.vat || 0],
-              priceIncVat: [item.priceIncVat || 0]
+                price: [item.price || 0],
+                vat: [item.vat || 0],
+                priceIncVat: [item.priceIncVat || 0]
+              });
+
+              this.details.push(detailRow);
             });
-
-            this.details.push(detailRow);
-          });
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error loading template details:', err);
         }
-
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.isLoading = false;
-        console.error(err);
-      }
-    });
+      });
   }
   
   // Invoice Detail Template
@@ -1002,10 +895,16 @@ selectedTemplateIndex: number  = 0;
 
   getProducts(event: AutoCompleteCompleteEvent) {
     let query = event.query;
-    this.productService.getProductsByprefix(query).subscribe((response) => {
-      this.products = response;
-    })
-
+    this.productService.getProductsByprefix(query)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.products = response;
+        },
+        error: (err) => {
+          this.logger.error('Error loading products:', err);
+        }
+      });
   }
 
   onSelectProduct(detail: any, e: any) {
@@ -1087,30 +986,32 @@ GenerateInvoiceDescription(event:any,selectedCategory:IEnums,index:number) {
   this.aiService
       .getInvoiceDescription({context: selectectContextValue,items:items})
       .pipe(
-        catchError((err) => {
-          this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        this.isLoading = false;
-        if (res) {
-          textareaControl.setValue(res.text);
-          this.messageService.add({
-            severity: 'success',
-            detail: this.sharedService.T('aiTextAdded'),
-          });
-          
-        }
-          else {
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            textareaControl.setValue(res.text);
+            this.messageService.add({
+              severity: 'success',
+              detail: this.sharedService.T('aiTextAdded'),
+            });
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              detail: this.sharedService.T('errorMessage'),
+            });
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error generating description:', err);
           this.messageService.add({
             severity: 'error',
             detail: this.sharedService.T('errorMessage'),
           });
-          }
-          
-        });
+        }
+      });
   }
 
   getFormGroup(control: AbstractControl): FormGroup {
@@ -1120,16 +1021,19 @@ GenerateInvoiceDescription(event:any,selectedCategory:IEnums,index:number) {
   // Sale Target Tab
   loadSaleTargets(saleYear:string) {
   this.isLoading = true;
-  this.saleService.getSaleTarget(saleYear).subscribe({
-    next: (res: any) => {
-      this.salesList = res.objectList || [];
-      this.isLoading = false;
-    },
-    error: (err) => {
-      this.isLoading = false;
-      console.error("Sales load fail:", err);
-    }
-  });
+  this.saleService.getSaleTarget(saleYear)
+    .pipe(
+      finalize(() => { this.isLoading = false; }),
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
+      next: (res: any) => {
+        this.salesList = res.objectList || [];
+      },
+      error: (err) => {
+        this.logger.error('Sales load fail:', err);
+      }
+    });
 }
 onSaleTargetYearChange(event: any){
   this.logger.info(event.value);
@@ -1149,14 +1053,20 @@ saveSaleTarget() {
     turnover: this.saleTarget.value.turnover
   };
 
-  this.saleService.upsertSale(payload).subscribe({
-    next: () => {
-      this.loadSaleTargets(this.selectedSaleYear);
-      this.saleTarget.reset({ turnover: 0 });
-      this.isLoading = false;
-    },
-    error: () => this.isLoading = false
-  });
+  this.saleService.upsertSale(payload)
+    .pipe(
+      finalize(() => { this.isLoading = false; }),
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
+      next: () => {
+        this.loadSaleTargets(this.selectedSaleYear);
+        this.saleTarget.reset({ turnover: 0 });
+      },
+      error: (err) => {
+        this.logger.error('Error saving sale target:', err);
+      }
+    });
 }
 deleteSaleTarget(sale: any) {
   this.confirmationService.confirm({
@@ -1164,46 +1074,27 @@ deleteSaleTarget(sale: any) {
     header: 'Confirm Deletion',
     accept: () => {
       this.isLoading = true;
-      this.saleService.deleteSale(sale.wmsId, sale.saleYear, sale.saleMonth).subscribe(() => {
-        this.isLoading = false;
-        this.messageService.add({ severity: 'success', detail: 'Deleted successfully!' });
-        this.loadSaleTargets(this.selectedSaleYear);
-      });
+      this.saleService.deleteSale(sale.wmsId, sale.saleYear, sale.saleMonth)
+        .pipe(
+          finalize(() => { this.isLoading = false; }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', detail: 'Deleted successfully!' });
+            this.loadSaleTargets(this.selectedSaleYear);
+          },
+          error: (err) => {
+            this.logger.error('Error deleting sale target:', err);
+          }
+        });
     }
   });
 }
 
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
 }
 
-
-// onPageChange(event: any): void {
-//     this.pager.firstPage = event.first;
-//     this.pager.pageSize = event.rows;
-//   }
-
-//   onPageSizeChange(event: any): void {
-//     this.pager.pageSize = event.value;
-//     this.pager.firstPage = 0;
-//   }
-// selectTab(index: number) {
-//     this.selectedTab = index;
-//     if (index === 3) {
-//       this.loadServices();
-//     }
-//   }
-  // get isCreateMode(): boolean {
-  //   return !this.editingService;
-  // }
-// resetNewTemplate(): void {
-  //   this.newProductTemplate = {
-  //     wmsId: this.wmsId,
-  //     productTemplateId: 0,
-  //     productTemplateName: '',
-  //     details: [],
-  //   };
-  //   this.details.clear();
-  //   this.isTagEditing = false;
-  //   this.isTemplateEditing = false;
-  //   this.editingTemplateIndex = null;
-  //   this.editingTagIndex = null;
-  // }
+}

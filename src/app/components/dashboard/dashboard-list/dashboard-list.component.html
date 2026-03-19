@@ -146,7 +146,7 @@
         <h3 class="text-lg font-semibold invisible">Placeholder</h3>
         <div class="flex items-center gap-2">
           <span class="text-gray-600 text-sm">Period:</span>
-          <p-select [options]="statMonths" 
+          <p-select [options]="noOfPreviousMonthsForChart" 
           [(ngModel)]="selectedStatMonths" [ngModelOptions]="{standalone: true}" 
           optionLabel="text"
            optionValue="value" 

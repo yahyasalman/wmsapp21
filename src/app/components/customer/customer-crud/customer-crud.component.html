@@ -43,7 +43,7 @@
             <label class="mb-2 block" for="customerName">{{ this.sharedService.T('customerName') }} 
             </label>
             <input type="text" formControlName="customerName" [invalid]="!customer.get('customerName')?.value"
-              [appRemovePlaceholderOnFocus]="this.sharedService.T('customerName')" class="w-full" pInputText />
+              class="w-full" pInputText />
           </div>
 
           <!-- Organization Number and VAT ID -->
@@ -53,7 +53,6 @@
                 }}</label>
               <div class="flex gap-2 items-center">
                 <input type="text" formControlName="organizationNo"
-                  [appRemovePlaceholderOnFocus]="this.sharedService.T('organizationNumber')" 
                   class="flex-1 h-10"
                   pInputText />
                 <p-button icon="pi pi-search" variant="outlined" (click)="fetchCompanyInfo()" label="{{ this.sharedService.T('search') }}" [style]="{'height': '40px', 'display': 'flex', 'align-items': 'center'}" />
@@ -61,7 +60,7 @@
               </div>
             <div class="mb-6">
               <label class="mb-2 block" for="vatId">{{ this.sharedService.T('vatRegistrationNumber') }}</label>
-              <input type="text" formControlName="vatId" [appRemovePlaceholderOnFocus]="this.sharedService.T('vatRegistrationNumber')"
+              <input type="text" formControlName="vatId"
                 class="w-full" pInputText />
             </div>
           </div>
@@ -74,7 +73,7 @@
             </div>
             <div class="mb-6">
               <label class="mb-2 block" for="telephone">{{ this.sharedService.T('telephone') }}</label>
-              <input type="tel" formControlName="telephone" [appRemovePlaceholderOnFocus]="this.sharedService.T('telephone')"
+              <input type="tel" formControlName="telephone"
                 class="w-full" pInputText />
             </div>
           </div>
@@ -84,7 +83,7 @@
               {{ this.sharedService.T('email') }}
             </label>
 
-            <input type="text" formControlName="email" [appRemovePlaceholderOnFocus]="this.sharedService.T('email')"
+            <input type="text" formControlName="email"
               class="w-full" [ngClass]="{
       'border-red-500': customer.get('email')?.touched && customer.get('email')?.invalid
     }" pInputText />
@@ -95,7 +94,6 @@
             <label class="mb-2 block" for="digitalserviceid">{{ this.sharedService.T('digitalWorkshopId')
               }}</label>
             <input type="text" formControlName="digitalServiceId"
-              [appRemovePlaceholderOnFocus]="this.sharedService.T('digitalWorkshopId')" 
               class="w-full" 
               [invalid]="customer.get('digitalServiceId')?.touched && customer.get('digitalServiceId')?.invalid"  pInputText />
           </div>
@@ -109,29 +107,25 @@
           <!-- Care Of -->
           <div class="mb-6">
             <label class="mb-2 block" for="careOf">{{ this.sharedService.T('careof') }}</label>
-            <input type="text" formControlName="careOf" [appRemovePlaceholderOnFocus]="this.sharedService.T('careof')"
-              class="w-full" pInputText />
+            <input type="text" formControlName="careOf" class="w-full" pInputText />
           </div>
 
           <!-- Address -->
           <div class="mb-6">
             <label class="mb-2 block" for="customerAddress">{{ this.sharedService.T('address') }}</label>
-            <input type="text" formControlName="customerAddress"
-              [appRemovePlaceholderOnFocus]="this.sharedService.T('address')" class="w-full" pInputText />
+            <input type="text" formControlName="customerAddress" class="w-full" pInputText />
           </div>
 
           <!-- Postal Code -->
           <div class="mb-6">
             <label class="mb-2 block" for="customerPostNo">{{ this.sharedService.T('postalCode') }}</label>
-            <input type="text" formControlName="customerPostNo"
-              [appRemovePlaceholderOnFocus]="this.sharedService.T('postalCode')" class="w-full" pInputText />
+            <input type="text" formControlName="customerPostNo" class="w-full" pInputText />
           </div>
 
           <!-- City -->
           <div class="mb-6">
             <label class="mb-2 block" for="customerCsity">{{ this.sharedService.T('city') }}</label>
-            <input type="text" formControlName="customerCity" [appRemovePlaceholderOnFocus]="this.sharedService.T('city')"
-              class="w-full" pInputText />
+            <input type="text" formControlName="customerCity" class="w-full" pInputText />
           </div>
 
           <!-- Country -->

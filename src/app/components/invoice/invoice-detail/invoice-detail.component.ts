@@ -1,32 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { IInvoice, IInvoiceHistory } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { InvoiceService } from 'app/services/invoice.service';
 import { LogService } from 'app/services/log.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { catchError } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { finalize, takeUntil, catchError, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TimelineModule } from 'primeng/timeline';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
 interface WorkshopService { name: string };
 
 @Component({
   selector: 'app-invoice-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,
-    PdfViewerModule,TimelineModule,ProgressSpinnerModule
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    TableModule,
+    TimelineModule,
+    ProgressSpinnerModule,
+    PdfViewerModule,
+    DialogModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './invoice-detail.component.html',
   styleUrl: './invoice-detail.component.css',
 })
-export class InvoiceDetailComponent {
+export class InvoiceDetailComponent implements OnInit, OnDestroy {
 
   invoiceId: number = 0;
   disableEdit: boolean = false;
@@ -43,7 +62,10 @@ export class InvoiceDetailComponent {
   //ds
   services!: WorkshopService[];
   selectedServices!: WorkshopService[];
+  private destroy$ = new Subject<void>();
+
   constructor(private logger: LogService,
+    private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
     public readonly digitalServiceService: DigitalServiceService,
     private router: Router,
@@ -59,6 +81,11 @@ export class InvoiceDetailComponent {
       emailTo: '',
       message: ''
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   ngOnInit() {
@@ -82,34 +109,41 @@ export class InvoiceDetailComponent {
     this.isLoading = true;
     this.invoiceService
       .getInvoice(undefined, undefined, undefined, this.invoiceId, false)
-      .pipe(catchError((err) => {
-        console.log(err); throw err;
-      }))
-      .subscribe((response: any) => {
-        this.invoice = response.data;
-        this.credit = this.invoice.priceIncVat > 0 ? false : true;
-        this.disableEdit = this.invoice.isSent || this.invoice.isPaid || this.invoice.priceIncVat < 0;
-        this.emailForm.patchValue({ emailTo: this.invoice.customerEmail });
-       setTimeout(() => {
-        this.isLoading = false;
-      }, 800);
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.invoice = response.data;
+          this.credit = this.invoice.priceIncVat > 0 ? false : true;
+          this.disableEdit = this.invoice.isSent || this.invoice.isPaid || this.invoice.priceIncVat < 0;
+          this.emailForm.patchValue({ emailTo: this.invoice.customerEmail });
+          this.logger.info('getInvoice success', { invoiceId: this.invoiceId });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getInvoice', 'Failed to load invoice.');
+        }
       });
-
   }
 
   getInvoiceHistory() {
     this.invoiceService
       .getInvoiceHistory(this.invoiceId)
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          this.logger.info(response);
-          this.invoiceHistory = response;
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.invoiceHistory = response;
+            this.logger.info('getInvoiceHistory success', { historyCount: this.invoiceHistory.length });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getInvoiceHistory', 'Failed to load invoice history.');
         }
       });
   }
@@ -118,15 +152,18 @@ export class InvoiceDetailComponent {
     this.sharedService
       .printPdf('invoice', this.invoiceId.toString(), 'basic')
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          var newBlob = new Blob([response], { type: "application/pdf" });
-          this.pdfUrl = window.URL.createObjectURL(newBlob);
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            var newBlob = new Blob([response], { type: "application/pdf" });
+            this.pdfUrl = window.URL.createObjectURL(newBlob);
+            this.logger.info('getPdf success', { invoiceId: this.invoiceId });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getPdf', 'Failed to load PDF.');
         }
       });
   }
@@ -178,28 +215,26 @@ export class InvoiceDetailComponent {
         label: this.sharedService.T('yes'),
       },
       accept: () => {
-
         this.invoiceService
           .createCreditInvoice(this.invoiceId)
           .pipe(
-            catchError((err) => {
-              console.log('Test-inside credit invoice');
-              console.log(err);
-              throw err;
-            })
+            finalize(() => {
+              // No loading state to reset here
+            }),
+            takeUntil(this.destroy$)
           )
-          .subscribe((response: any) => {
-            if (response) {
-              this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('creditSuccessMessage') });
-              const creditInvoice = true;
-              const disableEdit = true;
-              this.sharedService.clearState();
-              this.sharedService.setState({ disableEdit: disableEdit.toString(), creditInvoice: creditInvoice.toString(), customerId: response.customerId, customerEmail: response.customerEmail });
-              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                this.router.navigate([`sv/invoice/details/${response.invoiceId}`]);
-              });
-
-
+          .subscribe({
+            next: (response: any) => {
+              if (response) {
+                this.logger.info('createCreditInvoice success', { creditInvoiceId: response.invoiceId });
+                this.messageService.add({ severity: 'info', summary: '', detail: this.sharedService.T('creditSuccessMessage') });
+                this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                  this.router.navigate([`sv/invoice/details/${response.invoiceId}`]);
+                });
+              }
+            },
+            error: (err) => {
+              this.errorHandler.handleError(err, 'createCreditInvoice', 'Failed to create credit invoice.');
             }
           });
       },
@@ -239,17 +274,24 @@ export class InvoiceDetailComponent {
     this.sharedService
       .sendEmail('invoice', this.invoiceId, emailTo, message)
       .pipe(
-        catchError((err) => {
-          this.isEmailSent = false;
-          this.closeEmailDialog();
-          throw err;
-        })
+        finalize(() => {
+          // No additional action needed on finalize
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((response: any) => {
-        if (response) {
-          this.isEmailSent = true;
-          this.disableEdit = true;
-          this.getInvoiceHistory();
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.isEmailSent = true;
+            this.disableEdit = true;
+            this.logger.info('sendEmail success', { emailTo, invoiceId: this.invoiceId });
+            this.getInvoiceHistory();
+            this.closeEmailDialog();
+          }
+        },
+        error: (err) => {
+          this.isEmailSent = false;
+          this.errorHandler.handleError(err, 'sendEmail', 'Failed to send email.');
           this.closeEmailDialog();
         }
       });

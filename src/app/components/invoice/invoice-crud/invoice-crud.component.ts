@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -7,34 +8,64 @@ import { ICustomer, IEnums, IInvoice, IInvoiceDetailPrompt, IProduct, IProductTe
 import { InvoiceService } from 'app/services/invoice.service';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { ProductService } from 'app/services/product.service';
 import { MenuItem, MessageService, SortEvent } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
-import { catchError } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { AiService } from 'app/services/ai.service';
-import { CustomerService } from 'app/services';
+import { finalize, takeUntil, catchError, Subject } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TableModule } from 'primeng/table';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { TooltipModule } from 'primeng/tooltip';
+import { CheckboxModule } from 'primeng/checkbox';
+import { AiService } from 'app/services/ai.service';
+import { CustomerService } from 'app/services/customer.service';
+
 
 
 @Component({
   selector: 'app-create-invoice',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS,
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    AutoCompleteModule,
+    InputNumberModule,
+    SelectModule,
+    DatePickerModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    IconFieldModule,
+    InputIconModule,
+    ProgressSpinnerModule,
+    TableModule,
     DragDropModule,
-    // CustomerInputComponent,
-    IconFieldModule,InputIconModule,ProgressSpinnerModule 
+    SplitButtonModule,
+    TooltipModule,
+    CheckboxModule
   ],
   templateUrl: './invoice-crud.component.html',
   styleUrl: './invoice-crud.component.css',
   providers: [MessageService]
 })
 
-export class InvoiceCrudComponent implements OnInit {
+export class InvoiceCrudComponent implements OnInit, OnDestroy {
 
   invoice: FormGroup;
   details: any = new FormArray([])
@@ -61,7 +92,10 @@ export class InvoiceCrudComponent implements OnInit {
  
  selectedCustomerName: any = null;
    customers: ICustomer[] = [];
+   private destroy$ = new Subject<void>();
+
   constructor(private logger: LogService,
+    private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
     private router: Router,
     private cdr: ChangeDetectorRef,
@@ -99,6 +133,12 @@ export class InvoiceCrudComponent implements OnInit {
       isPaid: false
     });
   }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
    ngOnInit() {
 
    this.unitOptions = [{ country: '',
@@ -117,23 +157,30 @@ export class InvoiceCrudComponent implements OnInit {
 
     this.logger.info(param.offerId, param.workOrderId, param.customerId, param.invoiceId, param.duplicate);
 
-   this.isLoading= true
+   this.isLoading = true;
     this.invoiceService
       .getInvoice(param.offerId, param.workOrderId, param.customerId, param.invoiceId, param.duplicate)
-      .pipe(catchError((err) => {
-        this.isLoading = false;
-        console.log(err); throw err;
-      })).subscribe((response: any) => {
-        this.logger.info('invoice-fetched', response);
-        this.defaultCustomerId = response.data.customerId;
-        this.defaultCustomerName = response.data.customerName;
-         this.selectedCustomerName = response.data.customerName;
-        this.priceMode = response.data.priceMode;
-        this.isNewObject = response.isNewObject;
-        this.loadInvoiceToEdit(response.data, 'g.editinvoice');
-        this.updateDueDate();
-        this.getTemplates();
-        this.isLoading = false;
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.logger.info('invoice-fetched', response);
+          this.defaultCustomerId = response.data.customerId;
+          this.defaultCustomerName = response.data.customerName;
+          this.selectedCustomerName = response.data.customerName;
+          this.priceMode = response.data.priceMode;
+          this.isNewObject = response.isNewObject;
+          this.loadInvoiceToEdit(response.data, 'g.editinvoice');
+          this.updateDueDate();
+          this.getTemplates();
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'ngOnInit', 'Failed to load invoice.');
+        }
       });
   }
   trackByFn(index: number, detail: AbstractControl | null | undefined): number {
@@ -175,27 +222,28 @@ export class InvoiceCrudComponent implements OnInit {
   }
 
   getTemplates() {
-    this.isLoading=true;
+    this.isLoading = true;
     this.productService
       .getDetailTemplates()
       .pipe(
-        catchError((err) => {
-          this.logger.error(err);
-          throw err;
-        })
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        if (res) {
-
-          this.logger.info('Prinitng Templates');
-          this.logger.info(res);
-          res.forEach(selectOption => {
-            this.templates.push({ label: selectOption.productTemplateName, command: () => { this.addTemplate(selectOption.productTemplateId); } });
-             this.isLoading=false;
-          });
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.logger.info('getTemplates success', { templateCount: res.length });
+            res.forEach(selectOption => {
+              this.templates.push({ label: selectOption.productTemplateName, command: () => { this.addTemplate(selectOption.productTemplateId); } });
+            });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'getTemplates', 'Failed to load templates.');
         }
       });
-
   }
 
   // customer selection
@@ -237,15 +285,23 @@ export class InvoiceCrudComponent implements OnInit {
     let category = detail.get('category').value;
     this.logger.info(category);
     let query = event.query;
-    this.productService.getProductsByprefix(query).subscribe((response) => {
-
-      this.products = response
-        .filter((product: any) => product.category === category)
-        .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
-      this.logger.info(this.products);
-      this.isSpinnerLoading = false;
-    })
-
+    this.productService.getProductsByprefix(query)
+      .pipe(
+        finalize(() => { this.isSpinnerLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response) => {
+          this.products = response
+            .filter((product: any) => product.category === category)
+            .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
+          this.logger.info(this.products);
+        },
+        error: (err) => {
+          this.logger.error('Error loading products', err);
+          this.isSpinnerLoading = false;
+        }
+      });
   }
 
   onSelectProduct(detail: any, e: any) {
@@ -397,56 +453,59 @@ export class InvoiceCrudComponent implements OnInit {
   }
 
   addTemplate(templateId: number) {
-    this.logger.info('inside template', templateId);
-    this.isLoading= true;
+    this.logger.info('addTemplate', { templateId });
+    this.isLoading = true;
     this.productService
       .getDetailTemplate(templateId)
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
-      ).subscribe((response: any) => {
-        this.logger.info('salman-response', response);
-        response.forEach((element: any) => {
-          this.logger.info('element', element);
-          var productRow: any = {};
-          productRow.invoiceId = this.invoice.get('invoiceId')?.value;
-          productRow.rowIndex = this.details.length;
-          if(element.isTextRow){
-          productRow.textContent = element.textContent;
-          productRow.isTextRow = true;
-          productRow.category = '';
-          productRow.isProductValid = true;
-          productRow.isUnitPriceValid = true;
-          }
-          else 
-          {
-          productRow.category = element.category;
-          productRow.productId = element.productId;
-          productRow.product = element.product;
-          productRow.isProductValid = true;
-          productRow.description = element.description;
-          productRow.quantity = element.quantity;
-          productRow.unit = element.unit;
-          productRow.unitPrice = (this.priceMode == 0) ? element.priceIncVat : element.unitPrice;
-          productRow.isUnitPriceValid = true;
-          productRow.vatPercentage = element.vatPercentage;
-          productRow.discountPercentage = 0;
-          productRow.price = element.price;
-          productRow.vat = element.vat;
-          productRow.priceIncVat = element.priceIncVat;
-          productRow.textContent = undefined;
-          productRow.isTextRow = false;
-          }
-          this.details.push(this.fb.group(productRow));
-          let lastIndex = this.details.length - 1;
-          this.updateDetailRow(this.details.controls[lastIndex] as FormGroup);
-           this.isLoading= false;
-        });
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Data Saved' });
+        finalize(() => {
+          this.isLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.logger.info('addTemplate success', { templateId });
+          response.forEach((element: any) => {
+            var productRow: any = {};
+            productRow.invoiceId = this.invoice.get('invoiceId')?.value;
+            productRow.rowIndex = this.details.length;
+            if(element.isTextRow){
+              productRow.textContent = element.textContent;
+              productRow.isTextRow = true;
+              productRow.category = '';
+              productRow.isProductValid = true;
+              productRow.isUnitPriceValid = true;
+            }
+            else 
+            {
+              productRow.category = element.category;
+              productRow.productId = element.productId;
+              productRow.product = element.product;
+              productRow.isProductValid = true;
+              productRow.description = element.description;
+              productRow.quantity = element.quantity;
+              productRow.unit = element.unit;
+              productRow.unitPrice = (this.priceMode == 0) ? element.priceIncVat : element.unitPrice;
+              productRow.isUnitPriceValid = true;
+              productRow.vatPercentage = element.vatPercentage;
+              productRow.discountPercentage = 0;
+              productRow.price = element.price;
+              productRow.vat = element.vat;
+              productRow.priceIncVat = element.priceIncVat;
+              productRow.textContent = undefined;
+              productRow.isTextRow = false;
+            }
+            this.details.push(this.fb.group(productRow));
+            let lastIndex = this.details.length - 1;
+            this.updateDetailRow(this.details.controls[lastIndex] as FormGroup);
+          });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Data Saved' });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'addTemplate', 'Failed to add template.');
+        }
       });
-
   }
 
   onEnter(event: any): void {
@@ -514,43 +573,44 @@ onFormSubmit() {
     if (this.selectedContext) {
       selectectContextValue = this.selectedContext[0].value; 
     }
-  const items: IInvoiceDetailPrompt[] = this.details.controls.map((item:any) => ({
-  type: item.get('category')?.value,
-  name: item.get('product')?.value,
-  description: item.get('description')?.value,
-  quantity: item.get('quantity')?.value,
-  unit: item.get('unit')?.value,
-  }));
-  this.logger.info('index=' + index);
-  const textareaControl = this.details.controls[index].get('textContent');
-  this.aiService
+    const items: IInvoiceDetailPrompt[] = this.details.controls.map((item:any) => ({
+      type: item.get('category')?.value,
+      name: item.get('product')?.value,
+      description: item.get('description')?.value,
+      quantity: item.get('quantity')?.value,
+      unit: item.get('unit')?.value,
+    }));
+    this.logger.info('GenerateInvoiceDescription', { index });
+    const textareaControl = this.details.controls[index].get('textContent');
+    this.isLoading = true;
+    this.aiService
       .getInvoiceDescription({context: selectectContextValue,items:items})
       .pipe(
-        catchError((err) => {
+        finalize(() => {
           this.isLoading = false;
-          console.log(err);
-          throw err;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        this.isLoading = false;
-        if (res) {
-          textareaControl.setValue(res.text);
-          this.messageService.add({
-            severity: 'success',
-            detail: this.sharedService.T('aiTextAdded'),
-          });
-          
-        }
-          else {
-          this.messageService.add({
-            severity: 'error',
-            detail: this.sharedService.T('errorMessage'),
-          });
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            textareaControl.setValue(res.text);
+            this.logger.info('GenerateInvoiceDescription success', { index });
+            this.messageService.add({
+              severity: 'success',
+              detail: this.sharedService.T('aiTextAdded'),
+            });
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              detail: this.sharedService.T('errorMessage'),
+            });
           }
-          //this.selectedContext = null;
-          
-        });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'GenerateInvoiceDescription', 'Failed to generate description.');
+        }
+      });
   }
 
   // customer-input
@@ -559,14 +619,17 @@ onFormSubmit() {
     this.customerService
       .getCustomerByPrefix(query)
       .pipe(
-        catchError((err) => {
-          console.log(err);
-          throw err;
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe((res: any) => {
-        if (res) {
-          this.customers = res;
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.customers = res;
+            this.logger.info('filterCustomer success', { customerCount: this.customers.length });
+          }
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'filterCustomer', 'Failed to load customers.');
         }
       });
   }

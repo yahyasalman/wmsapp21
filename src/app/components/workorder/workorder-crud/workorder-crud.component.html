@@ -121,7 +121,7 @@
                     <span class="text-red-500">*</span></label>
                   <input type="text" formControlName="customerName"
                     [invalid]="customer.get('customerName')?.touched && customer.get('customerName')?.errors"
-                    [appRemovePlaceholderOnFocus]="this.sharedService.T('customerName')" class="w-full" pInputText />
+                    class="w-full" pInputText />
 
                 </div>
                 <!-- Organization Number and VAT ID -->
@@ -131,13 +131,13 @@
                       this.sharedService.T('organizationNr')
                       }}</label>
                     <input type="text" formControlName="organizationNo"
-                      [appRemovePlaceholderOnFocus]="this.sharedService.T('organizationNr')" class="w-full"
+                       class="w-full"
                       pInputText />
                   </div>
                   <div class="mb-6">
                     <label class="block mb-2" for="vatId">{{ this.sharedService.T('vatregNr') }}</label>
                     <input type="text" formControlName="vatId"
-                      [appRemovePlaceholderOnFocus]="this.sharedService.T('vatregNr')" class="w-full" pInputText />
+                      class="w-full" pInputText />
                   </div>
                 </div>
                 <!-- Payment Terms and Telephone -->
@@ -151,7 +151,7 @@
                     <label class="block mb-2" for="telephone">{{ this.sharedService.T('telephone')
                       }}</label>
                     <input type="tel" formControlName="telephone"
-                      [appRemovePlaceholderOnFocus]="this.sharedService.T('telephone')" class="w-full" pInputText />
+                      class="w-full" pInputText />
                   </div>
                 </div>
 
@@ -161,7 +161,7 @@
                   </label>
 
                   <input type="text" formControlName="email"
-                    [appRemovePlaceholderOnFocus]="this.sharedService.T('email')" class="w-full border p-2 rounded"
+                    class="w-full border p-2 rounded"
                     pInputText />
                 </div>
 
@@ -170,8 +170,7 @@
                   <label class="mb-2 text-Darkgray block" for="digitalserviceid">{{
                     this.sharedService.T('digitalWorkshopId') }}</label>
                   <input type="text" formControlName="digitalServiceId"
-                    [appRemovePlaceholderOnFocus]="this.sharedService.T('digitalWorkshopId')" class="w-full" pInputText
-                    pInputText />
+                    class="w-full" pInputText />
 
                 </div>
                 <div class="mb-6">
@@ -291,9 +290,7 @@
           <label class="block mb-2">{{ this.sharedService.T('personalNotes')
             }}</label>
           <textarea [(ngModel)]="newWOPurchase.purchaseNote" [ngModelOptions]="{ standalone: true }" rows="2"
-            [appRemovePlaceholderOnFocus]="this.sharedService.T('personalNotes')"
             class="w-full border border-gray-300 rounded-md p-2 focus:outline-none"></textarea>
-
           <p-button label="{{ this.sharedService.T('add') }}" size="small" icon="pi pi-plus"
             (click)="saveWOPurchase()"></p-button>
         </div>

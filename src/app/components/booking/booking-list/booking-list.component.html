@@ -53,7 +53,7 @@
                                     [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.8125rem', 'font-weight': '500', 'gap': '0'}" />
                                 <p-button label="Busy Hours" severity="danger" size="small" badge="{{ serviceHoursCount[day] || 0  }}" badgeSeverity="danger" variant="text"  
                                     [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.75rem', 'gap': '0'}" />
-                                <p-button label="Free Hours" severity="success" size="small" badge="{{ 8 - (serviceHoursCount[day] || 0) }}" badgeSeverity="success" variant="text" 
+                                <p-button label="Free Hours" severity="success" size="small" badge="{{ calculateFreeHours(day) }}" badgeSeverity="success" variant="text" 
                                     [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.75rem', 'gap': '0'}" /> 
                             </div>
                         </th>

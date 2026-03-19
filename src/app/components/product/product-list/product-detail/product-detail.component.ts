@@ -1,27 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedService } from 'app/services/shared.service';
 import { ProductService } from 'app/services/product.service';
 import { LogService } from 'app/services/log.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { SHARED_IMPORTS } from 'app/sharedimports';
-import { IInventory, IProduct, IPager } from 'app/app.model'; // IPager import zaroori hai
-import { switchMap, catchError } from 'rxjs';
+import { IInventory, IProduct, IPager } from 'app/app.model';
+import { switchMap, catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { DialogModule } from 'primeng/dialog';
+import { TabsModule } from 'primeng/tabs';
+import { DatePickerModule } from 'primeng/datepicker';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, ProgressSpinnerModule
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    SelectModule,
+    InputNumberModule,
+    TableModule,
+    ToastModule,
+    DialogModule,
+    ConfirmDialogModule,
+    MessageModule,
+    ProgressSpinnerModule,
+    TabsModule,
+    DatePickerModule 
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css',
 })
-export class ProductDetailComponent implements OnInit {
-
+export class ProductDetailComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   productId: number = 0;
   product: any = {};
   isLoading: boolean = false;
@@ -40,6 +64,7 @@ export class ProductDetailComponent implements OnInit {
   salesFilters: FormGroup;
   productCategory:string = '';
   constructor(
+    private logger: LogService,
     public readonly sharedService: SharedService,
     private router: Router,
     private route: ActivatedRoute,
@@ -91,17 +116,20 @@ export class ProductDetailComponent implements OnInit {
 
   getProductDetails() {
     this.isLoading = true;
-    this.productService.getProduct(this.productId).subscribe({
-      next: (res: any) => {
-        this.product = res.data || res;
-        this.productCategory = this.sharedService.getEnumByValue('detailCategory',this.product.category).text;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.isLoading = false;
-      }
-    });
+    this.productService.getProduct(this.productId)
+      .pipe(
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.product = res.data || res;
+          this.productCategory = this.sharedService.getEnumByValue('detailCategory', this.product.category).text;
+        },
+        error: (err) => {
+          this.logger.error('Error loading product:', err);
+        }
+      });
   }
 
 
@@ -117,19 +145,22 @@ export class ProductDetailComponent implements OnInit {
     }
     this.isLoading = true;
     const productPayload: IProduct = this.editProductForm.value;
-    this.productService.upsertProduct(productPayload).pipe(
-      catchError((err) => {
-        this.isLoading = false;
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update product!' });
-        throw err;
-      })
-    )
-      .subscribe((res: any) => {
-        this.isLoading = false;
-        if (res === true || res?.success === true || res?.productId) {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product updated successfully!` });
-          this.getProductDetails();
-          this.closeProductDialog();
+    this.productService.upsertProduct(productPayload)
+      .pipe(
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res: any) => {
+          if (res === true || res?.success === true || res?.productId) {
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product updated successfully!` });
+            this.getProductDetails();
+            this.closeProductDialog();
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error updating product:', err);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update product!' });
         }
       });
   }
@@ -177,16 +208,17 @@ export class ProductDetailComponent implements OnInit {
 
     this.productService.getInventories(this.inventoryFilters)
       .pipe(
-        catchError((err) => {
-          // this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.inventories = res?.objectList || [];
-        this.inventoryPager = res?.pager;
-        this.isLoading = false;
+      .subscribe({
+        next: (res) => {
+          this.inventories = res?.objectList || [];
+          this.inventoryPager = res?.pager;
+        },
+        error: (err) => {
+          this.logger.error('Error loading inventories:', err);
+        }
       });
   }
 
@@ -262,17 +294,18 @@ export class ProductDetailComponent implements OnInit {
           inventoryNote: inventoryNote
         };
         return this.productService.upsertInventory(payload);
-      })
+      }),
+      finalize(() => { this.isLoading = false; }),
+      takeUntil(this.destroy$)
     ).subscribe({
       next: (res) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Inventory saved successfully' });
         this.showInventoryDialog = false;
-        this.isLoading = false;
         this.loadInventories();
         this.getProductDetails();
       },
       error: (err) => {
-        this.isLoading = false;
+        this.logger.error('Error saving inventory:', err);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save inventory' });
       }
     });
@@ -286,17 +319,18 @@ export class ProductDetailComponent implements OnInit {
 
     this.productService.getProductSales(this.salesFilters)
       .pipe(
-        catchError((err) => {
-          // this.logger.error(err);
-          this.isLoading = false;
-          throw err;
-        })
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
-        this.sales = res?.objectList || [];
-        console.log('Sales Data:', this.sales);
-        this.salesPager = res?.pager;
-        this.isLoading = false;
+      .subscribe({
+        next: (res) => {
+          this.sales = res?.objectList || [];
+          this.logger.info('Sales Data:', this.sales);
+          this.salesPager = res?.pager;
+        },
+        error: (err) => {
+          this.logger.error('Error loading sales:', err);
+        }
       });
   }
 
@@ -318,5 +352,10 @@ export class ProductDetailComponent implements OnInit {
   }
   redirectToInvoiceDetailComponent(invoiceId: number) {
     this.router.navigate([`sv/invoice/details/${invoiceId}`]);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

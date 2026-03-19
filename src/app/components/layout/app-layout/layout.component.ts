@@ -1,37 +1,62 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router,  RouterModule, RouterOutlet } from '@angular/router';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { IEnum, IWorkshop } from 'app/app.model';
 import { MenuItem, MessageService } from 'primeng/api';
-import { catchError, concatMap, filter, lastValueFrom, of, switchMap, tap } from 'rxjs';
-import { SHARED_IMPORTS } from 'app/sharedimports';
+import { filter, finalize, takeUntil, Subject } from 'rxjs';
 import { PrimeNG } from 'primeng/config';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { ThemeService } from 'app/services/theme.service';
 import { Menu } from 'primeng/menu';
+import { MenubarModule } from 'primeng/menubar';
+import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { InputTextModule } from 'primeng/inputtext';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-layout',
   standalone: true,
  imports: [
-    ...SHARED_IMPORTS,
+    CommonModule,
     RouterModule,
     RouterOutlet,
-    Menu
-  ],  
+    Menu,
+    MenubarModule,
+    ButtonModule,
+    SelectModule,
+    SelectButtonModule,
+    ToastModule,
+    ConfirmDialogModule,
+    MessageModule,
+    InputTextModule,
+    IconFieldModule,
+    InputIconModule,
+    FormsModule
+  ],
   templateUrl: './layout.component.html',
   providers: [MessageService]
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   items: MenuItem[] | undefined;
-  workshop!:IWorkshop;
-  selectedWorkshop!:IWorkshop;
-  workshops:IWorkshop[] = [];
+  workshop!: IWorkshop;
+  selectedWorkshop!: IWorkshop;
+  workshops: IWorkshop[] = [];
   selectedLang:string = '';
   version = '';
   selectedTheme = '';  
+  imagesUrl = environment.production ? `${environment.CDN_URL}/images/` : 'assets/images/';
 palettes = [
   { label: 'Professional Blue', value: 'blue', color: '#3b82f6' },     // Default
   { label: 'Modern Indigo',     value: 'indigo', color: '#4f46e5' },
@@ -56,41 +81,46 @@ palettes = [
   ) {
       this.version = environment.Version; 
         this.router.events
-    .pipe(filter(e => e instanceof NavigationEnd))
-    .subscribe((e: any) => {
-      this.selectedRoute = e.urlAfterRedirects;
-      this.buildMenu();
-      this.currentMenuLabel = this.getSelectedMenuLabel();
+    .pipe(
+      filter(e => e instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
+      next: (e: any) => {
+        this.selectedRoute = e.urlAfterRedirects;
+        this.buildMenu();
+        this.currentMenuLabel = this.getSelectedMenuLabel();
+      },
+      error: (err: any) => {
+        this.logger.error('Router navigation error:', err);
+      }
     });
   }
        
   ngOnInit(): void {
     this.workshopService
-    .getWorkshop()
-    .pipe(
-      catchError((err) => {
-        console.log(err);
-        throw err;
-      })
-    )
-    .subscribe((response: any) => {
-      if(response){
-        this.workshop = response; 
-        this.workshops.push(this.workshop);
-        this.selectedWorkshop = this.workshops[0];
-        this.theme.setPrimaryPalette(this.selectedWorkshop.defaultTheme);
-        this.selectedTheme = this.selectedWorkshop.defaultTheme;
-        
-        this.selectedLang = sessionStorage.getItem('lang') || this.selectedWorkshop.defaultLang;
-
-        // this.logger.info('Selected Language from workshop::', this.selectedLang ,this.selectedWorkshop.defaultLang);
-        // if(this.selectedLang === '' || this.selectedLang === null){
-        //   this.selectedLang = this.selectedWorkshop.defaultLang;
-        // }
-        this.currentUser = sessionStorage.getItem('userName');
-        this.logger.info(this.workshop);
-      }
-    });
+      .getWorkshop()
+      .pipe(
+        finalize(() => {}),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.workshop = response;
+            this.workshops.push(this.workshop);
+            this.selectedWorkshop = this.workshops[0];
+            this.theme.setPrimaryPalette(this.selectedWorkshop.defaultTheme);
+            this.selectedTheme = this.selectedWorkshop.defaultTheme;
+            this.selectedLang = sessionStorage.getItem('lang') || this.selectedWorkshop.defaultLang;
+            this.currentUser = sessionStorage.getItem('userName');
+            this.logger.info(this.workshop);
+          }
+        },
+        error: (err) => {
+          this.logger.error('Error loading workshop:', err);
+        }
+      });
   }
 
   buildMenu() {
@@ -104,13 +134,6 @@ palettes = [
                         routerLink: '/sv/dashboard',
                         styleClass: this.selectedRoute.startsWith('/sv/dashboard') ? 'active-menu-item' : ''
                     },
-                    // {
-                    //     label: this.sharedService.T('vehicles'),
-                    //     materialIcon: 'directions_car',
-                    //     routerLink: '/sv/vehicle',
-                    //     styleClass: this.selectedRoute.startsWith('/sv/vehicle') ? 'active-menu-item' : ''
-                    // },
-
                     {
                         label: this.sharedService.T('customers'),
                         materialIcon: 'person',
@@ -175,12 +198,6 @@ palettes = [
                         styleClass: this.selectedRoute.startsWith('/sv/employment') ? 'active-menu-item' : ''
                     },
                     {
-                       label: this.sharedService.T('reports'),
-                        materialIcon: 'exit_to_app',
-                        routerLink: '/sv/reports',
-                        styleClass: this.selectedRoute.startsWith('/sv/reports') ? 'active-menu-item' : ''
-                    },
-                    {
                        label: this.sharedService.T('settings'),
                         materialIcon: 'settings',
                         routerLink: '/sv/setting',
@@ -212,59 +229,55 @@ palettes = [
     this.sharedService
         .logout()
         .pipe(
-          catchError((error) => {
-            return of(null);
-          }))
-        .subscribe((res) => {
-              // Clear all sessionStorage
-              sessionStorage.clear();
-              this.logger.info('User logged out successfully');
-              // Redirect to home page
-              this.router.navigate(['/']);
-            });
+          finalize(() => {}),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: (res) => {
+            sessionStorage.clear();
+            this.logger.info('User logged out successfully');
+            this.router.navigate(['/']);
+          },
+          error: (error) => {
+            this.logger.error('Error logging out:', error);
+          }
+        });
   }
 
   getSelectedMenuLabel(): string {
-    // if (!this.items || this.items.length === 0) {
-    //   return 'Dashboard';
-    // }
-    
-    // const menuItems = this.items[0]?.items || [];
-    // const selected = menuItems.find(item => 
-    //   item.routerLink && this.selectedRoute.startsWith(item.routerLink as string)
-    // );
-    // return selected?.label || this.sharedService.T('welcome');
-  if (this.selectedRoute.startsWith('/sv/dashboard')) {
-    return this.sharedService.T('welcome');
-  } else if (this.selectedRoute.startsWith('/sv/customer')) {
-    return this.sharedService.T('customers');
-  } else if (this.selectedRoute.startsWith('/sv/booking')) {
-    return this.sharedService.T('bookings');
-  } else if (this.selectedRoute.startsWith('/sv/offer')) {
-    return this.sharedService.T('offers');
-  } else if (this.selectedRoute.startsWith('/sv/workorder')) {
-    return this.sharedService.T('workorders');
-  } else if (this.selectedRoute.startsWith('/sv/invoice')) {
-    return this.sharedService.T('invoices');
-  } else if (this.selectedRoute.startsWith('/sv/digitalservice')) {
-    return this.sharedService.T('digitalServiceBook');
-  } else if (this.selectedRoute.startsWith('/sv/product')) {
-    return this.sharedService.T('products');
-  } else if (this.selectedRoute.startsWith('/sv/supplier')) {
-    return this.sharedService.T('suppliers');
-  } else if (this.selectedRoute.startsWith('/sv/employee')) {
-    return this.sharedService.T('employees');
-  } else if (this.selectedRoute.startsWith('/sv/employment')) {
-    return this.sharedService.T('attendanceRegister');
-  } else if (this.selectedRoute.startsWith('/sv/reports')) {
-    return this.sharedService.T('reports');
-  } else if (this.selectedRoute.startsWith('/sv/setting')) {
-    return this.sharedService.T('settings');
-  } else if (this.selectedRoute.startsWith('/sv/vehicle')) {
-    return this.sharedService.T('searchVehicle');
-  } else {
-    return '';
+    if (this.selectedRoute.startsWith('/sv/dashboard')) {
+      return this.sharedService.T('welcome');
+    } else if (this.selectedRoute.startsWith('/sv/customer')) {
+      return this.sharedService.T('customers');
+    } else if (this.selectedRoute.startsWith('/sv/booking')) {
+      return this.sharedService.T('bookings');
+    } else if (this.selectedRoute.startsWith('/sv/offer')) {
+      return this.sharedService.T('offers');
+    } else if (this.selectedRoute.startsWith('/sv/workorder')) {
+      return this.sharedService.T('workorders');
+    } else if (this.selectedRoute.startsWith('/sv/invoice')) {
+      return this.sharedService.T('invoices');
+    } else if (this.selectedRoute.startsWith('/sv/digitalservice')) {
+      return this.sharedService.T('digitalServiceBook');
+    } else if (this.selectedRoute.startsWith('/sv/product')) {
+      return this.sharedService.T('products');
+    } else if (this.selectedRoute.startsWith('/sv/supplier')) {
+      return this.sharedService.T('suppliers');
+    } else if (this.selectedRoute.startsWith('/sv/employee')) {
+      return this.sharedService.T('employees');
+    } else if (this.selectedRoute.startsWith('/sv/employment')) {
+      return this.sharedService.T('attendanceRegister');
+    } else if (this.selectedRoute.startsWith('/sv/setting')) {
+      return this.sharedService.T('settings');
+    } else if (this.selectedRoute.startsWith('/sv/vehicle')) {
+      return this.sharedService.T('searchVehicle');
+    } else {
+      return '';
+    }
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

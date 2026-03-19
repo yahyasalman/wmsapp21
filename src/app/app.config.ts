@@ -1,88 +1,52 @@
-
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection,provideAppInitializer, inject, APP_INITIALIZER} from '@angular/core';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { DragDropModule } from 'primeng/dragdrop';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import svFile from 'primelocale/sv.json';
 const { sv } = svFile;
-import { MaterialPreset } from 'app/app.theme';
+import { definePreset } from '@primeng/themes';
+import Material from '@primeng/themes/material';
 import { LoggingInterceptor } from 'app/interceptor/logging.interceptor';
 import { TokenInterceptor } from 'app/interceptor/token.interceptor';
-import { SharedService } from './services';
-import { firstValueFrom } from 'rxjs';
-export function loadResourcesFactory(sharedService: SharedService): () => Promise<void> {
-  return () => firstValueFrom(sharedService.loadResources());
-}
+export const MaterialPreset = definePreset(Material, {});
 export const appConfig: ApplicationConfig = {
   providers: [
-    SharedService,
+    // Zone Change Detection
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    
+    // Routing
+    provideRouter(routes),
+    
+    // Animations - Use only provideAnimationsAsync (modern approach)
+    provideAnimationsAsync(),
+    
+    // PrimeNG Configuration
+    providePrimeNG({ 
+      translation: sv,
+      theme: {
+        preset: MaterialPreset,
+      }
+    }),
+    
+    // HTTP Client
+    provideHttpClient(withInterceptorsFromDi()),
+    
+    // HTTP Interceptors
     {
-      provide: APP_INITIALIZER,
-      useFactory: loadResourcesFactory,
-      deps: [SharedService],
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
       multi: true
     },
-    provideAnimationsAsync(),
-        providePrimeNG({ 
-          translation:sv,
-            theme: {
-                preset: MaterialPreset,
-              //   options: {
-              //     cssLayer: {
-              //         name: 'primeng',
-              //         order: 'tailwind-base,primeng,tailwind-utilities'
-              //     }
-              // }
-            }
-        }),
-  provideZoneChangeDetection({ eventCoalescing: true }), 
-  provideRouter(routes),
-  importProvidersFrom(BrowserAnimationsModule),
-  importProvidersFrom(DragDropModule),
-  provideHttpClient(withInterceptorsFromDi()),  
-  {
-      provide:HTTP_INTERCEPTORS,
-      useClass:TokenInterceptor,
-      multi:true
-  },
-  { provide: HTTP_INTERCEPTORS, useClass: LoggingInterceptor, multi: true }
-]
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoggingInterceptor,
+      multi: true
+    },
+    
+    // Standalone Module Imports (if needed for specific features)
+    importProvidersFrom(DragDropModule)
+  ]
 };
-
-//  import { ApplicationConfig, provideZoneChangeDetection, APP_INITIALIZER } from '@angular/core';
-// import { provideRouter } from '@angular/router';
-// import { routes } from './app.routes';
-// import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-// import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-// import { providePrimeNG } from 'primeng/config';
-// import sv from 'primelocale/sv.json';
-// import { MyPreset } from 'app/app.theme';
-// import { LoggingInterceptor } from 'app/interceptor/logging.interceptor';
-// import { TokenInterceptor } from 'app/interceptor/token.interceptor';
-// import { SharedService } from './services';
-
-// export const appConfig: ApplicationConfig = {
-//   providers: [
-//     provideZoneChangeDetection({ eventCoalescing: true }),
-//     provideRouter(routes),
-//     provideHttpClient(withInterceptorsFromDi()),
-//     provideAnimationsAsync(),
-//     providePrimeNG({ theme: { preset: MyPreset }, translation: sv }),
-
-//     // Register DI-based interceptors so withInterceptorsFromDi picks them up
-//     { provide: HTTP_INTERCEPTORS, useClass: LoggingInterceptor, multi: true },
-//     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-
-//     // Optional app initializer (example)
-//     {
-//       provide: APP_INITIALIZER,
-//       useFactory: (svc: SharedService) => () => svc.init(),
-//       deps: [SharedService],
-//       multi: true,
-//     },
-//   ],
-// };
