@@ -132,6 +132,7 @@
         </ng-template>
       </p-select>
     </div>
+
   </div>
 </aside>
 
@@ -211,36 +212,32 @@
   </main>
 
   <!-- Fixed footer aligned to the right of the sidebar -->
-  <footer class="fixed bottom-0 right-0 left-60 h-12 px-5 border-t flex justify-between items-center bg-white">
+  <footer class="fixed bottom-0 right-0 left-60 h-12 px-5 border-t border-gray-200 flex justify-between items-center bg-white">
     <ul class="flex gap-4 text-sm">
       <li class="flex gap-1 items-center">
-          <span class="material-symbols-outlined">forward_to_inbox</span>
+          <span class="material-symbols-outlined">quiz</span>
           <a href="#">FAQ</a>
       </li>
       <li class="flex gap-1 items-center">
-        <span class="material-symbols-outlined">forward_to_inbox</span>
+        <span class="material-symbols-outlined">help</span>
         <a href="#">Help</a>
       </li>
       <li class="flex gap-1 items-center">
-        <span class="material-symbols-outlined">forward_to_inbox</span>
+        <span class="material-symbols-outlined">mail</span>
         <a href="#">Email us</a>
       </li>
       <li class="flex gap-1 items-center">
-        <span class="material-symbols-outlined">forward_to_inbox</span>
+        <span class="material-symbols-outlined">call</span>
         <a href="#">Ring oss</a>
       </li>
       <li class="flex gap-1 items-center">
-        <span class="material-symbols-outlined">forward_to_inbox</span>
+        <span class="material-symbols-outlined">schedule</span>
         <span>Mon - thu 09:00 - 12:00</span>
       </li>
     </ul>
 
     <div class="flex items-center gap-2">
       <span>V{{version}}</span>
-      <button class="flex gap-1 text-sm px-2.5 py-1.5 rounded-full">
-        <img [src]="imagesUrl + 'Bhelp.png'" alt="">
-        <span>help</span>
-      </button>
     </div>
   </footer>
 </div>

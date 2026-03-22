@@ -13,11 +13,11 @@
                         size="large" icon="pi pi-plus" (click)="redirectToOrderCrudComponent()" />
 
                     <p-select [options]="this.sharedService.getEnums('workOrderStatus')"
-                        formControlName="workOrderStatus" size="small" optionLabel="text" optionValue="value"
+                        formControlName="workOrderStatus" optionLabel="text" optionValue="value"
                         (onChange)="onChangeType($event,'status')" [checkmark]="true" [showClear]="true"
                         placeholder="Status" (onClear)="onClearWorkOrderStatus()" />
                     <p-select [options]="this.sharedService.getEnums('paymentType')" formControlName="paymentType"
-                        size="small" optionLabel="text" optionValue="value" (onChange)="onChangeType($event,'payment')"
+                        optionLabel="text" optionValue="value" (onChange)="onChangeType($event,'payment')"
                         [checkmark]="true" [showClear]="true" placeholder="{{ this.sharedService.T('paymentType') }}"
                         (onClear)="onClearPaymentType()" />
                 </div>
@@ -29,31 +29,28 @@
                 </div>
 
                 <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap lg:ml-auto">
-                    <div class="flex items-center content-center">
-                        <p-datepicker formControlName="year" size="large" view="year" dateFormat="yy" class="w-19"
+                    <div class="flex items-center gap-3">
+                        <div class="text-xs font-semibold text-gray-500">{{ this.sharedService.T('year') }}:</div>
+                        <p-datepicker formControlName="year" view="year" dateFormat="yy" class="w-19"
                             (onSelect)="onSelectYear($event)" />
                     </div>
-                    <div class="my-auto">
-                        <div class="flex align-items-center justify-content-center">
-                            <div class="flex text-center gap-3">
-                                <p-date-picker dataType="string" formControlName="fromDate"
-                                    class="w-30" dateFormat="yy-mm-dd" [iconDisplay]="'input'"
-                                    [showIcon]="false" (onSelect)="onSelectFromDate()">
-                                </p-date-picker>
-                            </div>
-                            <span class="my-auto">
-                                <img src="assets/images/line.png" alt="">
-                            </span>
-                            <div class="flex text-center gap-3">
-                                <p-date-picker dataType="string" class="w-30"
-                                    formControlName="toDate" dateFormat="yy-mm-dd" [iconDisplay]="'input'"
-                                    [showIcon]="false" (onSelect)="onSelectToDate()">
-                                </p-date-picker>
-                            </div>
-                        </div>
+                    <div class="flex items-center gap-3">
+                        <p-date-picker dataType="string" formControlName="fromDate"
+                            class="w-30" dateFormat="yy-mm-dd" [iconDisplay]="'input'"
+                            [showIcon]="false" placeholder="From" (onSelect)="onSelectFromDate()">
+                        </p-date-picker>
+
+                        <span class="flex items-center justify-center h-8 w-8 rounded-full" style="background-color: var(--p-primary-100);">
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </span>
+
+                        <p-date-picker dataType="string" class="w-30"
+                            formControlName="toDate" dateFormat="yy-mm-dd" [iconDisplay]="'input'"
+                            [showIcon]="false" placeholder="To" (onSelect)="onSelectToDate()">
+                        </p-date-picker>
                     </div>
-                    <div class="rounded-md">
-                        <div class="w-full ps-2 h-10">
+                    <div class="rounded-md ml-auto mb-3">
+                        <div class="w-full ps-2 h-10 rounded-md ">
                              <p-iconfield>
                              <p-inputicon class="pi pi-search" />
                             <p-autoComplete formControlName="vehiclePlate" [suggestions]="vehiclePlates"

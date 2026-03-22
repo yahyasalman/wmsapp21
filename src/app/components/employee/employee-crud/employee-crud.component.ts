@@ -260,8 +260,8 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
   showSuccess(message: string) {
     this.messageService.add({
       severity: 'success',
-      summary: 'Success',
-      detail: message,
+      summary: this.sharedService.T('success'),
+      icon: 'pi pi-check-circle',
       life: 8000
     });
   }

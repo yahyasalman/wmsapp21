@@ -348,8 +348,8 @@ export class OfferListComponent implements OnInit, OnDestroy {
                 if (res) {
                   this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: this.sharedService.T('Status updated successfully'),
+                    summary: this.sharedService.T('success'),
+                    icon: 'pi pi-check-circle',
                     life: 3000
                   });
                   this.logger.info('Offer updated', res);

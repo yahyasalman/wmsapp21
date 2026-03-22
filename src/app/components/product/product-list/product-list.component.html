@@ -180,8 +180,10 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-inv>
                             <tr class="hover:bg-gray-50">
-                                <td class="p-2"><img src="assets/icons/invoice/cancel1.svg" alt=""
-                                        class="cursor-pointer" /></td>
+                                <td class="p-2">
+                                    <p-button size="small" severity="danger" icon="pi pi-trash">
+                                    </p-button>
+                                </td>
                                 <td class="p-2">{{ inv.inventoryDate }}</td>
                                 <td class="p-2 text-center">{{ inv.inventoryQuantity }}</td>
                                 <td class="p-2 text-center">

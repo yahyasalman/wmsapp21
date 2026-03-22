@@ -175,9 +175,9 @@ export class WorkOrderListComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           if (res) {
             this.messageService.add({
-              severity: 'success', 
+              severity: 'success',
               summary: this.sharedService.T('success'),
-              detail: this.sharedService.T('workorder') + '#' + workOrder.workOrderId + ' ' + this.sharedService.T('statusConfirmMessage') + this.sharedService.getEnumByValue('workOrderStatus', workOrder.workOrderStatus).text
+              icon: 'pi pi-check-circle'
             });
             this.getOrders();
           }

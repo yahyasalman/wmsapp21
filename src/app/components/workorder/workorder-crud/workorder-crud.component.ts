@@ -709,9 +709,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     if (res === true || res?.success === true) {
       this.messageService.add({
         severity: 'success',
-        summary: 'Success',
-        detail: `${customerName} has been successfully created!`,
-        life: 6000,
+        summary: this.sharedService.T('success'),
+        icon: 'pi pi-check-circle',
+        life: 6000
       });
       // Wait a bit so toastr shows before navigating
       setTimeout(() => {

@@ -153,7 +153,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           if (res === true || res?.success === true || res?.productId) {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product updated successfully!` });
+            this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
             this.getProductDetails();
             this.closeProductDialog();
           }
@@ -299,7 +299,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (res) => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Inventory saved successfully' });
+        this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
         this.showInventoryDialog = false;
         this.loadInventories();
         this.getProductDetails();

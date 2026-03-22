@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IDigitalService, IWorkOrder, IPager, IInvoice, IEnums } from 'app/app.model';
@@ -38,14 +38,18 @@ interface WorkshopService { name: string };
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule],
   providers: [ConfirmationService, MessageService],
-  styleUrl: './digitalservice-list.component.css',
-  templateUrl: './digitalservice-list.component.html'
+ templateUrl: './digitalservice-list.component.html'
 })
 
 export class DigitalServiceListComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   digitalServices: IDigitalService[] = [];
   pager: IPager = <IPager>{};
+
+  sortField = 'creationDate';
+  sortOrder = -1;
+  totalRecords: number = 0;
+
   filters: FormGroup;
   currentPage: number = 1;
   vehiclePlates: string[] = [];
@@ -66,7 +70,8 @@ export class DigitalServiceListComponent implements OnDestroy {
     private readonly fb: FormBuilder,
     private readonly workOrderService: WorkOrderService,
     private readonly digitalServiceService: DigitalServiceService,
-    private readonly invoiceService: InvoiceService,) {
+    private readonly invoiceService: InvoiceService,
+  private cdr: ChangeDetectorRef) {
 
     const currentDate = new Date();
     const twoYearBack = new Date(currentDate.getFullYear() - 2, currentDate.getMonth(), currentDate.getDate());
@@ -80,8 +85,9 @@ export class DigitalServiceListComponent implements OnDestroy {
       vehiclePlate: '',
       currentPage: 1,
       pageSize: 10,
-      sortBy: 'creationDate',
-      sortDir: '-1'
+      sortBy: this.sortField,
+      sortDir: this.sortOrder,
+
     });
 
 
@@ -157,7 +163,7 @@ export class DigitalServiceListComponent implements OnDestroy {
         next: (res) => {
           this.logger.info(res.objectList);
           this.digitalServices = res.objectList;
-          this.pager = res.pager;
+          this.totalRecords = res.pager.totalRecords;
         },
         error: (err) => {
           this.logger.error(err);
@@ -209,40 +215,6 @@ export class DigitalServiceListComponent implements OnDestroy {
      this.sharedService.updateFiltersInNavigation(this.filters);
     this.getDigitalServices(this.onlyThisWmsid);
   }
-
-  onPageSizeChange(event: SelectChangeEvent) {
-    this.filters.patchValue({ currentPage: 1, pageSize: event.value });
-    this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getDigitalServices(this.onlyThisWmsid);
-  }
-
-  onPageChange(e: any) {
-    this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-    this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getDigitalServices(this.onlyThisWmsid);
-  }
-
-  sortColumn(e: any) {
-    if (e) {
-      let pageIndex = e.first / e.rows;
-      // If the current page is already set, use it instead of resetting
-      if (this.filters.get('currentPage')?.value) {
-        pageIndex = +this.filters.get('currentPage')?.value - 1; // Convert to zero-based index
-      }
-      // Update the pager and filters
-      this.pager.firstPage = e.first;
-      this.filters.patchValue({
-        currentPage: (pageIndex + 1).toString(), // Convert back to one-based index
-        pageSize: e.rows,
-        sortDir: e.sortOrder,
-        sortBy: e.sortField,
-      });
-       this.sharedService.updateFiltersInNavigation(this.filters);
-      this.getDigitalServices(this.onlyThisWmsid);
-    }
-  }
-
-
 
   ///New code I added for popup///
 
@@ -411,7 +383,7 @@ export class DigitalServiceListComponent implements OnDestroy {
                   this.messageService.add({
                     severity: 'success',
                     summary: this.sharedService.T('success'),
-                    detail: this.sharedService.T('invoiceValidAndAttached'),
+                    icon: 'pi pi-check-circle',
                     life: 3000
                   });
 
@@ -429,12 +401,6 @@ export class DigitalServiceListComponent implements OnDestroy {
                 },
                 error: (err) => {
                   this.logger.error(err);
-                  this.messageService.add({
-                    severity: 'error',
-                    summary: this.sharedService.T('error'),
-                    detail: this.sharedService.T('errorMessage'),
-                    life: 3000
-                  });
                   this.resetDigitalServiceForm();
                 }
               });
@@ -442,12 +408,6 @@ export class DigitalServiceListComponent implements OnDestroy {
         },
         error: (err) => {
           this.logger.error(err);
-          this.messageService.add({
-            severity: 'error',
-            summary: this.sharedService.T('error'),
-            detail: this.sharedService.T('errorMessage'),
-            life: 3000
-          });
           this.resetDigitalServiceForm();
         }
       });
@@ -475,11 +435,6 @@ export class DigitalServiceListComponent implements OnDestroy {
         },
         error: (err) => {
           this.logger.error(err);
-          this.messageService.add({
-            severity: 'error',
-            summary: this.sharedService.T('error'),
-            detail: this.sharedService.T('errorMessage'),
-          });
         }
       });
   }
@@ -633,19 +588,14 @@ export class DigitalServiceListComponent implements OnDestroy {
                 this.getDigitalServices(this.onlyThisWmsid);
                 this.messageService.add({
                   severity: 'success',
-                  detail: this.sharedService.T('createdSuccessfully'),
+                  summary: this.sharedService.T('success'),
+                  icon: 'pi pi-check-circle',
                   life: 3000
                 });
               }
             },
             error: (err) => {
               this.logger.error(err);
-              this.messageService.add({
-                severity: 'error',
-                summary: this.sharedService.T('error'),
-                detail: this.sharedService.T('errorMessage'),
-                life: 3000
-              });
             }
           });
       },
@@ -675,4 +625,19 @@ export class DigitalServiceListComponent implements OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  onPageChange(e: any) {
+  const currentPage = (e.first / e.rows) + 1;
+  this.sortField = (e.sortField || this.sortField || 'invoiceId').trim();
+  this.sortOrder = (e.sortOrder !== undefined && e.sortOrder !== null) ? Number(e.sortOrder) : (this.sortOrder ?? 1);
+  const oldSortBy = this.filters.get('sortBy')?.value?.trim(); 
+  const oldSortDir = Number(this.filters.get('sortDir')?.value); 
+  const isSortChanged = (this.sortField !== oldSortBy) || (this.sortOrder !== oldSortDir);
+  const pageToSet = isSortChanged ? 1 : currentPage;
+  this.filters.patchValue({currentPage: pageToSet,pageSize: e.rows,sortBy: this.sortField,sortDir: this.sortOrder});
+  this.sharedService.updateFiltersInNavigation(this.filters);
+  this.cdr.detectChanges();
+  this.getDigitalServices(this.onlyThisWmsid);
+  }
+
 }

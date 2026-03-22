@@ -29,7 +29,14 @@ export class ThemeService {
   // Toggle dark mode for the preset
   setDarkMode(enable: boolean) {
     // Prime’s token themes apply dark variants when 'p-dark' is present on the root
-    this.document.documentElement.classList.toggle('p-dark', enable);
+    this.document.documentElement.classList.toggle('p-dark', enable);    
+    // Apply 'dark' class to html element for Tailwind dark: utilities
+    this.document.documentElement.classList.toggle('dark', enable);
+    
+    // Log for debugging
+    console.log('Dark mode class applied:', enable);
+    console.log('HTML element has p-dark:', this.document.documentElement.classList.contains('p-dark'));
+    console.log('HTML element has dark:', this.document.documentElement.classList.contains('dark'));
   }
 
 }

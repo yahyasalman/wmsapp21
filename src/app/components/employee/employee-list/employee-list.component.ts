@@ -67,7 +67,6 @@ export class EmployeeListComponent implements OnDestroy {
         next: (res) => {
           const objectData: any = res.objectList;
           this.employees = objectData;
-          this.pager = res.pager;
         },
         error: (err) => {
           this.logger.error(err);

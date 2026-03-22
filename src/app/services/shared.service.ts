@@ -350,8 +350,8 @@ loadResources(): Observable<void> {
 
   // Create the actual loading operation
   const translationsUrl = environment.production ? `${environment.CDN_URL}/resources/translations-${this.resourceFileVersion}.json` : 'assets/resources/translations.json';
-  const enumsUrl = environment.production ? `${environment.CDN_URL}/resources/enums-${this.resourceFileVersion}.json` : 'assets/resources/wmsenums.json';
-  const modelsUrl = environment.production ? `${environment.CDN_URL}/resources/models-${this.resourceFileVersion}.json` : 'assets/resources/wmsmodels.json';  
+  const enumsUrl = environment.production ? `${environment.CDN_URL}/resources/enums-${this.resourceFileVersion}.json` : 'assets/resources/enums.json';
+  const modelsUrl = environment.production ? `${environment.CDN_URL}/resources/models-${this.resourceFileVersion}.json` : 'assets/resources/models.json';  
 
   const fileRequests: [Observable<ITranslate[]>, Observable<IEnums[]>, Observable<IVehicle[]>] = [
     this.http.get<ITranslate[]>(translationsUrl).pipe(
@@ -362,13 +362,13 @@ loadResources(): Observable<void> {
     ),
     this.http.get<IEnums[]>(enumsUrl).pipe(
       catchError(error => {
-        this.logger.error('Error loading wmsenums.json:', error);
+        this.logger.error('Error loading enums.json:', error);
         return of([] as IEnums[]);
       })
     ),
     this.http.get<IVehicle[]>(modelsUrl).pipe(
       catchError(error => {
-        this.logger.error('Error loading wmsmodels.json:', error);
+        this.logger.error('Error loading models.json:', error);
         return of([] as IVehicle[]);
       })
     )

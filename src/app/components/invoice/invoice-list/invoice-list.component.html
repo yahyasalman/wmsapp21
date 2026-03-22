@@ -30,31 +30,26 @@
         <!-- Right Filters -->
         <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap lg:ml-auto">
           <!-- Year Filter -->
-          <div class="flex items-center content-center">
-            <p-datepicker formControlName="year" size="large" view="year" dateFormat="yy" class="w-19"
+          <div class="flex items-center gap-3">
+            <div class="text-xs font-semibold text-gray-500">{{ this.sharedService.T('year') }}:</div>
+            <p-datepicker formControlName="year" view="year" dateFormat="yy" class="w-19"
               (onSelect)="onSelectYear($event)"></p-datepicker>
           </div>
 
           <!-- Date Range Filter -->
-          <div class="my-auto">
-            <div class="flex align-items-center justify-content-center">
-              <div class="flex text-center gap-3">
-                <p-datepicker formControlName="fromDate" dataType="string" class="w-30"
-                  dateFormat="yy-mm-dd" [iconDisplay]="'input'" [showIcon]="false"
-                  (onSelect)="onSelectFromDate($event)"></p-datepicker> 
-              </div>
-              <span class="my-auto">
-                <img src="assets/images/line.png" alt="" />
-              </span>
-              <div class="flex text-center gap-3">
-                <p-datepicker formControlName="toDate" class="w-30" dataType="string"
-                  dateFormat="yy-mm-dd" [iconDisplay]="'input'" [showIcon]="false"
-                  (onSelect)="onSelectToDate($event)"></p-datepicker>
-              </div>
-            </div>
+          <div class="flex items-center gap-3">
+            <p-datepicker formControlName="fromDate" dataType="string" class="w-30"
+              dateFormat="yy-mm-dd" placeholder="From"
+              (onSelect)="onSelectFromDate($event)"></p-datepicker>
+            <span class="flex items-center justify-center h-8 w-8 rounded-full" style="background-color: var(--p-primary-100);">
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </span>
+            <p-datepicker formControlName="toDate" class="w-30" dataType="string"
+              dateFormat="yy-mm-dd" placeholder="To"
+              (onSelect)="onSelectToDate($event)"></p-datepicker>
           </div>
-          <div class="rounded-md">
-            <div class="w-full ps-2 rounded-md">
+          <div class="rounded-md ml-auto mb-3">
+            <div class="w-full ps-2 h-10 rounded-md">
              <p-iconfield>
              <p-inputicon class="pi pi-search" />
               <p-autoComplete formControlName="vehiclePlate" [suggestions]="vehiclePlates"
@@ -108,17 +103,17 @@
     <p-button 
       size="small" 
       variant="outlined" 
-      icon="pi pi-plus" 
+      icon="pi pi-download" 
       (click)="op.toggle($event)"  
       label="{{ this.sharedService.T('monthlyreport') }}">
     </p-button> 
 
     <p-popover #op>
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-5 p-4 bg-white rounded-lg min-w-72">
         <!-- Updated Label for Date Control -->
-        <label for="month-picker" class="font-medium mb-1">Select Month:</label>
+        <label for="month-picker" class="font-semibold text-gray-700">{{ this.sharedService.T('selectMonth') }}</label>
         
-        <!-- Date Control with Spacing -->
+        <!-- Date Control with Proper Spacing -->
         <p-datepicker 
           id="month-picker"
           [(ngModel)]="selectedMonth" 
@@ -127,16 +122,16 @@
           dateFormat="MM yy" 
           showIcon="true" 
           iconDisplay="input"
-          placeholder="Select Month" 
-          styleClass="w-52 custom-picker" />
+           />
         
-        <!-- Button with Vertical Space -->
+        <!-- Button with Adequate Top Margin -->
         <p-button 
-          label="{{ this.sharedService.T('add') }}" 
-          size="small" 
-          icon="pi pi-plus"
-          (click)="downloadExcel()"
-          class="mt-2">
+          label="{{ this.sharedService.T('download') }}" 
+          fullWidth="true"
+          variant="outlined" 
+          icon="pi pi-file-excel"
+          (click)="downloadExcel(); op.hide()"
+          class="mt-4">
         </p-button>
       </div>
     </p-popover>
@@ -348,9 +343,8 @@
             <ng-template pTemplate="body" let-payment>
               <tr class="hover:bg-gray-50">
                 <td class="p-2">
-
-                  <img src="assets/icons/invoice/cancel1.svg" alt="" class="cursor-pointer"
-                    (click)="confirmDeletePayment($event, payment.invoiceId, payment.invoicePaymentId)" />
+                <p-button size="small" severity="danger" icon="pi pi-trash" (onClick)="confirmDeletePayment($event, payment.invoiceId, payment.invoicePaymentId)">
+                </p-button>
                 </td>
                 <td class="p-2">{{ payment.paymentDate }}</td>
                 <td class="p-2 text-center">{{ payment.paymentAmount }}</td>

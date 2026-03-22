@@ -80,7 +80,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
  selectedPriceMode:any = '';
  selectedInvoiceTemplate:any = '';
  selectedSaleYear:string = new Date().getFullYear().toString();
- 
+ isSpinnerLoading: boolean = false;
  workshop: FormGroup;
  workshopServiceForm: FormGroup;
   saleTarget: FormGroup;
@@ -250,7 +250,8 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
           if (res) {
            this.messageService.add({
         severity: 'success',
-        summary: 'Success',
+        summary: this.sharedService.T('success'),
+        icon: 'pi pi-check-circle',
         detail: 'Workshop updated successfully!',
       });
       this.router.navigate(['sv/setting']);
@@ -318,8 +319,8 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           this.messageService.add({
             severity: 'success',
-            summary: 'Success',
-            detail: 'Image uploaded successfully!',
+            summary: this.sharedService.T('success'),
+            icon: 'pi pi-check-circle',
             life: 4000
           });
           if (response?.key) this.fileKey = response.key;
@@ -397,8 +398,8 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
               this.loadCustomerTags();
               this.messageService.add({
                 severity: 'success',
-                summary: 'Success',
-                detail: isUpdate ? 'Tag updated successfully!' : 'Tag added successfully!',
+                summary: this.sharedService.T('success'),
+                icon: 'pi pi-check-circle',
                 life: 2000
               });
             }
@@ -461,19 +462,13 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
           }
           this.messageService.add({
             severity: 'success',
-            summary: 'Tag Deleted',
-            detail: 'Customer Tag deleted successfully.',
+            summary: this.sharedService.T('success'),
+            icon: 'pi pi-check-circle',
             life: 2000
           });
         },
         error: (err) => {
           this.logger.error('Error deleting tag:', err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Delete Failed',
-            detail: 'Unable to delete tag. Please try again.',
-            life: 3000
-          });
         }
       });
   }
@@ -538,8 +533,8 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
               this.loadCustomerTypes();
               this.messageService.add({
                 severity: 'success',
-                summary: 'Success',
-                detail: isUpdate ? 'Type updated successfully!' : 'Type added successfully!',
+                summary: this.sharedService.T('success'),
+                icon: 'pi pi-check-circle',
                 life: 2000
               });
             }
@@ -547,12 +542,6 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
             this.logger.error('Error saving type:', err);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Save Failed',
-              detail: 'Unable to save Type. Please try again.',
-              life: 3000
-            });
           }
         });
     }
@@ -602,19 +591,13 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
           }
           this.messageService.add({
             severity: 'success',
-            summary: 'Type Deleted',
-            detail: 'Customer Type deleted successfully.',
+            summary: this.sharedService.T('success'),
+            icon: 'pi pi-check-circle',
             life: 2000
           });
         },
         error: (err) => {
           this.logger.error('Error deleting type:', err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Delete Failed',
-            detail: 'Unable to delete type. Please try again.',
-            life: 3000
-          });
         }
       });
   }
@@ -674,20 +657,14 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
             this.loadProductTemplates();
             this.messageService.add({
               severity: 'success',
-              summary: 'Success',
-              detail: 'Template added successfully!',
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle',
               life: 2000
             });
           }
         },
         error: (err) => {
           this.logger.error('Error saving template:', err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Save Failed',
-            detail: 'Unable to save template. Please try again.',
-            life: 3000
-          });
         }
       });
   }
@@ -743,20 +720,14 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
             this.loadProductTemplates();
             this.messageService.add({
               severity: 'success',
-              summary: 'Success',
-              detail: 'Template updated successfully!',
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle',
               life: 2000
             });
           }
         },
         error: (err) => {
           this.logger.error('Error updating template:', err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Save Failed',
-            detail: 'Unable to save template. Please try again.',
-            life: 3000
-          });
         }
       });
   }
@@ -774,7 +745,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: () => {
-            this.messageService.add({ severity: 'success', detail: 'Deleted successfully!' });
+            this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
             this.loadProductTemplates();
           },
           error: (err) => {
@@ -893,19 +864,30 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     });
   }
 
-  getProducts(event: AutoCompleteCompleteEvent) {
+    getProducts(detail:any, event: AutoCompleteCompleteEvent) {
+    this.isSpinnerLoading = true;
+    let category = detail.get('category').value;
+    this.logger.info(category);
     let query = event.query;
     this.productService.getProductsByprefix(query)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        finalize(() => { this.isSpinnerLoading = false; }),
+        takeUntil(this.destroy$)
+      )
       .subscribe({
         next: (response) => {
-          this.products = response;
+          this.products = response
+            .filter((product: any) => product.category === category)
+            .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
+          this.logger.info(this.products);
         },
         error: (err) => {
-          this.logger.error('Error loading products:', err);
+          this.logger.error('Error loading products', err);
+          this.isSpinnerLoading = false;
         }
       });
   }
+
 
   onSelectProduct(detail: any, e: any) {
     const item = e.value;
@@ -923,9 +905,14 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
         vatPercentage: vatPercentage
       })
       this.updateDetailRow(detail);
-      this.isLoading = false;
+      this.isSpinnerLoading = false;
     }
   }
+  onBlurProduct(event: any, detail: AbstractControl): void {
+  const typedValue = event.target.value; // Get the typed value from the input
+  detail.get('product')?.setValue(typedValue); // Update the form control with the typed value
+}
+
   updateDetailRow(detail: any) {
     if (Number(detail.get('unitPrice').value) > 0)
       detail.patchValue({ isUnitPriceValid: true });
@@ -995,7 +982,8 @@ GenerateInvoiceDescription(event:any,selectedCategory:IEnums,index:number) {
             textareaControl.setValue(res.text);
             this.messageService.add({
               severity: 'success',
-              detail: this.sharedService.T('aiTextAdded'),
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle'
             });
           } else {
             this.messageService.add({
@@ -1006,10 +994,6 @@ GenerateInvoiceDescription(event:any,selectedCategory:IEnums,index:number) {
         },
         error: (err) => {
           this.logger.error('Error generating description:', err);
-          this.messageService.add({
-            severity: 'error',
-            detail: this.sharedService.T('errorMessage'),
-          });
         }
       });
   }
@@ -1081,7 +1065,7 @@ deleteSaleTarget(sale: any) {
         )
         .subscribe({
           next: () => {
-            this.messageService.add({ severity: 'success', detail: 'Deleted successfully!' });
+            this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
             this.loadSaleTargets(this.selectedSaleYear);
           },
           error: (err) => {

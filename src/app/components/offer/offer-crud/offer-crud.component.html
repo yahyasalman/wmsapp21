@@ -109,10 +109,8 @@
                     <div class="w-[3%]  whitespace-nowrap"></div>
                     <div class="w-[7%]  whitespace-nowrap flex">{{ this.sharedService.T('category') }}
                         <span class="my-auto">
-                            <div class="my-auto w-10">
-                                <img src="assets/icons/offers/help.svg" class="w-4 h-4" [pTooltip]="tooltipContent"
-                                    tooltipPosition="top" alt="">
-                            </div>
+                            <span class="material-symbols-outlined text-sm" [pTooltip]="tooltipContent"
+                                tooltipPosition="top">help</span>
                         </span>
                     </div>
                     <div class="w-[15%] whitespace-nowrap">{{ this.sharedService.T('productService') }}</div>
@@ -129,10 +127,8 @@
                             </div>
                         </ng-template>
                         <span class="my-auto">
-                            <div class="my-auto w-10">
-                                <img src="assets/icons/offers/help.svg" class="w-4 h-4" [pTooltip]="pricewithoutvattp"
-                                    tooltipPosition="top" tooltipStyleClass="custom-tooltip" alt="">
-                            </div>
+                            <span class="material-symbols-outlined text-sm" [pTooltip]="pricewithoutvattp"
+                                tooltipPosition="top" tooltipStyleClass="custom-tooltip">help</span>
                         </span>
                         }
                         @if(priceMode == 0 )
@@ -144,10 +140,8 @@
                             </div>
                         </ng-template>
                         <span class="my-auto">
-                            <div class="my-auto w-10">
-                                <img src="assets/icons/offers/help.svg" class="w-4 h-4" [pTooltip]="pricewithvattp"
-                                    tooltipPosition="top" tooltipStyleClass="custom-tooltip" alt="">
-                            </div>
+                            <span class="material-symbols-outlined text-sm" [pTooltip]="pricewithvattp"
+                                tooltipPosition="top" tooltipStyleClass="custom-tooltip">help</span>
                         </span>
                         }
 
@@ -167,8 +161,11 @@
                     <div class="w-[5%]"></div>
                 </div>
                 <div cdkDropList (cdkDropListDropped)="onDrop($event)" class="space-y-2">
-                    <div *ngFor="let detail of details.controls; trackBy: trackByFn" [formGroup]="getFormGroup(detail)"
-                        cdkDrag (cdkDragStarted)="onDragStart($event, detail)"
+                    <div *ngFor="let detail of details.controls; trackBy: trackByFn" 
+                        [formGroup]="getFormGroup(detail)"
+                        cdkDrag 
+                        cdkDragLockAxis="y"
+                        (cdkDragStarted)="onDragStart($event, detail)"
                         (cdkDragEnded)="onDragEnd($event, detail)"
                         class="invoice-detail-row flex gap-2 p-4 bg-white rounded-lg shadow-md transition-all duration-300 border border-transparent hover:shadow-lg"
                         [ngClass]="{'dragging-active': detail.isDragging}">
@@ -176,14 +173,12 @@
 
                         <div class="flex gap-2 mb-2 text-sm font-semibold" [formGroup]="getFormGroup(detail)">
                             <div class="w-[3%] flex items-center">
-                                <span
-                                    class="material-symbols-outlined draggable-handle cdk-drag-handle">drag_indicator</span>
+                                <span class="material-symbols-outlined draggable-handle" cdkDragHandle>drag_indicator</span> 
                             </div>
                             @if(detail?.get('isTextRow').value)
                             {
-                            <div class="w-full flex items-start gap-4 relative">
-                                <textarea formControlName="textContent" rows="5" cols="130"
-                                    class="w-full bg-white border border-gray-300 rounded-md p-2" pTextarea></textarea>
+                        <div class="w-full flex items-center gap-4 relative">
+                            <textarea formControlName="textContent" rows="5" cols="135"  pTextarea></textarea>
                                 <div class="flex flex-col gap-1">
                                     <label class="mb-2 block" style="font-size: 11px; white-space: nowrap;">
                                         {{this.sharedService.T('autoGenerateText')}}: </label>
@@ -194,16 +189,16 @@
                                             (onChange)="GenerateInvoiceDescription($event, category, detail.get('rowIndex')?.value)">
                                         </p-checkbox>
                                         <label [for]="category.key" class="mb-2 block"
-                                            style="font-size: 11px; white-space: nowrap;"> {{ category.text }} </label>
+                                            style="font-size: 11px; white-space: nowrap;padding-left: 1px;"> {{ category.text }} </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="w-[5%] justify-end flex">
-                                <div class="my-auto">
-                                    <img src="assets/images/close.png" alt=""
-                                        (click)="removeDetailRow(detail.get('rowIndex')?.value)">
-                                </div>
+                                <div class="w-[5%] justify-end flex items-center">
+                                    <p-button icon="pi pi-times" severity="danger"  size="small" (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
+                                </div>                            
                             </div>
+
                             }
                             @else{
                             <div class="w-[7%]">
@@ -220,12 +215,9 @@
                                     [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
                                     [inputStyleClass]="detail.get('productName')?.value ? 'ng-invalid ng-dirty' : ''">
                                     <ng-template let-product pTemplate="item">
-                                        <div class="flex align-items-center gap-2">
-                                            <div>
-                                                <p>{{ product.productName }} <br>
-                                                    {{ product.priceIncVat }} / {{ product.productQuantity }} {{
-                                                    product.productUnit }} </p>
-                                            </div>
+                                        <div class="w-full">
+                                            <p class="font-semibold text-sm text-gray-900">{{ product.productName }}</p>
+                                            <p class="text-xs text-gray-500">{{ product.productDescription }}</p>
                                         </div>
                                     </ng-template>
                                 </p-autoComplete>

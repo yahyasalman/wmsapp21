@@ -271,8 +271,8 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
               this.uploadedFile = null;   // Reset current upload file
               this.messageService.add({
                 severity: 'success',
-                summary: 'Upload Successful',
-                detail: `Successfully uploaded ${file.name}`
+                summary: this.sharedService.T('success'),
+                icon: 'pi pi-check-circle'
               });
               this.getFiles();
             },

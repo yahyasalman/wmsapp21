@@ -522,10 +522,10 @@
                   <ng-template pTemplate="body" let-payment>
                     <tr class="hover:bg-gray-50">
                       <td class="p-2">
+                          <p-button size="small" severity="danger" icon="pi pi-trash" (onClick)="confirmDeletePayment($event, payment.invoiceId, payment.invoicePaymentId)">
+                     </p-button>
 
-                        <img src="assets/icons/invoice/cancel1.svg" alt="" class="cursor-pointer"
-                          (click)="confirmDeletePayment($event, payment.invoiceId, payment.invoicePaymentId)" />
-                      </td>
+                        </td>
                       <td class="p-2">{{ payment.paymentDate }}</td>
                       <td class="p-2 text-center">{{ payment.paymentAmount }}</td>
                       <td class="p-2 text-center">

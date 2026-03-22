@@ -31,6 +31,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { SplitButtonModule } from 'primeng/splitbutton';
+
 @Component({
   selector: 'app-create-offer',
   standalone: true,
@@ -463,7 +464,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
             this.updateDetailRow(this.details.controls[lastIndex] as FormGroup);
 
           });
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Data Saved' });
+          this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
         },
         error: (err) => {
           this.logger.error('addTemplate error', err);
@@ -504,7 +505,8 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
             textareaControl.setValue(res.text);
             this.messageService.add({
               severity: 'success',
-              detail: this.sharedService.T('aiTextAdded'),
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle'
             });
           }
           else {

@@ -304,8 +304,9 @@ export class ProductListComponent implements OnDestroy {
               if (res) {
                 this.messageService.add({
                   severity: 'success',
-                  summary: 'Status Updated',
-                  detail: `Product ${actionText}d successfully!`
+                  summary: this.sharedService.T('success'),
+                  icon: 'pi pi-check-circle',
+                  life: 3000
                 });
                 this.getProducts(); // List refresh karein
               }
@@ -365,8 +366,8 @@ export class ProductListComponent implements OnDestroy {
       if (res === true || res?.success === true || res?.productId) {
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
-          detail: `Product "${currentProductName}" saved successfully!`,
+          summary: this.sharedService.T('success'),
+          icon: 'pi pi-check-circle',
         });
         this.getProducts();
         this.productForm();
@@ -482,8 +483,8 @@ export class ProductListComponent implements OnDestroy {
         this.logger.info('Saved:', res);
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
-          detail: 'Inventory saved successfully'
+          summary: this.sharedService.T('success'),
+          icon: 'pi pi-check-circle'
         });
         this.showInventoryDialog = false;
       },

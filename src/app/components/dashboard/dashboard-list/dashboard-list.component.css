@@ -15,16 +15,8 @@ body .ui-button.rounded-button {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-.gradient-bg {
-    background: linear-gradient(135deg, #dde5f6 0%, #f0f4ff 100%);
-}
-
 .right-aligned-label {
     text-align: right !important;
-    margin-bottom: 1rem;
-}
-
-.vertical-spacing > p {
     margin-bottom: 1rem;
 }
 

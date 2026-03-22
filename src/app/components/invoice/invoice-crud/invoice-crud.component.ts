@@ -32,6 +32,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AiService } from 'app/services/ai.service';
 import { CustomerService } from 'app/services/customer.service';
+import { TextareaModule } from 'primeng/textarea';
 
 
 
@@ -58,7 +59,8 @@ import { CustomerService } from 'app/services/customer.service';
     DragDropModule,
     SplitButtonModule,
     TooltipModule,
-    CheckboxModule
+    CheckboxModule,
+    TextareaModule 
   ],
   templateUrl: './invoice-crud.component.html',
   styleUrl: './invoice-crud.component.css',
@@ -500,7 +502,7 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
             let lastIndex = this.details.length - 1;
             this.updateDetailRow(this.details.controls[lastIndex] as FormGroup);
           });
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Data Saved' });
+          this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
         },
         error: (err) => {
           this.errorHandler.handleError(err, 'addTemplate', 'Failed to add template.');
@@ -598,7 +600,8 @@ onFormSubmit() {
             this.logger.info('GenerateInvoiceDescription success', { index });
             this.messageService.add({
               severity: 'success',
-              detail: this.sharedService.T('aiTextAdded'),
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle'
             });
           } else {
             this.messageService.add({

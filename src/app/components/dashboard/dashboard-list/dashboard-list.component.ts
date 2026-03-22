@@ -8,7 +8,8 @@ import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
 import { DashboardService } from 'app/services/dashboard.service';
 import { InvoiceService } from 'app/services/invoice.service';
-import {TooltipItem } from 'chart.js';
+import {TooltipItem, Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ButtonModule } from 'primeng/button';
@@ -26,6 +27,9 @@ import { TagModule } from 'primeng/tag';
 
 // RxJS
 import { catchError, forkJoin, Subject, finalize } from 'rxjs';
+
+// Register chart plugin
+Chart.register(ChartDataLabels);
 
 @Component({
   selector: 'app-dashboard-list',
@@ -407,7 +411,28 @@ loadLineChart(noOfPreviousMonths:string){
         aspectRatio: 0.6,
         responsive: true,
         plugins: {
+          datalabels: {
+            anchor: 'end' as any,
+            align: 'top' as any,
+            color: textColor,
+            font: {
+              weight: 600 as any,
+              size: 11,
+              family: '"Inter", sans-serif'
+            },
+            formatter: (value: any) => {
+              if (value === null || value === undefined) return '';
+              const num = Number(value);
+              if (num >= 1000) {
+                return (num / 1000).toFixed(0) + 'K';
+              }
+              return num.toFixed(0);
+            },
+            offset: 8,
+            display: true
+          },
           legend: {
+            align: 'end' as const,
             labels: {
               color: textColor,
               font: {
@@ -420,7 +445,12 @@ loadLineChart(noOfPreviousMonths:string){
               boxWidth: 8,
               boxHeight: 8
             },
-            position: 'top' as const
+            position: 'top' as const,
+            margin: {
+              top: 0,
+              bottom: 50
+            },
+            padding: 20
           },
           tooltip: {
             backgroundColor: textColor,

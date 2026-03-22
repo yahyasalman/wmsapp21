@@ -192,7 +192,7 @@ export class SupplierListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           if (res) {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Supplier saved successfully' });
+            this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
             this.showSupplierDialog = false;
             this.getSuppliers();
           }

@@ -14,42 +14,37 @@
                     <p-select [options]="this.sharedService.getEnums('sentStatus')" formControlName="status" size="large" optionLabel="text" optionValue="value" (onChange)="onChangeStatus($event)" [checkmark]="true" [showClear]="true" placeholder="{{ this.sharedService.T('deliveryStatus') }}" /> 
                 </div> 
                 <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap lg:ml-auto">
-                    <div class="flex items-center content-center">
-                        <p-datepicker formControlName="year" size="large" view="year" dateFormat="yy" class="w-19"
+                    <!-- Year Filter -->
+                    <div class="flex items-center gap-3">
+                        <div class="text-xs font-semibold text-gray-500">{{ this.sharedService.T('year') }}:</div>
+                        <p-datepicker formControlName="year" view="year" dateFormat="yy" class="w-19"
                         (onSelect)="onSelectYear($event)" />
                     </div>
-                    <div class=" my-auto">
-                        <!-- <app-date-range (dateChange)="getDateRange($event)"></app-date-range>  -->
-                        <div class="flex align-items-center justify-content-center ">
-                            <div class="flex  text-center gap-3">
-                            <p-date-picker dataType="string"
-                            formControlName="fromDate"
-                            class="w-30"
-                            dateFormat="yy-mm-dd"
-                            [iconDisplay]="'input'" 
-                            [showIcon]="false" 
-                            (onSelect)="onSelectFromDate()"
-                                >
-                            </p-date-picker>
-                            </div>
-                            <span class="my-auto">
-                                <img src="assets/images/line.png" alt="">
-                            </span>
-                            <div class="flex year text-center gap-3">
-                            <p-date-picker class="w-30"
-                            dataType="string"
-                            formControlName="toDate"
-                            dateFormat="yy-mm-dd"
-                            [iconDisplay]="'input'" 
-                            [showIcon]="false"
-                            (onSelect)="onSelectToDate()"
-                            >
-                            </p-date-picker>
-                            </div>
-                        </div>
+
+                    <!-- Date Range Filter -->
+                    <div class="flex items-center gap-3">
+                        <p-date-picker dataType="string"
+                        formControlName="fromDate"
+                        class="w-30"
+                        dateFormat="yy-mm-dd"
+                        placeholder="From"
+                        (onSelect)="onSelectFromDate()">
+                        </p-date-picker>
+                        <span class="flex items-center justify-center h-8 w-8 rounded-full" style="background-color: var(--p-primary-100);">
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </span>
+                        <p-date-picker class="w-30"
+                        dataType="string"
+                        formControlName="toDate"
+                        dateFormat="yy-mm-dd"
+                        placeholder="To"
+                        (onSelect)="onSelectToDate()">
+                        </p-date-picker>
                     </div>
-                    <div class="rounded-md">
-                        <div class="w-full ps-2 rounded-md">
+
+                    <!-- Search -->
+                    <div class="rounded-md ml-auto mb-3">
+                        <div class="w-full ps-2 h-10 rounded-md">
                             <p-iconfield>
                             <p-inputicon class="pi pi-search" />
                             <p-autoComplete formControlName="vehiclePlate" [suggestions]="vehiclePlates" placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('vehiclePlate') }}"  
@@ -64,7 +59,7 @@
                             </p-autoComplete>
                             </p-iconfield>
                         </div>
-                        </div>
+                    </div>
                 </div>           
             </div>
             <hr class="border-CustomBorder">

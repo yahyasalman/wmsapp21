@@ -36,7 +36,6 @@ import { finalize, takeUntil, Subject } from 'rxjs';
     DialogModule
   ],
   providers: [ConfirmationService, MessageService],
-  styleUrl: './digitalservice-detail.component.css',
   templateUrl: './digitalservice-detail.component.html'
 })
 export class DigitalServiceDetailComponent implements OnDestroy {

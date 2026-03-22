@@ -85,7 +85,14 @@
   <!-- Header -->
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-xl font-semibold">{{this.sharedService.T('salePerformance')}}</h1>
-    <!-- (Optional) Keep this empty or add other global actions if needed -->
+    <div class="flex items-center gap-2">
+      <p-select [options]="noOfPreviousMonthsForChart" 
+      [(ngModel)]="selectedStatMonths" [ngModelOptions]="{standalone: true}" 
+      optionLabel="text"
+       optionValue="value" 
+       (onChange)="onPeriodChange($event)" 
+       [checkmark]="true"></p-select>
+    </div>
   </div>
  
   <!-- Main Content -->
@@ -141,22 +148,8 @@
 
     <!-- Chart Area (Right) -->
     <div class="col-span-3">
-      <!-- Month change control aligned with left heading -->
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-lg font-semibold invisible">Placeholder</h3>
-        <div class="flex items-center gap-2">
-          <span class="text-gray-600 text-sm">Period:</span>
-          <p-select [options]="noOfPreviousMonthsForChart" 
-          [(ngModel)]="selectedStatMonths" [ngModelOptions]="{standalone: true}" 
-          optionLabel="text"
-           optionValue="value" 
-           (onChange)="onPeriodChange($event)" 
-           [checkmark]="true"></p-select>
-        </div>
-      </div>
-
       <!-- Chart Card -->
-      <div class="card">
+      <div class="card mt-0">
         <p-chart
           type="bar"
           [data]="lineChartData"
@@ -258,7 +251,7 @@
        </div>
        <div>
         <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold">{{this.sharedService.T('unpaidInvoicesByCustomers')}}</h3>
+                    <h3 class="text-lg font-semibold">{{this.sharedService.T('unansweredOffers')}}</h3>
                 </div>
                 
                 <p-table 
@@ -275,7 +268,7 @@
                 >
         <ng-template #header>
           <tr>
-            <th class="id-column-header rounded-l-xl" pSortableColumn="offerId">
+            <th class="rounded-l-xl" pSortableColumn="offerId">
               <p-sortIcon field="offerId" />
             </th>
             <th>{{ this.sharedService.T('customerName') }}</th>

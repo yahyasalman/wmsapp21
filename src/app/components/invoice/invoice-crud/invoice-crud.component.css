@@ -7,6 +7,7 @@
   transform: scale(1.02) rotate(2deg);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0.95;
+  pointer-events: none;
 }
 
 /* Placeholder (Space where the dragged item will drop) */
@@ -27,12 +28,22 @@
 }
 
 /* Drag Handle (Cursor for draggable items) */
-.cdk-drag-handle {
+[cdkDragHandle] {
   cursor: grab;
   transition: color 0.2s ease;
+  user-select: none;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.cdk-drag-handle:active {
+[cdkDragHandle]:hover {
+  opacity: 0.7;
+  color: var(--p-primary-color);
+}
+
+[cdkDragHandle]:active {
   cursor: grabbing;
 }
 
@@ -54,9 +65,7 @@
 }
 
 /* Fix for p-autocomplete display issue */
-.p-autocomplete { 
-  display: grid !important;
-}
+.p-autocomplete {  display: grid !important; }
 
 .cdk-drag-animating {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -71,14 +80,6 @@
   cursor: grabbing; /* Grabbing icon when dragging */
 }
 
-/* UNUSED CLASS - NOT USED IN HTML */
-/* .cdk-drag.dragging {
-  border: 2px dotted #B0B0B0 !important;
-  background-color: #F9F9F9 !important;
-} */
 
-
-/* Actually,col-span-6 is not applying on customerName field. After adding this css.it is working fine. I am not sure why it is not working without this css. */
-.p-autocomplete { display: grid !important;}
 
   

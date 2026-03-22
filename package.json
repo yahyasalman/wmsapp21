@@ -34,6 +34,7 @@
     "@primeng/themes": "^21.0.4",
     "@tailwindcss/postcss": "^4.2.0",
     "chart.js": "^4.5.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "ng2-pdf-viewer": "^10.4.0",
     "primeicons": "^7.0.0",
     "primelocale": "^2.3.0",

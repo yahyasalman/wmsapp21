@@ -34,7 +34,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ConfirmDialogModule
   ],
   templateUrl: './customer-crud.component.html',
-  //styleUrl: './customer-crud.component.css',
   providers: [ConfirmationService, MessageService],
 })
 export class CustomerCrudComponent implements OnInit, OnDestroy {
@@ -194,7 +193,7 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'success',
               summary: this.sharedService.T('success'),
-              detail: this.sharedService.T('information added'),
+              icon: 'pi pi-check-circle',
               life: 3000
             });
           } else {
@@ -400,8 +399,8 @@ async onFormSubmit() {
 
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
-          detail: message,
+          summary: this.sharedService.T('success'),
+          icon: 'pi pi-check-circle',
           life: 6000,
         });
 

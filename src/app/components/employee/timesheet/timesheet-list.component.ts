@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, takeUntil, Subject } from 'rxjs';
@@ -29,6 +29,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TooltipModule } from 'primeng/tooltip';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-invoice-list',
@@ -54,7 +55,8 @@ import { TooltipModule } from 'primeng/tooltip';
     FloatLabelModule,
     SelectButtonModule,
     CheckboxModule,
-    TooltipModule
+    TooltipModule,
+    TextareaModule
   ],
   templateUrl: './timesheet-list.component.html',
   styleUrl: './timesheet-list.component.css',
@@ -65,6 +67,11 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
   @ViewChild('checkoutPopup') checkoutPopup!: Popover;
   @ViewChild('deletePopup') deletePopup!: Popover;
   @ViewChild('commentsPopup') commentsPopup!: Popover;
+  selectedMonth = '';
+  sortField = 'timesheetId';
+  sortOrder = -1;
+  totalRecords: number = 0;
+
   todayDateString: string = '';
   timesheets: ITimesheet[] = [];
   errorTimesheets: ITimesheet[] = [];
@@ -90,7 +97,8 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
     private readonly timesheetService: TimesheetService,
     private readonly employeeService: EmployeeService,
     private route: ActivatedRoute,
-    private messageService: MessageService,) {
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef) {
 
     this.filters = this.fb.group({
       year: (new Date().getFullYear()).toString(),
@@ -101,8 +109,8 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
       isActive: '',
       currentPage: 1,
       pageSize: 10,
-      sortBy: '',
-      sortDir: '-1'
+      sortBy: this.sortField,
+      sortDir: this.sortOrder,
     });
 
     const startDate = new Date();
@@ -168,10 +176,7 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
         next: (res) => {
           const objectData: any = res.objectList;
           this.timesheets = objectData;
-          this.logger.info(this.timesheets);
-          this.pager = res.pager;
-          this.logger.info('Page-Info');
-          this.logger.info(this.pager);
+          this.totalRecords = res.pager.totalRecords;
         },
         error: (err) => {
           this.logger.error(err);
@@ -251,29 +256,6 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
     this.getTimesheets();
   }
 
-  // Pager 
-  onPageChange(e: any) {
-    this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-     this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getTimesheets();
-  }
-  onPageSizeChange(event: SelectChangeEvent) {
-    this.filters.patchValue({ pageSize: event.value });
-     this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getTimesheets();
-  }
-
-  sortColumn(e: any) {
-    if (e) {
-      let pageIndex = e.first / e.rows;
-      this.pager.firstPage = e.first;
-      this.filters.patchValue({ currentPage: (++pageIndex).toString(), pageSize: e.rows, sortDir: e.sortOrder, sortBy: e.sortField });
-       this.sharedService.updateFiltersInNavigation(this.filters);
-      this.getTimesheets();
-    }
-  }
-
-  // *** pager ends ****
   showCheckInDialog() {
     this.resetTimesheetForm();
     this.isDialogVisible = true;
@@ -357,7 +339,8 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
           } else {
             this.messageService.add({
               severity: 'success',
-              detail: this.sharedService.T('timeRegisterSuccess'),
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle'
             });
             this.getTimesheets();
             this.resetTimesheetForm();
@@ -421,7 +404,8 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
           if (res) {
             this.messageService.add({
               severity: 'success',
-              detail: this.sharedService.T('timeRegisterSuccess'),
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle',
               life: 3000
             });
             this.checkoutTimesheet.patchValue({ timeOut: '' });
@@ -467,7 +451,8 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
           if (res) {
             this.messageService.add({
               severity: 'success',
-              detail: this.sharedService.T('sucess'),
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle',
               life: 3000
             });
             this.deletePopup.toggle(event);
@@ -508,7 +493,8 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
           if (res) {
             this.messageService.add({
               severity: 'success',
-              detail: this.sharedService.T('commentsUpdated'),
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle',
               life: 3000
             });
             this.commentsPopup.hide();
@@ -597,6 +583,48 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
   getf(field: string) {
     return this.timesheet.get(field);
   }
+
+    downloadPdf() {
+    this.logger.info('downloadExcel called' + this.selectedMonth);
+    const date = new Date(this.selectedMonth);
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    this.isLoading = true;
+    // this.invoiceService.exportInvoicesToExcel(year, month)
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe({
+    //     next: (response) => {
+    //       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //       const url = window.URL.createObjectURL(blob);
+    //       const a = document.createElement('a');
+    //       a.href = url;
+    //       a.download = `invoices_${year}_${month}.xlsx`;
+    //       a.click();
+    //       window.URL.revokeObjectURL(url);
+    //       this.isLoading = false;
+    //       this.logger.info('downloadExcel success', { year, month });
+    //     },
+    //     error: (err) => {
+    //       this.isLoading = false;
+    //       this.errorHandler.handleError(err, 'downloadExcel', 'Failed to download invoices.');
+    //     }
+    //   });
+  }
+
+    onPageChange(e: any) {
+  const currentPage = (e.first / e.rows) + 1;
+  this.sortField = (e.sortField || this.sortField || 'timesheetId').trim();
+  this.sortOrder = (e.sortOrder !== undefined && e.sortOrder !== null) ? Number(e.sortOrder) : (this.sortOrder ?? 1);
+  const oldSortBy = this.filters.get('sortBy')?.value?.trim(); 
+  const oldSortDir = Number(this.filters.get('sortDir')?.value); 
+  const isSortChanged = (this.sortField !== oldSortBy) || (this.sortOrder !== oldSortDir);
+  const pageToSet = isSortChanged ? 1 : currentPage;
+  this.filters.patchValue({currentPage: pageToSet,pageSize: e.rows,sortBy: this.sortField,sortDir: this.sortOrder});
+  this.sharedService.updateFiltersInNavigation(this.filters);
+  this.cdr.detectChanges();
+  this.getTimesheets();
+  }
+
 
   ngOnDestroy(): void {
     this.destroy$.next();

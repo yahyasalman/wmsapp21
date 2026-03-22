@@ -1,0 +1,43 @@
+/* Calendar container wrapper */
+.calendar-container {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+/* Only target inline datepicker within calendar container */
+.calendar-container p-datepicker {
+  display: block;
+  width: 100%;
+}
+
+/* Calendar specific styling - only affect datepicker-inline */
+:host ::ng-deep .calendar-container .p-datepicker.p-datepicker-inline {
+  width: 100%;
+  display: block;
+}
+
+:host ::ng-deep .calendar-container .p-datepicker-calendar {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+
+:host ::ng-deep .calendar-container .p-datepicker-calendar table {
+  width: 100% !important;
+}
+
+:host ::ng-deep .calendar-container .p-datepicker-calendar table td {
+  width: 14.28% !important;
+}
+
+:host ::ng-deep .calendar-container .p-datepicker-header {
+  width: 100% !important;
+}
+
+/* Time input styling - focus with primary color */
+.input-time-focus:focus {
+  border-color: var(--p-primary-300) !important;
+  --tw-ring-color: var(--p-primary-300) !important;
+}
+

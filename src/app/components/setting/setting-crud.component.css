@@ -1,4 +1,4 @@
-  /* Highlight the row while dragging - PREVIEW */
+/* Highlight the row while dragging - PREVIEW */
 .cdk-drag-preview {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
   border: 2px dotted #9CA3AF;
@@ -7,6 +7,7 @@
   transform: scale(1.02) rotate(2deg);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0.95;
+  pointer-events: none;
 }
 
 /* Placeholder (Space where the dragged item will drop) */
@@ -27,12 +28,22 @@
 }
 
 /* Drag Handle (Cursor for draggable items) */
-.cdk-drag-handle {
+[cdkDragHandle] {
   cursor: grab;
   transition: color 0.2s ease;
+  user-select: none;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.cdk-drag-handle:active {
+[cdkDragHandle]:hover {
+  opacity: 0.7;
+  color: var(--p-primary-color);
+}
+
+[cdkDragHandle]:active {
   cursor: grabbing;
 }
 
@@ -46,6 +57,16 @@
 /* Smooth hover effect */
 .invoice-detail-row:hover {
   border-color: #E5E7EB !important;
+}
+
+/* Enable pointer events for drop zones */
+[cdkDropList] {
+  pointer-events: auto;
+}
+
+/* Ensure draggable rows can receive events */
+[cdkDrag] {
+  pointer-events: auto;
 }
 
 /* Focus state for accessibility */
@@ -71,14 +92,6 @@
   cursor: grabbing; /* Grabbing icon when dragging */
 }
 
-/* UNUSED CLASS - NOT USED IN HTML */
-/* .cdk-drag.dragging {
-  border: 2px dotted #B0B0B0 !important;
-  background-color: #F9F9F9 !important;
-} */
-
-
-/* Actually,col-span-6 is not applying on customerName field. After adding this css.it is working fine. I am not sure why it is not working without this css. */
 .p-autocomplete { display: grid !important;}
 
   

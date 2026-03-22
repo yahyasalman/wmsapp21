@@ -58,15 +58,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
   selectedTheme = '';  
   imagesUrl = environment.production ? `${environment.CDN_URL}/images/` : 'assets/images/';
 palettes = [
-  { label: 'Professional Blue', value: 'blue', color: '#3b82f6' },     // Default
+  { label: 'Professional Blue', value: 'blue', color: '#3b82f6' },     
   { label: 'Modern Indigo',     value: 'indigo', color: '#4f46e5' },
   { label: 'Industrial Teal',   value: 'teal', color: '#0d9488' },
   { label: 'Minimal Slate',     value: 'slate', color: '#64748b' },
-  { label: 'Fresh Emerald',     value: 'emerald', color: '#10b981' },
-  { label: 'Deep Red',          value: 'red', color: '#b91c1c' }       // Muted red (not alert red)
+  { label: 'Deep Red',          value: 'red', color: '#b91c1c' },
+  { label: 'Industrial Amber',  value: 'amber', color: '#f59e0b' }
 ];
-   isDark = false;
-   currentUser:string |null = '' ;
+  currentUser:string |null = '' ;
    selectedRoute: string = '';
    currentMenuLabel: string = '';
     constructor(
@@ -222,9 +221,7 @@ palettes = [
    this.logger.info('change value to::',palette);
     this.theme.setPrimaryPalette(palette);
   }
-  onDarkChange(checked: boolean) {
-    this.theme.setDarkMode(checked);
-  }
+
   onLogout() {
     this.sharedService
         .logout()

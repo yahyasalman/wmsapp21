@@ -56,7 +56,6 @@ import { TabsModule } from 'primeng/tabs';
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './customer-detail.component.html',
-  styleUrl: './customer-detail.component.css',
 })
 export class CustomerDetailComponent implements OnInit, OnDestroy {
 

@@ -26,19 +26,22 @@
           </div>
 
           <div class="rounded-md ml-auto flex items-center gap-2">
+            <div class="text-xs font-semibold text-gray-500">{{ this.sharedService.T('year') }}:</div>
             <p-datepicker formControlName="year" view="year" dateFormat="yy" class="w-19"
               (onSelect)="onSelectYear($event)">
             </p-datepicker>
 
-            <div class="ds-date-range flex items-center">
-              <p-date-picker dataType="string" formControlName="fromDate" class="w-30" dateFormat="yy-mm-dd"
-                [iconDisplay]="'input'" [showIcon]="false" (onSelect)="onSelectFromDate()">
-              </p-date-picker>
+            <div class="ds-date-range flex items-center gap-3">
+              <p-datepicker dataType="string" formControlName="fromDate" class="w-30" dateFormat="yy-mm-dd"
+                [iconDisplay]="'input'" [showIcon]="false" placeholder="From" (onSelect)="onSelectFromDate()">
+              </p-datepicker>
 
-              <span class="ds-date-connector mx-1" aria-hidden="true"></span>
+              <span class="flex items-center justify-center h-8 w-8 rounded-full" style="background-color: var(--p-primary-100);">
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </span>
 
               <p-date-picker dataType="string" formControlName="toDate" class="w-30" dateFormat="yy-mm-dd"
-                [iconDisplay]="'input'" [showIcon]="false" (onSelect)="onSelectToDate()">
+                [iconDisplay]="'input'" [showIcon]="false" placeholder="To" (onSelect)="onSelectToDate()">
               </p-date-picker>
             </div>
 
@@ -67,9 +70,22 @@
       </div>
 
       <div class="mb-12">
-        <p-table [lazy]="true" [value]="digitalServices" [rows]="10" [showGridlines]="false"
-          [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
-          (onLazyLoad)="sortColumn($event)" sortField="creationDate" responsiveLayout="scroll" [sortOrder]="-1">
+        <p-table 
+        [lazy]="true" 
+        [value]="digitalServices" 
+        [showGridlines]="false"
+        [paginator]="true"
+        [rows]="filters.get('pageSize')?.value" 
+        [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[10, 20, 30]"  
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+        [showFirstLastIcon]="true"
+        (onLazyLoad)="onPageChange($event)"
+        responsiveLayout="scroll"
+        sortField="creationDate" 
+        [sortOrder]="-1">
 
           <ng-template pTemplate="header">
             <tr>
@@ -124,38 +140,6 @@
             </tr>
           </ng-template>
         </p-table>
-
-        <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
-
-          <div class="flex items-center">
-            <p-select [options]="[10, 20, 30]" [(ngModel)]="pager.pageSize" [ngModelOptions]="{standalone: true}"
-              styleClass="bg-white border border-CustomBorder rounded-md" (onChange)="onPageSizeChange($event)">
-            </p-select>
-          </div>
-
-          <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
-            (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-            currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-            styleClass="!bg-transparent">
-
-            <ng-template pTemplate="firstpagelinkicon">
-              <img src="assets/icons/paginator/previus.svg" alt="">
-            </ng-template>
-            <ng-template pTemplate="lastpagelinkicon">
-              <img src="assets/icons/paginator/next.svg" alt="">
-            </ng-template>
-            <ng-template pTemplate="previouspagelinkicon">
-              <div class="flex items-center gap-2">
-                <div>{{ this.sharedService.T('previous') }}</div>
-              </div>
-            </ng-template>
-            <ng-template pTemplate="nextpagelinkicon">
-              <div class="flex items-center gap-2">
-                <div>{{ this.sharedService.T('next') }}</div>
-              </div>
-            </ng-template>
-          </p-paginator>
-        </div>
       </div>
   </form>
   <!-- digital service popup code -->
@@ -279,7 +263,7 @@
               <label class="block mb-2">{{ this.sharedService.T('workCarriedOut') }} <span
                   class="text-red-500">*</span></label>
               <p-listbox [options]="this.sharedService.getEnums('digitalservice')" [multiple]="true" [checkbox]="true"
-                formControlName="services" optionLabel="text" optionValue="value" class="w-full custom-listbox">
+                formControlName="services" optionLabel="text" optionValue="value" class="w-full">
               </p-listbox>
             </div>
           </div>
