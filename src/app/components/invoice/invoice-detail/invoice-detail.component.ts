@@ -21,8 +21,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageModule } from 'primeng/message';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
-interface WorkshopService { name: string };
-
+import { WorkshopService } from 'app/services/workshop.service';
 @Component({
   selector: 'app-invoice-detail',
   standalone: true,
@@ -60,8 +59,8 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   isEmailSent: boolean | null = null;
 
   //ds
-  services!: WorkshopService[];
-  selectedServices!: WorkshopService[];
+  //services!: WorkshopService[];
+  
   private destroy$ = new Subject<void>();
 
   constructor(private logger: LogService,
@@ -72,6 +71,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly invoiceService: InvoiceService,
+    private readonly workshopService: WorkshopService,
     private http: HttpClient,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
@@ -94,13 +94,13 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
     this.getPdf();
     this.getInvoiceHistory();
 
-    this.services = [
-      { name: 'Engine oil and Filter' },
-      { name: 'Air Filter' },
-      { name: 'Fuel Filter' },
-      { name: 'Pollen Filter' },
-      { name: 'Spark Plugs' }
-    ];
+    // this.services = [
+    //   { name: 'Engine oil and Filter' },
+    //   { name: 'Air Filter' },
+    //   { name: 'Fuel Filter' },
+    //   { name: 'Pollen Filter' },
+    //   { name: 'Spark Plugs' }
+    // ];
 
     //this.sharedService.setPageHeader(this.sharedService.T('g.invoice') + ' [#' + this.invoiceId + ']');
   }
@@ -130,42 +130,61 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   getInvoiceHistory() {
-    this.invoiceService
-      .getInvoiceHistory(this.invoiceId)
-      .pipe(
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response: any) => {
-          if (response) {
-            this.invoiceHistory = response;
-            this.logger.info('getInvoiceHistory success', { historyCount: this.invoiceHistory.length });
-          }
-        },
-        error: (err) => {
-          this.errorHandler.handleError(err, 'getInvoiceHistory', 'Failed to load invoice history.');
-        }
-      });
+    
+            this.invoiceService
+              .getInvoiceHistory(this.invoiceId)
+              .pipe(
+                takeUntil(this.destroy$)
+              )
+              .subscribe({
+                next: (response: any) => {
+                  if (response) {
+                    this.invoiceHistory = response;
+                    this.logger.info('getInvoiceHistory success', { historyCount: this.invoiceHistory.length });
+                  }
+                },
+                error: (err) => {
+                  this.errorHandler.handleError(err, 'getInvoiceHistory', 'Failed to load invoice history.');
+                }
+              });
+
   }
 
   getPdf() {
-    this.sharedService
-      .printPdf('invoice', this.invoiceId.toString(), 'basic')
+
+    this.workshopService
+      .getWorkshop()
       .pipe(
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (response: any) => {
           if (response) {
-            var newBlob = new Blob([response], { type: "application/pdf" });
-            this.pdfUrl = window.URL.createObjectURL(newBlob);
-            this.logger.info('getPdf success', { invoiceId: this.invoiceId });
-          }
-        },
-        error: (err) => {
-          this.errorHandler.handleError(err, 'getPdf', 'Failed to load PDF.');
-        }
-      });
+            this.sharedService
+              .printPdf('invoice', this.invoiceId.toString(), response.defaultInvoiceTemplate)
+              .pipe(
+                takeUntil(this.destroy$)
+              )
+              .subscribe({
+                next: (response: any) => {
+                  if (response) {
+                    var newBlob = new Blob([response], { type: "application/pdf" });
+                    this.pdfUrl = window.URL.createObjectURL(newBlob);
+                    this.logger.info('getPdf success', { invoiceId: this.invoiceId });
+                  }
+                },
+                error: (err) => {
+                  this.errorHandler.handleError(err, 'getPdf', 'Failed to load PDF.');
+                }
+              });
+
+
+                  }
+                },
+                error: (err) => {
+                  this.errorHandler.handleError(err, 'getInvoiceHistory', 'Failed to load invoice history.');
+                }
+              });
   }
 
   confirmDuplicate(event: Event) {
@@ -296,9 +315,5 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
         }
       });
   }
-  onServiceChange(event: any): void {
-    const selectedServices = event.value.map((element: WorkshopService) => element.name).join(',');
-  }
-
   
 }

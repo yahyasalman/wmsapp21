@@ -543,24 +543,22 @@ onFormSubmit() {
 
     this.isLoading = true;
     this.logger.info('Submitting invoice:', invoice);
-    // this.invoiceService
-    //   .upsertInvoice(invoice)
-    //   .pipe(
-    //     catchError((err) => {
-    //       this.isLoading = false;
-    //       console.log(err);
-    //       throw err;
-    //     })
-    //   )
-    //   .subscribe((res: any) => {
-    //     this.isLoading = false;
+    this.invoiceService
+      .upsertInvoice(invoice)
+      .pipe(
+        catchError((err) => {
+          this.isLoading = false;
+          console.log(err);
+          throw err;
+        })
+      )
+      .subscribe((res: any) => {
+        this.isLoading = false;
         
-    //     if (res) {
-    //       this.sharedService.clearState();
-    //       this.sharedService.setState({ disableEdit: 'false', creditInvoice: 'false', customerId: invoice.customerId, customerEmail: invoice.customerEmail });
-    //       this.router.navigate([`sv/invoice/details/${res.data?.invoiceId || invoice.invoiceId}`]); 
-    //     }
-    //   });
+        if (res) {
+          this.router.navigate([`sv/invoice/details/${res.data?.invoiceId || invoice.invoiceId}`]); 
+        }
+      });
   }
     onCancelForm() {
     this.location.back();

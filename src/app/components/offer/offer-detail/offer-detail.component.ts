@@ -21,6 +21,9 @@ import { TableModule } from 'primeng/table';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
+import { WorkshopService } from 'app/services/workshop.service';
+import { ErrorHandlerService } from 'app/services/error-handler.service';
+
 @Component({
   selector: 'app-offer-detail',
   standalone: true,
@@ -63,6 +66,7 @@ export class OfferDetailComponent implements OnInit, OnDestroy {
   isEditButtonDisabled: boolean = false;
   isLoading: boolean = true;
   constructor(private logger: LogService,
+    private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
     private router: Router,
     private readonly fb: FormBuilder,
@@ -70,6 +74,7 @@ export class OfferDetailComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private readonly offerService: OfferService,
+    private readonly workshopService: WorkshopService,
     private http: HttpClient
   ) {
     this.emailForm = this.fb.group({
@@ -103,44 +108,41 @@ async getOffer(): Promise<void> {
     this.logger.error('Failed to fetch offer:', error);
   }
 }
-    // this.isLoading = true;
-    // await 
-    // this.offerService
-    //   .getOffer(this.offerId,undefined,false)
-    //   .pipe(catchError((err) => {
-    //     console.log(err); throw err;
-    //   }))
-    //   .subscribe((response: any) => {
-    //     this.offer = response.data;
-    //     this.logger.info(this.offer);
-    //    setTimeout(() => {
-    //     this.isLoading = false;
-    //   }, 800);
-    //   });
-
-  
 
   loadPdf() {
-    this.isLoading = true;
-    this.sharedService
-      .printPdf('offer', this.offerId.toString(), 'basic')
+
+    this.workshopService
+      .getWorkshop()
       .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        }),
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (response: any) => {
           if (response) {
-            var newBlob = new Blob([response], { type: "application/pdf" });
-            this.pdfUrl = window.URL.createObjectURL(newBlob);
-          }
-        },
-        error: (err) => {
-          this.logger.error('loadPdf error', err);
-        }
-      });
+            this.sharedService
+              .printPdf('offer', this.offerId.toString(), response.defaultInvoiceTemplate)
+              .pipe(
+                takeUntil(this.destroy$)
+              )
+              .subscribe({
+                next: (response: any) => {
+                  if (response) {
+                    var newBlob = new Blob([response], { type: "application/pdf" });
+                    this.pdfUrl = window.URL.createObjectURL(newBlob);
+                    this.logger.info('getPdf success', { offerId: this.offerId });
+                  }
+                },
+                error: (err) => {
+                  this.errorHandler.handleError(err, 'getPdf', 'Failed to load PDF.');
+                }
+              });
+               }
+                },
+                error: (err) => {
+                  this.errorHandler.handleError(err, 'getInvoiceHistory', 'Failed to load invoice history.');
+                }
+              });
+
   }
   loadHistory() {
     this.isLoading = true;

@@ -221,9 +221,9 @@
 /* =========================
    PrimeNG CUSTOMIZATION
 ========================= */
-.icon-primary { color: var(--p-primary-600) !important;},
+.icon-primary { color: var(--p-primary-600) !important;}
 
-.header-primary { background-color: var(--p-primary-100) !important;},
+.header-primary { background-color: var(--p-primary-100) !important;}
 
 
 /* =========================
@@ -259,15 +259,13 @@ Final revision done We only need following 2 properties to change for tables
   color: var(--p-primary-contrast) !important; /* Contrast text color */
 }
 
-// Menu 
-/* Hover state */
-/* Hover */
+/* Menu */
 .p-menu .p-menu-item-content:hover {
     background: var(--p-primary-color) !important;
     color: var(--p-primary-contrast-color) !important;
 }
-.p-menu .p-menu-item-link:not(.p-disabled):hover 
-{ background: var(--p-primary-100) !important; 
+.p-menu .p-menu-item-link:not(.p-disabled):hover { 
+  background: var(--p-primary-100) !important; 
   color: var(--p-primary-contrast-color) !important; 
 }
 
@@ -316,18 +314,3 @@ Final revision done We only need following 2 properties to change for tables
 }
 
 
-/* p-sorticon {
-    display: inline-block;
-    margin-left: 0.5rem;
-}
-
-p-sorticon svg {
-    width: 1rem;
-    height: 1rem;
-    vertical-align: middle;
-}
-.p-datatable .p-datatable-thead > tr > th.p-datatable-column-sorted p-sorticon {
-    opacity: 1;
-    visibility: visible;
-}
- */

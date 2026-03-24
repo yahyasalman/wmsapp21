@@ -29,6 +29,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { CustomerService } from 'app/services/customer.service';
 
 
 interface WorkshopService { name: string };
@@ -69,6 +70,7 @@ export class DigitalServiceListComponent implements OnDestroy {
     private messageService: MessageService,
     private readonly fb: FormBuilder,
     private readonly workOrderService: WorkOrderService,
+    private readonly customerService: CustomerService,
     private readonly digitalServiceService: DigitalServiceService,
     private readonly invoiceService: InvoiceService,
   private cdr: ChangeDetectorRef) {
@@ -387,17 +389,29 @@ export class DigitalServiceListComponent implements OnDestroy {
                     life: 3000
                   });
 
-                  this.digitalService.patchValue({
-                    invoiceId: invoiceRes.data.invoiceId,
-                    vehiclePlate: invoiceRes.data.vehiclePlate,
-                    vehicleManufacturer: invoiceRes.data.vehicleManufacturer,
-                    vehicleModel: invoiceRes.data.vehicleModel,
-                    vehicleYear: invoiceRes.data.vehicleYear,
-                    vehicleMileage: invoiceRes.data.vehicleMileage,
-                    isValidInvoice: true
-                  });
-
-                  this.getf('invoiceId')?.setErrors(null);
+                  this.customerService.getCustomer(invoiceRes.data.customerId)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe({
+                      next: (customerRes: any) => {
+                        if (customerRes && customerRes.data) {
+                          this.digitalService.patchValue({
+                            invoiceId: invoiceRes.data.invoiceId,
+                            userId: customerRes.data.digitalServiceId || '',
+                            vehiclePlate: invoiceRes.data.vehiclePlate,
+                            vehicleManufacturer: invoiceRes.data.vehicleManufacturer,
+                            vehicleModel: invoiceRes.data.vehicleModel,
+                            vehicleYear: invoiceRes.data.vehicleYear,
+                            vehicleMileage: invoiceRes.data.vehicleMileage,
+                            isValidInvoice: true
+                          });
+                          this.getf('invoiceId')?.setErrors(null);
+                        }
+                      },
+                      error: (err) => {
+                        this.logger.error(err);
+                        this.resetDigitalServiceForm();
+                      }
+                    });
                 },
                 error: (err) => {
                   this.logger.error(err);
@@ -412,6 +426,7 @@ export class DigitalServiceListComponent implements OnDestroy {
         }
       });
   }
+
   getf(controlName: string) {
     return this.digitalService.get(controlName);
   }
