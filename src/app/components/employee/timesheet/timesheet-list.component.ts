@@ -155,7 +155,6 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
         next: (res: IEmployee[]) => {
           if (res) {
             this.employees = res.map(employee => ({text: employee.fullName,value: employee.employeeId.toString()}));          
-            this.employeeCount = res.length;
           }
         },
         error: (err) => {
@@ -176,6 +175,8 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
         next: (res) => {
           const objectData: any = res.objectList;
           this.timesheets = objectData;
+          this.employeeCount = new Set(this.timesheets.map(timesheet => timesheet.employeeId)).size;
+          this.logger.info(this.timesheets);
           this.totalRecords = res.pager.totalRecords;
         },
         error: (err) => {
@@ -585,31 +586,36 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
   }
 
     downloadPdf() {
-    this.logger.info('downloadExcel called' + this.selectedMonth);
-    const date = new Date(this.selectedMonth);
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
+    this.logger.info('downloadPdf called');
     this.isLoading = true;
-    // this.invoiceService.exportInvoicesToExcel(year, month)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe({
-    //     next: (response) => {
-    //       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    //       const url = window.URL.createObjectURL(blob);
-    //       const a = document.createElement('a');
-    //       a.href = url;
-    //       a.download = `invoices_${year}_${month}.xlsx`;
-    //       a.click();
-    //       window.URL.revokeObjectURL(url);
-    //       this.isLoading = false;
-    //       this.logger.info('downloadExcel success', { year, month });
-    //     },
-    //     error: (err) => {
-    //       this.isLoading = false;
-    //       this.errorHandler.handleError(err, 'downloadExcel', 'Failed to download invoices.');
-    //     }
-    //   });
-  }
+this.timesheetService
+  .getPdfTimesheets(this.filters)
+  .pipe(
+    finalize(() => { this.isLoading = false; }),
+    takeUntil(this.destroy$)
+  )
+  .subscribe({
+    next: (res: Blob) => {
+      // Create a Blob URL and trigger the download
+      const blob = new Blob([res], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a temporary anchor element
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'timesheet.pdf'; // Set the filename
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      this.logger.error(err);
+    }
+  });
+   }
 
     onPageChange(e: any) {
   const currentPage = (e.first / e.rows) + 1;

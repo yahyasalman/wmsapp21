@@ -41,6 +41,7 @@ import { finalize, takeUntil, Subject } from 'rxjs';
 export class DigitalServiceDetailComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   vehiclePlate: string = '';
+  userId: string = '';
   pdfUrl: any;
   showEmailDialog: boolean = false;
   emailForm: FormGroup;
@@ -64,6 +65,7 @@ export class DigitalServiceDetailComponent implements OnDestroy {
 
   ngOnInit(){
     this.vehiclePlate = this.route.snapshot.params['vehiclePlate'];
+    this.userId = this.route.snapshot.params['userId'];
     this.getPdf();
   }
 
@@ -74,7 +76,8 @@ export class DigitalServiceDetailComponent implements OnDestroy {
       lang: 'sv',
       templateName: 'basic',
       objectName: 'digitalservice',
-      vehiclePlate: this.vehiclePlate
+      vehiclePlate: this.vehiclePlate,
+      userId: this.userId,
     };
     this.logger.info('Request body for PDF', requestBody);
     this.digitalServiceService.getPdf(requestBody)

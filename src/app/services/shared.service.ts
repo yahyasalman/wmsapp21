@@ -349,10 +349,6 @@ loadResources(): Observable<void> {
   }
 
   // Create the actual loading operation
-  // const translationsUrl = environment.production ? `${environment.CDN_URL}/resources/trans-${this.resourceFileVersion}.json` : 'assets/resources/trans-1.json';
-  // const enumsUrl = environment.production ? `${environment.CDN_URL}/resources/enums-${this.resourceFileVersion}.json` : 'assets/resources/enums-1.json';
-  // const modelsUrl = environment.production ? `${environment.CDN_URL}/resources/models-${this.resourceFileVersion}.json` : 'assets/resources/models-1.json';  
-
   const translationsUrl = 'assets/resources/trans-1.json';
   const enumsUrl =   'assets/resources/enums-1.json';
   const modelsUrl =  'assets/resources/models-1.json';  

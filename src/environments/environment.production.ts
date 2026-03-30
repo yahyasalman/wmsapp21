@@ -8,7 +8,7 @@ export const LOG_LEVEL = {
 
 export const environment = {
     production: true,
-      CDN_URL:'https://resources-aqafbng2e5acccgu.z01.azurefd.net',
+      //CDN_URL:'https://resources-aqafbng2e5acccgu.z01.azurefd.net',
       BASE_URL:'https://wmsapi-dhexdwcheaejf0gr.swedencentral-01.azurewebsites.net',
       logLevel: LOG_LEVEL.debug,
       Version:'2.13P'

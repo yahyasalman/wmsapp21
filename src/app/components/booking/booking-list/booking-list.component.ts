@@ -167,11 +167,14 @@ getKeys(obj: any): string[] {
     return Object.keys(obj);
   }
 
-  calculateFreeHours(day: string): number {
-    const busyHours = this.serviceHoursCount[day] || 0;
-    const freeHours = 8 - busyHours;
-    return Math.round(freeHours * 10) / 10;
-  }
+ calculateFreeHours(day: string): number {
+  const workshopCapacity = 8; // Assuming 8 working hours in a day
+  const busyHours = this.serviceHoursCount[day] || 0;
+  const freeHours = workshopCapacity - busyHours;
+
+  // Ensure the result is not negative and round to one decimal place
+  return Math.max(0, Math.round(freeHours * 10) / 10);
+}
   getBookings() {
     this.isLoading = true;
   this.logger.info('getBookings called', { filters: this.filters.value });

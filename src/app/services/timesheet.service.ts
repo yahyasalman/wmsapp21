@@ -24,7 +24,21 @@ export class TimesheetService {
         const url = `${this.baseUrl}/list-timesheet?${queryString}`;
         return this.http.get<IPageList<ITimesheet>>(url);
       }
-   
+    getPdfTimesheets(filters:FormGroup) {
+        
+      const queryParams = new URLSearchParams();
+      queryParams.append("wmsId", this.sharedService.wmsId);
+      Object.keys(filters.controls).forEach((key) => {
+      const value = filters.get(key)?.value;
+      if (value !== undefined && value !== null && value !== '') {
+        queryParams.append(key, value);
+      }
+      });
+      queryParams.append("country", this.sharedService.country);
+      queryParams.append("lang", this.sharedService.lang);
+      const url = `${this.baseUrl}/pdf-timesheet?${queryParams.toString()}`;
+      return this.http.get(url, { responseType: 'blob' });
+  }
     checkin(timesheet: ITimesheet) {
       this.logger.info('checkin', timesheet);
         timesheet.wmsId = this.sharedService.wmsId;

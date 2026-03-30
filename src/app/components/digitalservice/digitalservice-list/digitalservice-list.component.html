@@ -90,16 +90,22 @@
           <ng-template pTemplate="header">
             <tr>
               <th class="rounded-l-xl" pSortableColumn="creationDate">
+                {{ this.sharedService.T('createdDate') }}
                 <p-sortIcon field="creationDate" />
               </th>
-              <th>{{ this.sharedService.T('vehiclePlate') }}</th>
-              <th>{{ this.sharedService.T('vehicleMake') }}</th>
+              <th pSortableColumn="vehiclePlate">
+                {{ this.sharedService.T('vehiclePlate') }}
+                <p-sortIcon field="vehiclePlate" />
+              </th>
+              <th pSortableColumn="vehicleManufacturer">
+                {{ this.sharedService.T('vehicleMake') }}
+                <p-sortIcon field="vehicleManufacturer" />
+              </th>
               <th>{{ this.sharedService.T('vehicleModel') }}</th>
               <th>{{ this.sharedService.T('vehicleYear') }}</th>
               <th>{{ this.sharedService.T('serviceType') }}</th>
               <th>{{ this.sharedService.T('serviceDate') }}</th>
               <th>{{ this.sharedService.T('nextServiceDate') }}</th>
-              <th>{{ this.sharedService.T('nextServiceMileage') }}</th>
               <th>{{ this.sharedService.T('workshop') }}</th>
               <th class="rounded-r-xl">{{ this.sharedService.T('comments') }}</th>
             </tr>
@@ -112,7 +118,7 @@
               </td>
               <td>
                 <div class="flex items-center gap-2 cursor-pointer"
-                  (click)="redirectToVehicleDetailComponent(ds.vehiclePlate)"
+                  (click)="redirectToVehicleDetailComponent(ds.vehiclePlate,ds.userId)"
                   [title]="'Vehicle Number: ' + ds.vehiclePlate">
                   <span class="id-text">{{ ds.vehiclePlate }}</span>
                   <i class="pi pi-external-link icon-primary"></i>
@@ -126,7 +132,6 @@
               </td>
               <td>{{ ds.serviceDate | date: 'yyyy-MM-dd' }}</td>
               <td>{{ ds.nextServiceDate | date: 'yyyy-MM-dd' }}</td>
-              <td>{{ ds.nextServiceVehicleMileage }}</td>
               <td [pTooltip]="
             '<div class=\'tooltip-content\'>' +
               '<b>Workshop Name:</b><br>' + ds.workshopName + '<br><br>' +
@@ -136,7 +141,13 @@
             '</div>'" tooltipPosition="top" [tooltipOptions]="{ escape: false }" tooltipStyleClass="custom-tooltip">
                 {{ ds.workshopName?.length > 18 ? (ds.workshopName | slice : 0 : 18) + '...' : ds.workshopName }}
               </td>
-              <td class="rounded-r-lg">{{ ds.comments }}</td>
+              <td class="whitespace-nowrap">
+                  <p-button variant="text" [raised]="true" size="small"
+                      [pTooltip]="ds.comments" tooltipPosition="top" >
+                      <span class="material-symbols-outlined">comment</span>
+                  </p-button>
+              </td>
+
             </tr>
           </ng-template>
         </p-table>

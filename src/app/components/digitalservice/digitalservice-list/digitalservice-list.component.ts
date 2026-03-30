@@ -431,12 +431,13 @@ export class DigitalServiceListComponent implements OnDestroy {
     return this.digitalService.get(controlName);
   }
 
-  redirectToVehicleDetailComponent(vehiclePlate: string) {
+  redirectToVehicleDetailComponent(vehiclePlate: string,userId:string) {
     const requestBody = {
       country: 'se',
       lang: 'sv',
       objectName: 'digitalservice',
-      vehiclePlate: vehiclePlate
+      vehiclePlate: vehiclePlate,
+      userId: userId
     };
     this.isLoading = true;
     this.digitalServiceService.getPdf(requestBody)
@@ -446,7 +447,7 @@ export class DigitalServiceListComponent implements OnDestroy {
       )
       .subscribe({
         next: (_) => {
-          this.router.navigate(['sv/digitalservice/details', vehiclePlate]);
+          this.router.navigate(['sv/digitalservice/details', vehiclePlate,userId]);
         },
         error: (err) => {
           this.logger.error(err);

@@ -76,37 +76,11 @@
       size="small" 
       variant="outlined" 
       icon="pi pi-download" 
-      (click)="op.toggle($event)"  
-      label="{{ this.sharedService.T('monthlyreport') }}">
+      (click)="downloadPdf()"  
+      label="{{ this.sharedService.T('showPdf') }}">
     </p-button> 
 
-    <p-popover #op>
-      <div class="flex flex-col gap-5 p-4 bg-white rounded-lg min-w-72">
-        <!-- Updated Label for Date Control -->
-        <label for="month-picker" class="font-semibold text-gray-700">{{ this.sharedService.T('selectMonth') }}</label>
-        
-        <!-- Date Control with Proper Spacing -->
-        <p-datepicker 
-          id="month-picker"
-          [(ngModel)]="selectedMonth" 
-          [ngModelOptions]="{standalone: true}"
-          view="month" 
-          dateFormat="MM yy" 
-          showIcon="true" 
-          iconDisplay="input"
-           />
-        
-        <!-- Button with Adequate Top Margin -->
-        <p-button 
-          label="{{ this.sharedService.T('download') }}" 
-          fullWidth="true"
-          variant="outlined" 
-          icon="pi pi-file-pdf"
-          (click)="downloadPdf(); op.hide()"
-          class="mt-4">
-        </p-button>
-      </div>
-    </p-popover>
+    
   </div>
 </div>
                 </div>
@@ -118,7 +92,7 @@
 
                 <p-table 
                 [lazy]="true" 
-                [value]="timesheets" 
+                [value]="timesheets"  
                 [rows]="10"
                 [showGridlines]="false"
                 [paginator]="true"
@@ -136,22 +110,23 @@
 
                     <ng-template pTemplate="header">
                         <tr class="table-header-row">
-                            <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="timesheetId">
+                            <th class="rounded-l-xl" pSortableColumn="timesheetId">
                                 <p-sortIcon field="timesheetId" />
                             </th>
-                            <th class="table-header-cell">{{this.sharedService.T('status')}}</th>
-                            <th class="table-header-cell">{{this.sharedService.T('employeeName')}}</th>
-                            <th class="table-header-cell">{{this.sharedService.T('date')}}</th>
-                            <th class="table-header-cell">{{this.sharedService.T('type')}}</th>
-                            <th class="table-header-cell">{{this.sharedService.T('intervalId')}}</th>
-                            <th class="table-header-cell">{{this.sharedService.T('startTime')}}</th>
-                            <th class="table-header-cell">{{this.sharedService.T('endTime')}}</th>
+                            <th>{{this.sharedService.T('status')}}</th>
+                            <th>{{this.sharedService.T('employeeName')}}</th>
+                            <th>{{this.sharedService.T('personalNumber')}}</th>
+                            <th>{{this.sharedService.T('date')}}</th>
+                            <th>{{this.sharedService.T('type')}}</th>
+                            <th>{{this.sharedService.T('intervalId')}}</th>
+                            <th>{{this.sharedService.T('startTime')}}</th>
+                            <th>{{this.sharedService.T('endTime')}}</th>
                             <th class="table-header-cell rounded-r-xl">{{this.sharedService.T('comments')}}</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-timesheet>
-                        <tr class="p-selectable-row" data-href="#">
-                            <td class="id-column-cell rounded-l-lg">{{timesheet.timesheetId}}</td>
+                        <tr data-href="#">
+                            <td class="rounded-l-lg">{{timesheet.timesheetId}}</td>
                             <td>
                                 @if(timesheet.isActive)
                                 {
@@ -167,6 +142,9 @@
                             <td class="whitespace-nowrap cursor-pointer" title="{{ timesheet.employeeName }}">
                                 {{ timesheet.employeeName > 18 ? (timesheet.employeeName | slice:0:18) + '...' :
                                 timesheet.employeeName }}
+                            </td>
+                            <td class="fw-bold ">
+                                {{ timesheet.personNumber }}
                             </td>
                             <td class="fw-bold">
                                 {{ timesheet.startDate }}

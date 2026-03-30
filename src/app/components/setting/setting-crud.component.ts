@@ -136,6 +136,8 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
   imageUrl: string = '';
   fileKey: string = '';
   invoiceTemplates:any[] = [{value: 'basic', name: 'Basic Template' }, {value: 'modern', name: 'Modern Template'}];
+  selectedTemplateCardIndex: number = -1;
+  
   constructor(
     private logger: LogService,
     public readonly sharedService: SharedService,
@@ -1075,6 +1077,14 @@ deleteSaleTarget(sale: any) {
     }
   });
 }
+
+  onTemplateCardHover(index: number, isHovering: boolean): void {
+    if (isHovering) {
+      this.selectedTemplateCardIndex = index;
+    } else {
+      this.selectedTemplateCardIndex = -1;
+    }
+  }
 
 ngOnDestroy(): void {
   this.destroy$.next();

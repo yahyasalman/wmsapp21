@@ -19,14 +19,14 @@ export class EmployeeService {
   constructor(private http: HttpClient,private logger: LogService,private sharedService:SharedService) {
   }
 
-  getEmployees (filters:FormGroup) {
-    const queryString = this.sharedService.buildQueryParams(filters);
-    const url = `${this.baseUrl}/list?${queryString}`;
-    return this.http.get<IPageList<IEmployee>>(url);
+    getAllEmployees(){
+      const queryParams = new URLSearchParams();
+      queryParams.append("wmsId", this.sharedService.wmsId);
+      const url = `${this.baseUrl}/employees?${queryParams}`;
+      return this.http.get<IEmployee[]>(url);
     }
 
-    getEmployee(employeeId:number | undefined){
-      debugger;
+  getEmployee(employeeId:number | undefined){
       const queryParams = new URLSearchParams();
       queryParams.append("wmsId", this.sharedService.wmsId);
       if (employeeId !== undefined && employeeId > 0)
@@ -36,6 +36,8 @@ export class EmployeeService {
     }
 
     upsertEmployee(employee:IEmployee){
+      this.logger.debug('Service: Upserting employee with data:');
+      this.logger.debug(employee);
       employee.wmsId = this.sharedService.wmsId;
       const headers = new HttpHeaders({'Content-Type': 'application/json',});
       return this.http.post<IEmployee>(`${this.baseUrl}/upsert-employee`, employee, {headers});
@@ -46,13 +48,7 @@ export class EmployeeService {
       return this.http.delete<boolean>(url);
     }
 
-    getAllEmployees(){
-      const queryParams = new URLSearchParams();
-      queryParams.append("wmsId", this.sharedService.wmsId);
-      const url = `${this.baseUrl}/employees?${queryParams}`;
-      return this.http.get<IEmployee[]>(url);
-    }
-
+  
 
     checkExistingEmployee(wmsId:string,employeeName:string){
       const url = `${this.baseUrl}/isalreadyexists?wmsId=${wmsId}&employeeName=${employeeName}`;
