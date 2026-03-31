@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { IDigitalService, IWorkOrder, IPager, IInvoice, IEnums } from 'app/app.model';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { IDigitalService, IWorkOrder, IPager, IInvoice, IEnums, IFileUploadRequest } from 'app/app.model';
 import { WorkOrderService } from 'app/services/workorder.service';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
@@ -29,15 +30,16 @@ import { ListboxModule } from 'primeng/listbox';
 import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { CustomerService } from 'app/services/customer.service';
+import { WorkshopService } from 'app/services/workshop.service';
 
-
-interface WorkshopService { name: string };
 
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule, FileUploadModule, ProgressBarModule],
   providers: [ConfirmationService, MessageService],
  templateUrl: './digitalservice-list.component.html'
 })
@@ -46,11 +48,11 @@ export class DigitalServiceListComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   digitalServices: IDigitalService[] = [];
   pager: IPager = <IPager>{};
-
+  selectedId: number = 0;
   sortField = 'creationDate';
   sortOrder = -1;
   totalRecords: number = 0;
-
+  showAttachmentDialog: boolean = false;
   filters: FormGroup;
   currentPage: number = 1;
   vehiclePlates: string[] = [];
@@ -62,6 +64,12 @@ export class DigitalServiceListComponent implements OnDestroy {
   models: any[] = [];
   isEmailSent: boolean | null = null;
   onlyThisWmsid:boolean = true;
+  
+  // PDF Upload Properties
+  selectedVehicleData: any = null;
+  uploadProgress: number = 0;
+  wmsId: string = '';
+  pdfBlobUrl: SafeResourceUrl | null = null;
   constructor(private logger: LogService,
     public readonly sharedService: SharedService,
     private router: Router,
@@ -73,7 +81,9 @@ export class DigitalServiceListComponent implements OnDestroy {
     private readonly customerService: CustomerService,
     private readonly digitalServiceService: DigitalServiceService,
     private readonly invoiceService: InvoiceService,
-  private cdr: ChangeDetectorRef) {
+    private readonly workshopService: WorkshopService,
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer) {
 
     const currentDate = new Date();
     const twoYearBack = new Date(currentDate.getFullYear() - 2, currentDate.getMonth(), currentDate.getDate());
@@ -266,7 +276,238 @@ export class DigitalServiceListComponent implements OnDestroy {
   closeDigitalServiceDialog() {
     this.showDigitalServiceDialog = false;
     this.resetDigitalServiceForm();
+  }
 
+  // PDF Upload Dialog Methods
+  closeAttachmentDialog() {
+    this.showAttachmentDialog = false;
+    this.selectedVehicleData = null;
+    this.uploadProgress = 0;
+    // Clean up blob URL
+    if (this.pdfBlobUrl) {
+      URL.revokeObjectURL((this.pdfBlobUrl as any).changingThisBreaksApplicationSecurity);
+      this.pdfBlobUrl = null;
+    }
+  }
+
+  openAttachmentDialog(selectedDigitalService: IDigitalService) {
+    this.showAttachmentDialog = true;
+    this.selectedId = selectedDigitalService.digitalServiceId;
+    
+    // Get WMS ID from shared service
+    this.wmsId = this.sharedService.wmsId;
+    
+    const pdfFileName = `${selectedDigitalService.digitalServiceId}.pdf`;
+    const fileKey = `${this.wmsId}/digitalservice/${selectedDigitalService.digitalServiceId}.pdf`;
+    
+    // Prepare vehicle data to display in dialog
+    this.selectedVehicleData = {
+      digitalServiceId: selectedDigitalService.digitalServiceId,
+      vehiclePlate: selectedDigitalService.vehiclePlate,
+      manufacturer: selectedDigitalService.vehicleManufacturer,
+      serviceDate: selectedDigitalService.serviceDate,
+      pdfFileName: pdfFileName,
+      downloadUrl: fileKey,
+      pdfExists: false
+    };
+
+    // Fetch the PDF from server and display in viewer
+    this.sharedService.getPDFBlob(fileKey).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        this.pdfBlobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+        this.selectedVehicleData.pdfExists = true;
+        this.logger.info(`PDF loaded for Digital Service: ${selectedDigitalService.digitalServiceId}`);
+      },
+      error: (error) => {
+        console.error('Error fetching PDF:', error);
+        this.pdfBlobUrl = null;
+        this.selectedVehicleData.pdfExists = false;
+        this.logger.error(`Failed to load PDF for Digital Service: ${selectedDigitalService.digitalServiceId}`);
+      }
+    });
+  }
+
+  onPDFSelected(event: any) {
+    const files = event.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.validatePDFFile(file);
+    }
+  }
+
+  private validatePDFFile(file: File): boolean {
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid File Type',
+        detail: 'Only PDF files are allowed.',
+        life: 4000
+      });
+      return false;
+    }
+    
+    if (file.size > 10000000) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'File Too Large',
+        detail: 'Maximum file size is 10MB.',
+        life: 4000
+      });
+      return false;
+    }
+    return true;
+  }
+
+  uploadPDF(fileUpload: any) {
+    if (!fileUpload.files || fileUpload.files.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'No File Selected',
+        detail: 'Please select a PDF file to upload.',
+        life: 3000
+      });
+      return;
+    }
+
+    const file = fileUpload.files[0];
+
+    if (!this.validatePDFFile(file)) {
+      return;
+    }
+
+    this.uploadProgress = 0;
+    const uploadRequest: IFileUploadRequest = {
+      type: 'digitalservice',
+      id: this.selectedVehicleData.digitalServiceId,
+      file: file
+    };
+
+    console.log('=== PDF UPLOAD INITIATED ===');
+    console.log('Upload Request Type:', uploadRequest.type);
+    console.log('Digital Service ID:', uploadRequest.id);
+    console.log('File Name:', file.name);
+    console.log('File Size:', file.size);
+    console.log('WMS ID:', this.wmsId);
+    console.log('Expected Download URL:', this.selectedVehicleData.downloadUrl);
+    console.log('=============================');
+    this.logger.info(`Starting PDF upload - Service ID: ${uploadRequest.id}, File: ${file.name}`);
+
+    this.sharedService.uploadFile(uploadRequest)
+      .pipe(
+        finalize(() => {
+          this.uploadProgress = 0;
+          fileUpload.clear();
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: () => {
+          console.log('=== PDF UPLOAD SUCCESS ===');
+          console.log('Digital Service ID:', this.selectedVehicleData.digitalServiceId);
+          console.log('File Name:', this.selectedVehicleData.pdfFileName);
+          console.log('Download URL (File Key):', this.selectedVehicleData.downloadUrl);
+          console.log('WMS ID:', this.wmsId);
+          console.log('===========================');
+          this.logger.info(`PDF uploaded successfully. File Key: ${this.selectedVehicleData.downloadUrl}`);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'PDF uploaded successfully.',
+            life: 4000
+          });
+          
+          // Fetch and display the newly uploaded PDF
+          this.sharedService.getPDFBlob(this.selectedVehicleData.downloadUrl).pipe(
+            takeUntil(this.destroy$)
+          ).subscribe({
+            next: (blob) => {
+              const blobUrl = URL.createObjectURL(blob);
+              this.pdfBlobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+              this.selectedVehicleData.pdfExists = true;
+              this.logger.info(`Updated PDF displayed after upload`);
+            },
+            error: (err) => {
+              console.error('Error fetching uploaded PDF:', err);
+              this.selectedVehicleData.pdfExists = true;
+              this.logger.error('Failed to fetch uploaded PDF for display');
+            }
+          });
+        },
+        error: (error) => {
+          console.log('=== PDF UPLOAD ERROR ===');
+          console.log('Digital Service ID:', this.selectedVehicleData.digitalServiceId);
+          console.log('Download URL (File Key):', this.selectedVehicleData.downloadUrl);
+          console.log('Error:', error);
+          console.log('========================');
+          this.logger.error('PDF upload failed:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to upload PDF. Please try again.',
+            life: 4000
+          });
+        }
+      });
+  }
+
+  downloadPDF() {
+    if (!this.selectedVehicleData || !this.selectedVehicleData.pdfExists) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'No PDF Available',
+        detail: 'No PDF file available to download.',
+        life: 3000
+      });
+      return;
+    }
+
+    const fileKey = this.selectedVehicleData.downloadUrl;
+    console.log('=== PDF DOWNLOAD DEBUG ===');
+    console.log('File Key:', fileKey);
+    console.log('Digital Service ID:', this.selectedVehicleData.digitalServiceId);
+    console.log('WMS ID:', this.wmsId);
+    console.log('Selected Vehicle Data:', this.selectedVehicleData);
+    console.log('File Exists:', this.selectedVehicleData.pdfExists);
+    console.log('========================');
+    this.logger.info(`Downloading PDF with key: ${fileKey}`);
+
+    this.sharedService.downloadFile(fileKey);
+  }
+
+  viewPDF() {
+    if (!this.selectedVehicleData || !this.selectedVehicleData.pdfExists) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'No PDF Available',
+        detail: 'No PDF file available to view.',
+        life: 3000
+      });
+      return;
+    }
+
+    const fileKey = this.selectedVehicleData.downloadUrl;
+    console.log('=== PDF VIEW DEBUG ===');
+    console.log('File Key:', fileKey);
+    console.log('Digital Service ID:', this.selectedVehicleData.digitalServiceId);
+    console.log('WMS ID:', this.wmsId);
+    console.log('Selected Vehicle Data:', this.selectedVehicleData);
+    console.log('File Exists:', this.selectedVehicleData.pdfExists);
+    console.log('====================');
+    this.logger.info(`Viewing PDF with key: ${fileKey}`);
+
+    this.sharedService.downloadFile(fileKey);
+  
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
 

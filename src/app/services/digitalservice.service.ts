@@ -36,6 +36,12 @@ export class DigitalServiceService {
     return this.http.post<{ state: boolean, overlaps: IDigitalService[] }>(`${this.baseUrl}/create`, digitalService, { headers });
   }
 
+  isValidDigitalWorkshopId(digitalWorkshopId:string) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("digitalWorkshopId", digitalWorkshopId);
+    return this.http.get<boolean>(`${this.baseUrl}/is-valid-digitalworkshopid?${queryParams}`);
+  }
+
   isDigitalServiceExists(invoiceId: number) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);

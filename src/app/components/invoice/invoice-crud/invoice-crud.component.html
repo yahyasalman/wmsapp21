@@ -12,13 +12,6 @@
             this.sharedService.T('editInvoice')}}
             #{{invoice.get('invoiceId')?.value}}</p>
     </div>
-    <div class="flex gap-2">
-        <span class="my-auto">{{ this.sharedService.workshopName}}</span>
-        <div
-            class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
-            <p>AS</p>
-        </div>
-    </div>
 </header>
 <!-- header end -->
  
@@ -29,7 +22,7 @@
             <div class="col-span-6 mb-2">
                 <label class="mb-2 block" for="customerId">{{ this.sharedService.T('customerName') }}</label>
                     <p-iconfield>
-                    <p-inputicon class=" icon-primary pi pi-users" />
+                    <p-inputicon class=" icon-primary pi pi-user" />
                     <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
                         [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
                         (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()" [showClear]="true" class="w-full"

@@ -122,6 +122,14 @@ get lang(): 'en' | 'sv' {
   }
 
 
+  getPDFBlob(key: string): Observable<Blob> {
+    const params = new HttpParams().set('key', key);
+    return this.http.get(`${this.fileUrl}/download-file`, {
+      params,
+      responseType: 'blob'
+    });
+  }
+
   downloadFile(key: string): void {
     const params = new HttpParams().set('key', key);
 
