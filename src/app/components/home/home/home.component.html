@@ -213,7 +213,104 @@
 
   </div>
 </section>
+<!-- App Information section -->
+<!-- MOBILE APP SECTION -->
+<section id="mobile-app" class="py-20 sm:py-28 bg-gradient-to-b from-white to-blue-50">
+  <div class="container-main">
+    
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      
+      <!-- LEFT CONTENT -->
+      <div class="fade-in">
+        <h2 class="text-4xl font-extrabold text-[var(--color-gray-header)] mb-6">
+          Din verkstad – i kundens ficka
+        </h2>
 
+        <p class="text-lg text-[var(--color-gray-dark)] mb-6">
+          Låt dina kunder följa sin servicehistorik, se fakturor och vara kopplade till dig direkt i mobilen.
+        </p>
+
+        <ul class="space-y-3 mb-8">
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[var(--color-primary)]">check</span>
+            <span>Full servicehistorik och reparationer</span>
+          </li>
+
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[var(--color-primary)]">check</span>
+            <span>Se fakturor och kvitton</span>
+          </li>
+
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[var(--color-primary)]">check</span>
+            <span>Direkt koppling till din verkstad</span>
+          </li>
+        </ul>
+
+        <!-- STORE BUTTONS -->
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+          
+          <!-- Google Play (REAL LINK) -->
+          <a 
+            href="https://play.google.com/store/apps/details?id=nu.digitalworkshop.wms.prod" 
+            target="_blank"
+          >
+            <img 
+              [src]="imagesUrl + 'playstore.png'" 
+              class="h-12 hover:opacity-80 transition"
+              alt="Google Play"
+            />
+          </a>
+
+          <!-- App Store (placeholder for now) -->
+          <a href="https://apps.apple.com/se/app/digital-workshop/id6757603791?l=en-GB" target="_blank">
+            <img 
+              [src]="imagesUrl + 'black.svg'"  
+              class="h-12 hover:opacity-80 transition"
+              alt="App Store"
+            />
+          </a>
+
+        </div>
+
+        <!-- QR CODES -->
+        <div class="flex gap-6 items-center">
+          
+          <div class="text-center">
+            <img 
+              [src]="imagesUrl + 'playstoreqr.png'"
+              class="w-28 h-28 rounded-lg shadow-md"
+              alt="Google Play QR"
+            />
+            <p class="text-xs mt-2 text-gray-500">Android</p>
+          </div>
+
+          <div class="text-center">
+            <img 
+              [src]="imagesUrl + 'appleqr.png'"
+              class="w-28 h-28 rounded-lg shadow-md"
+              alt="App Store QR"
+            />
+            <p class="text-xs mt-2 text-gray-500">iPhone</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDE (PHONE MOCKUP OPTIONAL) -->
+      <div class="fade-in flex justify-center">
+        <img 
+          [src]="imagesUrl + 'apppreview.png'"
+          class="max-w-xs w-full drop-shadow-2xl rounded-3xl"
+          alt="App preview"
+        />
+      </div>
+
+    </div>
+
+  </div>
+</section>
 
 <!-- Frequently asked questions-->
 

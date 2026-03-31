@@ -91,6 +91,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       icon: 'book',
       title: 'Digital Servicebok',
       description: 'Ge dina kunder full transparens med en digital servicebok för varje fordon. All servicehistorik, utförda arbeten och bilder samlas på ett ställe och är lättåtkomlig för både dig och kunden.'
+    },
+    {
+      icon: 'person',
+      title: 'Antsällningsregister',
+      description: 'Samla all information om dina anställda på ett ställe. Hantera anställningsuppgifter, roller och kontaktinformation, och få en tydlig överblick över personalen för enklare administration och bättre kontroll.'
+    },
+    {
+      icon: 'person',
+      title: 'Personalliggare',
+      description: 'Håll koll på anställdas arbetstider enkelt och korrekt. Registrera när personal checkar in och ut, få överblick i realtid och säkerställ att allt följer regler och krav utan krångel.'
     }
   ];
 
