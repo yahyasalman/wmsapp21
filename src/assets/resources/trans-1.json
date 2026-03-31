@@ -1820,6 +1820,56 @@
         "sv": "Ingen data hittades"
     },
     {
+        "tkey": "personalNumber",
+        "en": "Personal Nr.",
+        "sv": "Personnr."
+    },
+    {
+        "tkey": "monthlySalary",
+        "en": "Monthly Salary",
+        "sv": "Månadslön"
+    },
+    {
+        "tkey": "createEmployee",
+        "en": "Create Employee",
+        "sv": "Skapa anställd"
+    },
+    {
+        "tkey": "updateEmployee",
+        "en": "Update Employee",
+        "sv": "Uppdatera anställd"
+    },
+    {
+        "tkey": "jobTitle",
+        "en": "Job Title",
+        "sv": "Jobbtitel"
+    },
+    {
+        "tkey": "hireDate",
+        "en": "Hire Date",
+        "sv": "Anställningsdatum"
+    },
+    {
+        "tkey": "terminationDate",
+        "en": "Termination Date",
+        "sv": "Avslutsdatum"
+    },
+    {
+        "tkey": "skills",
+        "en": "Skills",
+        "sv": "Färdigheter"
+    },
+    {
+        "tkey": "certifications",
+        "en": "Certifications",
+        "sv": "Certifieringar"
+    },
+    {
+        "tkey": "characters",
+        "en": "Characters",
+        "sv": "Tecken"
+    },
+    {
         "tkey": "status",
         "en": "Status",
         "sv": "Status"
@@ -1928,5 +1978,35 @@
         "tkey": "vehicleStoryL4",
         "en": "This means the vehicle is {{serviceType}}, with revenue mainly driven by {{mainDriver}}.",
         "sv": "Detta innebär att fordonet är {{serviceType}}, där intäkterna främst drivs av {{mainDriver}}."
+    },
+    {
+        "tkey": "bookings",
+        "en": "Bookings",
+        "sv": "Bokningar"
+    },
+    {
+        "tkey": "availableHours",
+        "en": "Available Hours",
+        "sv": "Tillgängliga timmar"
+    },
+    {
+        "tkey": "bookedHours",
+        "en": "Booked Hours",
+        "sv": "Bokade timmar"
+    },
+    {
+        "tkey": "createdDate",
+        "en": "Created Date",
+        "sv": "Skapad datum"
+    },
+    {
+        "tkey": "newEmployee",
+        "en": "New Employee",
+        "sv": "Ny anställd"
+    },
+    {
+        "tkey": "editEmployee",
+        "en": "Edit Employee",
+        "sv": "Redigera anställd"
     }
 ]

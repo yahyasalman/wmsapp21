@@ -62,7 +62,7 @@ export const routes: Routes =  [
               {path: 'workorder/details/:workOrderId',component:WorkOrderDetailComponent},                
               {path: 'workorder/crud',component:WorkOrderCrudComponent},
               {path: 'digitalservice',component:DigitalServiceListComponent},
-              {path: 'digitalservice/details/:vehiclePlate',component:DigitalServiceDetailComponent},   
+              {path: 'digitalservice/details/:vehiclePlate/:userId',component:DigitalServiceDetailComponent},   
               {path: 'product',component:ProductListComponent},
               {path: 'product/details/:id',component:ProductDetailComponent},
               {path: 'supplier',component:SupplierListComponent},

@@ -208,6 +208,8 @@ export interface ITimesheet {
   wmsId: string,
   timesheetId: number,
   employeeId: number,
+  employeeName: string,
+  personalNumber: string,
   timesheetType: string,
   startDate: string,
   intervalId: number,

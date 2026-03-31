@@ -6,7 +6,7 @@
           icon="pi pi-plus" (click)="redirectToEmployeeCrudComponent()"></p-button>
       </div>
 
-      <div class="ml-auto">
+      <!-- <div class="ml-auto">
         <p-autoComplete
           placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('employee') }}" [suggestions]="employees"
           (onClear)="onClearEmployeeName()" (keyup)="keyupEmployeeName($event.target)"
@@ -18,7 +18,7 @@
             </div>
           </ng-template>
         </p-autoComplete>
-      </div>
+      </div> -->
     </div>
 
     <hr class="border-CustomBorder" />
@@ -35,27 +35,33 @@
       [showCurrentPageReport]="true"
       currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
       [sortOrder]="-1" 
-      sortField="customerId" 
-      data-testid="customer-table">
+      sortField="employeeId" 
+      >
       <ng-template pTemplate="header">
         <tr class="table-header-row">
-          <th class="rounded-l-xl" pSortableColumn="employeeId"><p-sortIcon field="employeeId"/></th>
-          <th>Full Name</th>
-          <th>Job Title</th>
-          <th>Telephone</th>
-          <th>Email</th>
-          <th>Active</th>
-          <th>Actions</th>
+          <th class="rounded-l-xl" pSortableColumn="employeeId">
+            {{this.sharedService.T('id')}}
+            <p-sortIcon field="employeeId"/></th>
+          <th>{{this.sharedService.T('employeeName')}}</th>
+          <th>{{this.sharedService.T('personalNumber')}}</th>
+          <th>{{this.sharedService.T('jobTitle')}}</th>
+          <th>{{this.sharedService.T('hireDate')}}</th>
+          <th>{{this.sharedService.T('terminationDate')}}</th>
+          <th>{{this.sharedService.T('telephone')}}</th>
+          <th>{{this.sharedService.T('email')}}</th>
+          <th>{{this.sharedService.T('actions')}}</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-emp>
-        <tr class="" style="background-color: transparent;">
+        <tr>
           <td>{{emp.employeeId}}</td>
           <td>{{emp.fullName}}</td>
+          <td>{{emp.personNumber}}</td>
           <td>{{emp.jobTitle}}</td>
+          <td>{{emp.hireDate}}</td>
+          <td>{{emp.terminationDate}}</td>
           <td>{{emp.telephone}}</td>
           <td>{{emp.email}}</td>
-          <td>{{emp.isActive ? 'Yes' : 'No'}}</td>
           <td>
             <p-button size="small" icon="pi pi-pencil" severity="secondary"
                                      (onClick)="editEmployee(emp.employeeId)">

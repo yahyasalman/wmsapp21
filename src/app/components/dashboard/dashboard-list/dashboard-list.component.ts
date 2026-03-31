@@ -197,7 +197,7 @@ private getCurrentOrPreviousMonth(): { year: number; month: number; monthName: s
 
 private calculatePercentage(value: number, total: number): number {
   if (total > 0) {
-    return Math.min((value / total) * 100, 100); // Cap percentage at 100
+    return Math.round(Math.min((value / total) * 100, 100));
   }
   return 0; // Handle division by zero
 }

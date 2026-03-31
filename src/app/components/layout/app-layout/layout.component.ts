@@ -56,7 +56,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   selectedLang:string = '';
   version = '';
   selectedTheme = '';  
-  imagesUrl = environment.production ? `${environment.CDN_URL}/images/` : 'assets/images/';
+  imagesUrl = 'assets/images/';
 palettes = [
   { label: 'Professional Blue', value: 'blue', color: '#3b82f6' },     
   { label: 'Modern Indigo',     value: 'indigo', color: '#4f46e5' },

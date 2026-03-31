@@ -1538,19 +1538,19 @@
         "country": "se",
         "lang": "en",
         "key": "digitalserviceType",
-        "value": "repairService",
+        "value": "repair",
         "index": 2,
         "isdefault": false,
-        "text": "Repair Service"
+        "text": "Repair"
     },
     {
         "country": "se",
         "lang": "sv",
         "key": "digitalserviceType",
-        "value": "repairService",
+        "value": "repair",
         "index": 2,
         "isdefault": false,
-        "text": "Reparationsservice"
+        "text": "Reparation"
     },
     {
         "country": "se",
@@ -1574,7 +1574,7 @@
         "country": "se",
         "lang": "en",
         "key": "digitalserviceType",
-        "value": "aService",
+        "value": "bService",
         "index": 4,
         "isdefault": false,
         "text": "B Service"
@@ -1583,7 +1583,7 @@
         "country": "se",
         "lang": "sv",
         "key": "digitalserviceType",
-        "value": "aService",
+        "value": "bService",
         "index": 4,
         "isdefault": false,
         "text": "B-service"
@@ -1632,5 +1632,95 @@
         "index": 1,
         "isdefault": false,
         "text": "Övrigt"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalserviceType",
+        "value": "vehicleInspection",
+        "index": 5,
+        "isdefault": false,
+        "text": "Vehicle Inspection"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalserviceType",
+        "value": "vehicleInspection",
+        "index": 5,
+        "isdefault": false,
+        "text": "Besiktning"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "digitalserviceType",
+        "value": "wheelAlignment",
+        "index": 6,
+        "isdefault": false,
+        "text": "Wheel Alignment"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "digitalserviceType",
+        "value": "wheelAlignment",
+        "index": 6,
+        "isdefault": false,
+        "text": "Hjulinställning"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "jobTitle",
+        "value": "workshopManager",
+        "index": 1,
+        "isdefault": false,
+        "text": "Workshop Manager"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "jobTitle",
+        "value": "serviceAdvisor",
+        "index": 2,
+        "isdefault": false,
+        "text": "Service Advisor"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "jobTitle",
+        "value": "mechanic",
+        "index": 3,
+        "isdefault": true,
+        "text": "Mechanic"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "jobTitle",
+        "value": "workshopManager",
+        "index": 1,
+        "isdefault": false,
+        "text": "Verkstadschef"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "jobTitle",
+        "value": "serviceAdvisor",
+        "index": 2,
+        "isdefault": false,
+        "text": "Servicerådgivare"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "jobTitle",
+        "value": "mechanic",
+        "index": 3,
+        "isdefault": true,
+        "text": "Mekaniker"
     }
 ]

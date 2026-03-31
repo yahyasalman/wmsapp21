@@ -300,28 +300,38 @@
             </div>
 
             <!-- SECTION 2: Invoice Template Selection -->
-            <div class="p-6 border border-gray-200 rounded-lg mb-8">
+            <div class="p-6 border border-gray-200 rounded-lg mb-8 bg-gradient-to-br from-gray-50 to-gray-100">
               <p class="text-2xl font-semibold mb-8 text-gray-800">{{ this.sharedService.T('invoiceTemplate') }}</p>
               
-              <!-- Template Cards -->
-              <div class="grid grid-cols-2 gap-8">
-                <!-- Urban Template -->
-                <div *ngFor="let template of invoiceTemplates" class="field-checkbox">
-                <div class="border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 cursor-pointer">
-                  <div class="bg-gray-100 h-64 overflow-hidden flex items-center justify-center">
-                    <img src="assets/images/pdf-img/default.jpg" alt="Urban" class="w-full h-full object-cover">
-                  </div>
-                  <div class="p-4 flex items-center gap-3 border-t border-gray-200">
-                    <p-radiobutton [inputId]="template.value" name="template" [value]="template" [(ngModel)]="selectedInvoiceTemplate" />
-                    <div class="flex-1">
-                      <label [for]="template.value" class="cursor-pointer font-medium text-gray-800">{{ template.name }}</label>
-                      <p class="text-xs text-gray-500 mt-1">Professional urban style template</p>
+              <!-- Template Cards Container -->
+              <div class="flex items-stretch justify-center gap-12">
+                <!-- Template Card Loop -->
+                <div *ngFor="let template of invoiceTemplates; let i = index" class="flex-1 max-w-2xl">
+                  <div class="border-2 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer bg-white h-full flex flex-col"
+                       [style.border-color]="selectedTemplateCardIndex === i ? 'var(--p-primary-color)' : 'var(--gray-300)'"
+                       [style.box-shadow]="selectedTemplateCardIndex === i ? '0 25px 50px -12px rgba(0, 0, 0, 0.25)' : 'none'"
+                       (mouseenter)="onTemplateCardHover(i, true)"
+                       (mouseleave)="onTemplateCardHover(i, false)">
+                    <!-- Template Thumbnail -->
+                    <div class="h-130 bg-white overflow-auto flex items-center justify-center border-b-2 border-gray-200 flex-shrink-0">
+                      <img [src]="'assets/images/pdf-img/' + template.value + '.jpg'" 
+                           [alt]="template.name" 
+                           class="w-auto h-full object-contain p-6"
+                           onerror="this.src='assets/images/placeholder.jpg'">
                     </div>
-                    <span class="material-symbols-outlined text-sm" pTooltip="Professional urban style template" 
-                      tooltipPosition="top">help</span>
+                    
+                    <!-- Template Info -->
+                    <div class="p-6 bg-white flex-grow flex flex-col justify-between">
+                      <div class="flex items-start gap-4">
+                        <p-radiobutton [inputId]="template.value" name="template" [value]="template" [(ngModel)]="selectedInvoiceTemplate" class="mt-1"></p-radiobutton>
+                        <div class="flex-1">
+                          <label [for]="template.value" class="cursor-pointer font-bold text-lg text-gray-900 block">{{ template.name }}</label>
+                          <p class="text-sm text-gray-600 mt-2 leading-relaxed">Professional invoice template with complete layout and formatting</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div> 
-              </div>
+                </div>
               </div>
             <div class="flex gap-4 mt-8">
               <p-button [raised]="true" label="{{ this.sharedService.T('saveSettings') }}" size="large" icon="pi pi-plus" (click)="saveWorkshopSettings()"></p-button>

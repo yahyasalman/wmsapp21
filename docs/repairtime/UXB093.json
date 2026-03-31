@@ -1,0 +1,1382 @@
+﻿[
+    {
+        "data-time":  12.7,
+        "data-description":  "Motor, kompl. med växellåda",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.8,
+        "data-description":  "Motorfäste - vänster",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.2,
+        "data-description":  "Kompressionsprov",
+        "data-action":  "Kontroll"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Ventilkåpa med packning",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  16,
+        "data-description":  "Cylinderlockspackning",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  17.3,
+        "data-description":  "Cylinderlock - flyttning detaljer",
+        "data-action":  "Isärtagning och ihopsättning"
+    },
+    {
+        "data-time":  18.1,
+        "data-description":  "Ventiler (alla) inkl. läppning",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  18,
+        "data-description":  "Ventilspindelns oljetätningar (alla)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  9.3,
+        "data-description":  "Kamaxel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  9.5,
+        "data-description":  "Kamaxelhus",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  4,
+        "data-description":  "Kamtransmissionens drivande hjul",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.9,
+        "data-description":  "Kamtransmissionens drivna hjul",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.9,
+        "data-description":  "Kamrem",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.9,
+        "data-description":  "Kamremspännare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  17.7,
+        "data-description":  "Vevaxellager (alla)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  4.1,
+        "data-description":  "Vevaxelns främre tätning",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  13.9,
+        "data-description":  "Vevaxelns bakre tätning",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.4,
+        "data-description":  "Vevaxelns remskiva",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  26.2,
+        "data-description":  "Vevstakar och kolvar (alla)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Oljetryck",
+        "data-action":  "Kontroll"
+    },
+    {
+        "data-time":  4.8,
+        "data-description":  "Oljetråg",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  5,
+        "data-description":  "Oljepump",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  8.8,
+        "data-description":  "Oljepumpkedja",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Oljerör till turbo",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.9,
+        "data-description":  "Oljereturrör för turbo",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.3,
+        "data-description":  "Hjälpaggregatdrivrem",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.4,
+        "data-description":  "Hjälpaggregatdrivremmens spännare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Luftfilterenhet",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Luftfilterinsats",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.4,
+        "data-description":  "Gaspedal - högerstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.4,
+        "data-description":  "Gaspedal - vänsterstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Styrenhet",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.6,
+        "data-description":  "Givare, luftflöde/luftmassa",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.7,
+        "data-description":  "Kylvätsketemperatursensor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Bränsletrycksensor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Bränsletemperatursensor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Givare, motorvarvtal",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Kamaxellägessensor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  5.8,
+        "data-description":  "Högtryckspump (common rail)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.4,
+        "data-description":  "Insprutare (alla)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.8,
+        "data-description":  "Bränslefördelningsrör",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Glödstift (alla)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.7,
+        "data-description":  "Spjällhus",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.5,
+        "data-description":  "Bränslepump - i tank",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.2,
+        "data-description":  "Bränsletank",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  8.8,
+        "data-description":  "Turbokompressor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Waste gate",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Kylvätska/frostskydd",
+        "data-action":  "Tappa ur/fyll på"
+    },
+    {
+        "data-time":  0.2,
+        "data-description":  "Provtryckning av system",
+        "data-action":  "Kontroll"
+    },
+    {
+        "data-time":  0.4,
+        "data-description":  "Kylfläkt",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  4.5,
+        "data-description":  "Kylare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.9,
+        "data-description":  "Termostat",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.5,
+        "data-description":  "Laddluftkylare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  4.9,
+        "data-description":  "Vattenpump",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.6,
+        "data-description":  "Elektrisk vattenpump",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.6,
+        "data-description":  "Expansionstank",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  8.8,
+        "data-description":  "Packning för avgasgrenrör",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Främre rördel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Mittre rördel/ljuddämpare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Bakre rördel/ljuddämpare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  7.9,
+        "data-description":  "Katalysator",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Lambdasensor - fram",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Lambdasensor - bakre",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.6,
+        "data-description":  "Lambdasensor (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Avgasåterledningsventil - vänster",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Avgasåterledningsventil - höger",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  7.9,
+        "data-description":  "Dieselpartikelfilter",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.3,
+        "data-description":  "Pedal - högerstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.3,
+        "data-description":  "Pedal - vänsterstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.3,
+        "data-description":  "Hydrauliskt manöversystem",
+        "data-action":  "Lufta"
+    },
+    {
+        "data-time":  2.4,
+        "data-description":  "Huvudcylinder - högerstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.4,
+        "data-description":  "Huvudcylinder - vänsterstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  12.9,
+        "data-description":  "Manövercylinder",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  12.9,
+        "data-description":  "Urkopplingslager",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  13.1,
+        "data-description":  "Lamell, tryckplatta och lager",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  13.7,
+        "data-description":  "Svänghjul",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  12.7,
+        "data-description":  "Växellåda",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.6,
+        "data-description":  "Växellänkage",
+        "data-action":  "Kontroll och justering"
+    },
+    {
+        "data-time":  1.7,
+        "data-description":  "Växellänkage",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.7,
+        "data-description":  "Växlingsarm",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  12.9,
+        "data-description":  "Tätning, ingående axel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  12.8,
+        "data-description":  "Tätning, utgående axel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  15.5,
+        "data-description":  "Primärdrev, lågväxel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  15.5,
+        "data-description":  "5:ans växel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  5.9,
+        "data-description":  "Framaxel, kompl.",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.6,
+        "data-description":  "Drivaxel - vänster",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.6,
+        "data-description":  "Drivaxel - höger",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.4,
+        "data-description":  "Drivaxel (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.7,
+        "data-description":  "Drivaxelns inre tätning - vänster",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.7,
+        "data-description":  "Drivaxelns inre tätning - höger",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.5,
+        "data-description":  "Drivaxelns inre tätning (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2,
+        "data-description":  "Gummidamask, yttre drivaxelknut - vänster",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2,
+        "data-description":  "Gummidamask, yttre drivaxelknut - höger",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Gummidamask, inre drivaxelknut - vänster",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Gummidamask, inre drivaxelknut - höger",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.3,
+        "data-description":  "Gummidamask, drivaxelknut (båda) - vänster",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.3,
+        "data-description":  "Gummidamask, drivaxelknut (båda) - höger",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2,
+        "data-description":  "Hjullager (sats)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.2,
+        "data-description":  "Hjullager (sats) (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.1,
+        "data-description":  "Hjulnav, kompl. (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.6,
+        "data-description":  "Bakaxel, kompl.",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.1,
+        "data-description":  "Hjullager (sats)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3,
+        "data-description":  "Axeltapp",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.1,
+        "data-description":  "Hjulnav, kompl.",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  5.9,
+        "data-description":  "Hjälpram/tvärbalk",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Fjäderben kompl.",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.1,
+        "data-description":  "Fjäderben kompl. (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.2,
+        "data-description":  "Övre fäste, fjäderben",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.7,
+        "data-description":  "Övre fäste, fjäderben (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.1,
+        "data-description":  "Fjäder",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.7,
+        "data-description":  "Fjäder (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.2,
+        "data-description":  "Hjulupphängningens fjädringsstopp",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.4,
+        "data-description":  "Nedre länkarm",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.3,
+        "data-description":  "Bärarm, nedre (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.6,
+        "data-description":  "Nedre länkarm, fram - bussning",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.3,
+        "data-description":  "Nedre länkarm, bak - bussning",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  6.2,
+        "data-description":  "Krängningshämmare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.6,
+        "data-description":  "Krängningshämmare - yttre stag",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Krängningshämmare - yttre stag (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.3,
+        "data-description":  "Styrspindel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.9,
+        "data-description":  "Styrspindel (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.1,
+        "data-description":  "Fjäder",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Fjäder - vänster",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Fjäder (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.4,
+        "data-description":  "Stötdämpare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Stötdämpare (par)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Fjädringsstyrdon",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Geometri, hela bilen",
+        "data-action":  "Kontroll"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Hjulinställning fram (toe-in)",
+        "data-action":  "Kontroll och justering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Hjulinställning bak (toe-in)",
+        "data-action":  "Kontroll och justering"
+    },
+    {
+        "data-time":  5.7,
+        "data-description":  "Styrväxel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  5.9,
+        "data-description":  "Gummidamasker, kuggstång",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  6,
+        "data-description":  "Gummidamasker, kuggstång (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  5.9,
+        "data-description":  "Styrstag",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  6.2,
+        "data-description":  "Styrstag (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.6,
+        "data-description":  "Styrled",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Styrled (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.3,
+        "data-description":  "Axeltapp",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.9,
+        "data-description":  "Axeltapp (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Ratt",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.7,
+        "data-description":  "Rattlås",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Rattaxel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.6,
+        "data-description":  "Rattaxelns hölje",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.3,
+        "data-description":  "Hjul",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.3,
+        "data-description":  "Hjul (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Hjul (alla)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.3,
+        "data-description":  "Hydraulsystem",
+        "data-action":  "Lufta"
+    },
+    {
+        "data-time":  1.1,
+        "data-description":  "Hydraulsystem",
+        "data-action":  "Tappa ur/fyll på"
+    },
+    {
+        "data-time":  3.3,
+        "data-description":  "Vätskebehållare (separat)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3,
+        "data-description":  "Huvudcylinder, högerstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3,
+        "data-description":  "Huvudcylinder, vänsterstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.7,
+        "data-description":  "Bromsok, främre (ett)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.2,
+        "data-description":  "Bromsok, främre (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.7,
+        "data-description":  "Bromsok, bakre (ett)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.2,
+        "data-description":  "Bromsok, bakre (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.1,
+        "data-description":  "Bromsslang, främre (en)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.5,
+        "data-description":  "Bromsslang, främre (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2,
+        "data-description":  "Bromsslang, bakre (en)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.1,
+        "data-description":  "Bromsslang, bakre (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Bromsbelägg fram (alla)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Bromsbelägg fram (alla) - hjul borttagna",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Bromsbelägg bak (alla)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Bromsbelägg bak (alla) - hjul borttagna",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.5,
+        "data-description":  "Bromsskivor fram (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.5,
+        "data-description":  "Bromsskivor bak (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.4,
+        "data-description":  "Bromssköld bak (en)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Pedal - högerstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Pedal - vänsterstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  24.1,
+        "data-description":  "Bromsservo - högerstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  4,
+        "data-description":  "Bromsservo - vänsterstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.1,
+        "data-description":  "Backventil för servo",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.5,
+        "data-description":  "Vakuumpump (diesel)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.5,
+        "data-description":  "Styrdon",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Hjulsensor - fram (en)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Hjulsensor - fram (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Hjulsensor - bak (en)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Hjulsensor - bak (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.5,
+        "data-description":  "Motor och pump - högerstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.5,
+        "data-description":  "Motor och pump - vänsterstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Parkeringsbromsmanöverdon",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Parkeringsbromsmanöverdon - båda",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.3,
+        "data-description":  "Batteri",
+        "data-action":  "Kontroll"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Batteri",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.3,
+        "data-description":  "Ledning till chassijord",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.8,
+        "data-description":  "Generator",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3,
+        "data-description":  "Spänningsregulator",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.4,
+        "data-description":  "Startmotor - med dragmagnet",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.6,
+        "data-description":  "Strålkastarinställning",
+        "data-action":  "Kontroll och justering"
+    },
+    {
+        "data-time":  1.7,
+        "data-description":  "Strålkastare - en",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.8,
+        "data-description":  "Strålkastare - båda",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.2,
+        "data-description":  "Sidoblinklykta - en",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Bakljusgrupp",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Bakljus - inre",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Skyltbelysning - en",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Högt monterat bromsljus",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.1,
+        "data-description":  "Lampa, framdörr",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.1,
+        "data-description":  "Innerbelysning - bak",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.2,
+        "data-description":  "Kartläsarlampa",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.1,
+        "data-description":  "Handskfacksbelysning",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.1,
+        "data-description":  "Bagagerumslampa",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.4,
+        "data-description":  "Tändnings/startlås",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.3,
+        "data-description":  "Strömställare för huvudbelysning",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Bromsljuskontakt",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.1,
+        "data-description":  "Instrumentpanel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.1,
+        "data-description":  "Cigarettändare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.3,
+        "data-description":  "Signalhorn (båda)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.7,
+        "data-description":  "Kylvätsketemperatursensor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Säkringsdosa",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Relä-/säkringsdosa (kombinerad)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Bakrutetorkarmotor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.6,
+        "data-description":  "Hissmotor, framruta",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3,
+        "data-description":  "Motor för sollucka",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.2,
+        "data-description":  "Motor för backspeglar",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Magnetventil/manöverdon, centrallås fram",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Magnetventil/manöverdon, centrallås baklucka",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Central styrenhet (CPU)",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Styrenhet, centrallås",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.1,
+        "data-description":  "Torkarblad - båda",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Torkararm",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Torkararm - båda",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.3,
+        "data-description":  "Spolarmunstycke - ett",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.4,
+        "data-description":  "Spolarmunstycke - båda",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Spolarbehållare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Spolarslang",
+        "data-action":  "Demontering och byte"
+    },
+    {
+        "data-time":  0.1,
+        "data-description":  "Torkarblad",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.4,
+        "data-description":  "Torkararm",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  8.2,
+        "data-description":  "Komplett värmepaket",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  5.2,
+        "data-description":  "Värmeelement - högerstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  5.2,
+        "data-description":  "Värmeelement - vänsterstyrd",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Värmefläktmotor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.2,
+        "data-description":  "Kupéfilter",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "System, läcktest",
+        "data-action":  "Kontroll och justering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "System, evakuering/fyllning",
+        "data-action":  "Kontroll och justering"
+    },
+    {
+        "data-time":  2.8,
+        "data-description":  "Vätskefiltertorkare",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3.8,
+        "data-description":  "Kompressor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.3,
+        "data-description":  "Expansionsventil - fram",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.9,
+        "data-description":  "Kondensor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  8.5,
+        "data-description":  "Förångare - fram",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.2,
+        "data-description":  "Luftkonditioneringsreglagepanel",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Trycksensor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Sensor, omgivningstemperatur",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.6,
+        "data-description":  "Temperatursensor - fram",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.4,
+        "data-description":  "Solsensor",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Luftfördelningsmotor/magnetventil - fram",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Luftfördelningsmotor/magnetventil - fram - vänster",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Återcirkulationsmotor/magnetventil - fram",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Främre stötfångare - komplett",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Främre stötfångare - komplett",
+        "data-action":  "Demontering och byte"
+    },
+    {
+        "data-time":  1.3,
+        "data-description":  "Stötfångargrill",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.3,
+        "data-description":  "Motorhuvens frigöringsvajer",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  3,
+        "data-description":  "Vindrute",
+        "data-action":  "Demontering och byte"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Dörruta",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Fönsterhissmekanism",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Dörrspegel - en",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.1,
+        "data-description":  "Dörrspegel - båda",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.1,
+        "data-description":  "Spegelglas och fäste",
+        "data-action":  "Demontering och byte"
+    },
+    {
+        "data-time":  0.6,
+        "data-description":  "Dörruta",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1,
+        "data-description":  "Bakre sidoruta",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Krockkudde - förare",
+        "data-action":  "Demontering och byte"
+    },
+    {
+        "data-time":  2.2,
+        "data-description":  "Krockkudde - passagerare",
+        "data-action":  "Demontering och byte"
+    },
+    {
+        "data-time":  0.7,
+        "data-description":  "Sidokrockkudde - fram (en)",
+        "data-action":  "Demontering och byte"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Sidokrockkudde - bak (en)",
+        "data-action":  "Demontering och byte"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Styrdon för krockkuddar",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.1,
+        "data-description":  "Låscylinder, handskfack",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.3,
+        "data-description":  "Främre bilbälte",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Bilbälteslås - fram",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.9,
+        "data-description":  "Bakre bilbälte - yttre",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.2,
+        "data-description":  "Bakre bilbälte - yttre - kupé",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.8,
+        "data-description":  "Bakre bilbälte - mittre",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Bilbälteslås - yttre bak",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Bilbälteslås - mittre bak",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  2.2,
+        "data-description":  "Bakre stötfångare - komplett",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Bakre stötfångare - komplett - kupé",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  0.5,
+        "data-description":  "Låscylinder",
+        "data-action":  "Demontering och byte"
+    },
+    {
+        "data-time":  2.6,
+        "data-description":  "Bakruta",
+        "data-action":  "Demontering och montering"
+    },
+    {
+        "data-time":  1.9,
+        "data-description":  "Bakruta - kupé",
+        "data-action":  "Demontering och montering"
+    }
+]

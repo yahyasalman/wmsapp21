@@ -13,7 +13,7 @@ import { SupplierService } from 'app/services/supplier.service';
 import { BookingService } from 'app/services/booking.service';
 import { ProductService } from 'app/services/product.service';
 import { MessageService } from 'primeng/api';
-import { firstValueFrom, of, Subject } from 'rxjs';
+import { EMPTY, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, tap, finalize, takeUntil } from 'rxjs/operators';
 import { SelectChangeEvent } from 'primeng/select';
 import { CustomerService } from 'app/services/customer.service';
@@ -40,6 +40,8 @@ import { TagModule } from 'primeng/tag';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
+import { emailOrTelephoneRequiredValidator } from 'app/validators/validator';
+import { DigitalServiceService } from 'app/services/digitalservice.service';
 
 @Component({
   selector: 'app-order-crud',
@@ -83,7 +85,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   uploadedFiles: any[] = [];
   customers: ICustomer[] = [];
-
+  showSpinner: boolean = false;
+  showCustomerSpinner:boolean = false;
+  duplicateCustomerName: boolean = false; 
   services: IProduct[] = [];
   selectedServices: any[] = [];
 
@@ -97,17 +101,17 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   oilTypes: string[] = ['5W30', '0W20', '5W40', '0W30', '10W30', '10W40'];
   isCreate: boolean = true;
   isNewObject: boolean = true;
-  isLoading: boolean = false;
+  
   manufacturers: any[] = [];
   suppliers: ISupplier[] = [];
   products: any[] = [];
   models: any[] = [];
 
-  startCustomerId: number | null = null;
-  startCustomerName: string | null = null;
-  startCustomerTelephone: string | null = null;
-  startCustomerEmail: string | null = null;
-  submitted: boolean = false;
+  // startCustomerId: number | null = null;
+  // startCustomerName: string | null = null;
+  // startCustomerTelephone: string | null = null;
+  // startCustomerEmail: string | null = null;
+  // submitted: boolean = false;
 
   //customerInput
   selectedCustomerName: any = null;
@@ -149,6 +153,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     private readonly productService: ProductService,
     private cdr: ChangeDetectorRef,
     private readonly customerService: CustomerService,
+    private readonly digitalService: DigitalServiceService,
 
   ) {
 
@@ -188,17 +193,22 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       telephone: [],
       email: ['', [Validators.email]],
       digitalServiceId: ['', [Validators.email]],
-    });
+    },
+    {
+      validators: [emailOrTelephoneRequiredValidator]  
+    }
+  );
 
   }
   ngOnInit() {
     const param: any = this.route.snapshot.params;
-    this.isLoading = true;
+    this.loadCustomerTypes();
+    this.loadCustomerTags();
+  
     this.workOrderService
       .getWorkOrder(param.offerId, param.customerId, param.workOrderId, param.isDuplicate)
       .pipe(
         catchError((err) => {
-          this.isLoading = false;
           throw err; // Handle the error
         }),
         switchMap((response: any) => {
@@ -214,11 +224,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
               map(() => response)
             );
           }
-          this.isLoading = false;
           return of(null);
         })
       )
-      .pipe(finalize(() => { this.isLoading = false; }))
+      .pipe(finalize(() => { }))
       .subscribe((response: any) => {
         if (response.data) {
           if (param.bookingDate)
@@ -235,11 +244,14 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
               this.selectedServices.push(matchingService);
             }
           });
-          this.startCustomerId = response.data.customerId;
-          this.startCustomerName = response.data.customerName;
-          this.startCustomerTelephone = response.data.customerTelephone;
-          this.startCustomerEmail = response.data.customerEmail;
+          
+          // this.startCustomerId = response.data.customerId;
+          // this.startCustomerName = response.data.customerName;
+          // this.startCustomerTelephone = response.data.customerTelephone;
+          // this.startCustomerEmail = response.data.customerEmail;
+          
           this.selectedCustomerName = response.data.customerName;
+
           this.isNewObject = response.isNewObject;
           this.workOrder.patchValue(response.data);
           this.logger.info('WORKORDERS-0', response.data);
@@ -259,12 +271,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   }
 
   loadCustomerTags() {
-    this.isLoading = true;
     this.workshopService
       .getCustomerTags()
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         }),
         takeUntil(this.destroy$)
       )
@@ -272,6 +282,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           if (response) {
             this.customerTags = response;
+            this.logger.info('Customer Tags', this.customerTags);
             if (!(this.customer.get('customerTag') && Number(this.customer.get('customerTag')) > 0))
               this.customer.patchValue({ 'customerTag': this.customerTags[0].customerTagId });
           }
@@ -283,12 +294,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   }
 
   loadCustomerTypes() {
-    this.isLoading = true;
     this.workshopService
       .getCustomerTypes()
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         }),
         takeUntil(this.destroy$)
       )
@@ -296,6 +305,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           if (response) {
             this.customerTypes = response;
+            this.logger.info('Customer Types', this.customerTypes);
+
             if (!(this.customer.get('customerType') && Number(this.customer.get('customerType')) > 0))
               this.customer.patchValue({ 'customerType': this.customerTypes[0].customerTypeId });
           }
@@ -313,12 +324,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   }
 
   getSuppliers() {
-    this.isLoading = true;
     this.supplierService
       .getAllSuppliers()
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         }),
         takeUntil(this.destroy$)
       )
@@ -336,12 +345,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   }
 
   getAllEmployees() {
-    this.isLoading = true;
     this.employeeService
       .getAllEmployees()
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         }),
         takeUntil(this.destroy$)
       )
@@ -359,13 +366,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   }
 
   getBookings(bookingDate: string) {
-    this.isLoading = true;
-    this.logger.info('Sending Bookingdate...', bookingDate);
     this.bookingService
       .getDayBookings(bookingDate)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         }),
         takeUntil(this.destroy$)
       )
@@ -411,12 +415,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.manufacturers = this.sharedService.getVehicleManufacturers(event.query.toUpperCase());
   }
   filterSuppliers(event: any): void {
-    this.isLoading = true;
     this.supplierService
       .getSuppliersByprefix(event.query.toUpperCase())
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         }),
         takeUntil(this.destroy$)
       )
@@ -434,11 +436,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   }
 
   filterProducts(event: any): void {
-    this.isLoading = true;
     this.productService.getProductsByprefix(event.query.toUpperCase())
       .pipe(
         finalize(() => {
-          this.isLoading = false;
         }),
         takeUntil(this.destroy$)
       )
@@ -484,23 +484,22 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       order.woPurchaseId = index + 1; // Reassign index starting from 1
     });
   }
-  onFormSubmit() {
+  saveWorkOrder() {
     this.logger.info('Submitting WorkOrder Form...');
-
+    this.showSpinner = true;
     if (this.workOrder.invalid) {
       this.workOrder.markAllAsTouched();
+      this.showSpinner = false;
       return;
     }
     this.logger.info(this.selectedServices);
-    if(!this.selectedServices || this.selectedServices.length === 0){ 
+    if(this.selectedServices.length === 0){ 
      this.workOrder.markAllAsTouched();
-      return;
+     this.showSpinner = false; 
+     return;
     }
-    
-    this.logger.info('Form is Valid.. Starting Submittion');
 
     var submittedWorkOrder: IWorkOrder = this.workOrder.value;
-
     submittedWorkOrder.woPurchases = [];
     this.woPurchases.forEach(p =>
       submittedWorkOrder.woPurchases.push({
@@ -522,13 +521,13 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       });
       i++;
     });
-    this.logger.info('submittedWorkOrder', submittedWorkOrder);
-    this.isLoading = true;
+
+    
     this.workOrderService
       .upsertWorkOrder(submittedWorkOrder)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
+          this.showSpinner = false;
         }),
         takeUntil(this.destroy$)
       )
@@ -548,283 +547,178 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   onCancelForm() {
     this.location.back();
   }
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.workOrder.get(fieldName);
-    return field ? field.invalid && (field.touched || this.submitted) : false;
+  openCustomerDialog(event: Event) {
+    this.showCustomerSpinner = false;
+    this.customerService
+      .getCustomer(undefined)
+      .pipe(
+        finalize(() => {
+          // loading state is not set here since this is just filtering
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+                  this.loadCustomerTags();
+                  this.loadCustomerTypes();
+                  this.customer.patchValue({
+                    customerId: res.data.customerId,
+                    customerName: '',
+                    organizationNo:'',
+                    vatId: '',
+                    invoiceCreditDays: 0 ,
+                    telephone: '',
+                    email: '',
+                    digitalServiceId: '',
+                  });
+                  this.customerPopup.toggle(event);
+          }
+        },
+        error: (err) => {
+          this.logger.error('filterCustomer error', err);
+        }
+      });
   }
-  async openCustomerDialog(event: Event) {
-    const response: any = await firstValueFrom(
-      this.customerService.getCustomer(0).pipe(
-        catchError((err) => {
-          console.error(err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Something went wrong while saving the customer!',
-            life: 6000,
-          });
-          throw err;
-        })));
 
-    // ✅ Success / Update Message
-    if (response.isNewObject && response.data.customerId > 0) {
-      this.logger.info('Creating new customer object');
-      this.customer.patchValue({ customerId: response.data.customerId });
-      this.customerPopup.toggle(event);
-    } else {
-      this.logger.info('Could not create new customer object');
-    }
-  }
-  async onCreateCustomer() {
-    // Mark all touched to trigger red borders
+ 
+  saveCustomer() {
+    this.logger.info('Save Customer Clicked');
+    this.showCustomerSpinner = true; 
     this.customer.markAllAsTouched();
-    const customerId = this.customer.get('customerId')?.value;
-    const customerName = this.customer.get('customerName')?.value;
-    const customerTelephone = this.customer.get('telephone')?.value;
-    const customerEmail = this.customer.get('email')?.value;
-    const digitalServiceId = this.customer.get('digitalServiceId')?.value;
-
-    // 🔸 Customer Name Empty Validation
-    if (!customerName?.trim()) {
-      this.customer.get('customerName')?.setErrors({ required: true });
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Validation Error',
-        detail: 'Please enter the customer name.',
-        life: 4000,
-      });
-      return;
+    if (this.customer.get('invoiceCreditDays')?.value == 0)
+        this.customer.patchValue({ isCreditAllowed: false});
+ 
+ if (this.customer.invalid) {
+  Object.keys(this.customer.controls).forEach((key) => {
+    const controlErrors = this.customer.get(key)?.errors;
+    if (controlErrors) {
+      console.log(`Control: ${key}, Errors:`, controlErrors);
     }
-
-    // 🔸 Either Telephone or Email Required Validation
-
-    if (!customerTelephone && customerEmail) {
-      this.customer.get('customerEmail')?.setErrors({ required: true });
-      this.customer.get('customerTelephone')?.setErrors({ required: true });
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Validation Error',
-        detail: 'Please provide either Telephone or Email.',
-        life: 4000,
-      });
-      return;
-    }
-
-    // 🔸 Email Format Validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (customerEmail && !emailRegex.test(customerEmail)) {
-      this.customer.get('customerEmail')?.setErrors({ email: true });
+  });
+}
+ 
+ 
+    this.logger.info('Contact Required validation');
+    if (this.customer.invalid) {
+      this.logger.info('customer form is invalid');
+        if (this.customer.hasError('contactRequired')) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Validation Error',
+            detail: 'Please provide either Telephone or Email.',
+            life: 4000
+          });
+          this.showCustomerSpinner = false;
+          return;
+        }
+     
+    
+    this.logger.info('Customer email validation');
+    const emailCtrl = this.customer.get('email');
+    if (emailCtrl?.hasError('email')) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Invalid Email Format',
         detail: 'Please enter a valid email address (e.g. user@example.com).',
-        life: 4000,
+        life: 4000
       });
+      this.showCustomerSpinner = false;
       return;
     }
+  }
+    // Run async validations and save if valid
+    this.logger.info('Start Running async validations for customer:');
+    this.runAsyncValidationsAndSave();
+    return;
+  
+    
+  }
+  runAsyncValidationsAndSave(): void {
+  
+  const name = this.customer.get('customerName')?.value?.trim();
+  const digitalId = this.customer.get('digitalWorkshopId')?.value?.trim(); 
+  
+  this.logger.info('Running async validations for customer:', { name, digitalId });
 
-    // 🔸 Digital Workshop ID Format Validation
-
-    if (digitalServiceId && !emailRegex.test(digitalServiceId)) {
-      this.customer.get('digitalServiceId')?.setErrors({ invalidFormat: true });
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Invalid Digital Workshop',
-        detail: 'Please enter a valid Digital Workshop (e.g. workshop@example.com).',
-        life: 4000,
-      });
-      return;
-    }
-    if (digitalServiceId) {
-      try {
-        const isValidUser = await firstValueFrom(this.sharedService.isValidAppUser(digitalServiceId));
-        if (!isValidUser) {
-          this.customer.get('digitalServiceId')?.setErrors({ invalidUser: true });
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Invalid Digital Service ID',
-            detail: 'The Digital Service ID is not valid.',
-            life: 4000,
-          });
-          return;
-        }
-      } catch (error) {
-        console.error('Error validating App User', error);
+  this.customerService.isCustomerExists(name).pipe(
+    takeUntil(this.destroy$),
+    // 1) Duplicate customer name
+    switchMap((exists: boolean) => {
+      if (exists) {
+        this.logger.warn('Duplicate customer name:', name);
+        this.showCustomerSpinner = false;
+        this.duplicateCustomerName = true;
         this.messageService.add({
           severity: 'error',
-          summary: 'Validation Error',
-          detail: 'Could not validate Digital Service ID. Please try again.',
+          summary: 'Duplicate Customer',
+          detail: 'This customer name already exists.',
           life: 4000,
         });
-        return;
+        // Stop the chain – do not continue to next steps
+        return EMPTY;
       }
-    }
+      
+      // if (digitalId?.trim()) {
+      //   return this.digitalService.isValidDigitalWorkshopId(digitalId.trim());
+      // }
+      // No digitalId to validate → treat as valid and move on
+      return of(true);
+    }),
 
-    if (this.customer.invalid) {
-      this.customer.markAllAsTouched();
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Validation Error',
-        detail: 'Please fill all required fields.',
-        life: 4000,
-      });
-      return;
-    }
-
-    const originalCustomerName = await this.getCustomerName(customerId);
-    const exists = await this.checkIfCustomerExists(customerName);
-
-    if (exists) {
-      this.customer.get('customerName')?.setErrors({ customerExists: true });
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Duplicate Customer',
-        detail: 'This customer name already exists.',
-        life: 4000,
-      });
-      return;
-    }
-    if (this.customer.get('invoiceCreditDays')?.value > 0)
-      this.customer.patchValue({ isCreditAllowed: true });
-    else
-      this.customer.patchValue({ isCreditAllowed: false, invoiceCreditDays: 0 });
-    this.isLoading = true;
-    // 🧠 API call
-    const res: any = await firstValueFrom(
-      this.customerService.upsertCustomer(this.customer.value).pipe(
-        catchError((err) => {
-          console.error(err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Something went wrong while saving the customer!',
-            life: 6000,
-          });
-          throw err;
-        })
-      )
-    );
-
-    if (res === true || res?.success === true) {
-      this.messageService.add({
-        severity: 'success',
-        summary: this.sharedService.T('success'),
-        icon: 'pi pi-check-circle',
-        life: 6000
-      });
-      // Wait a bit so toastr shows before navigating
-      setTimeout(() => {
-
-        this.startCustomerId = customerId;
-        this.startCustomerName = customerName;;
-        this.startCustomerTelephone = customerTelephone;
-        this.startCustomerEmail = customerEmail;
-
-        this.workOrder.patchValue({
-          customerId: customerId,
-          customerName: customerName,
-          customerTelephone: customerTelephone,
-          customerEmail: customerEmail
+    // 3) If digitalWorkshopId is invalid, stop; otherwise call upsertCustomer
+    switchMap((isValidId: boolean) => {
+      if (!isValidId) {
+        this.showCustomerSpinner = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Invalid DigitalWorkshop Id',
+          detail: 'Please provide a valid DigitalWorkshop Id.',
+          life: 4000,
         });
-        this.resetCustomerForm();
-        this.logger.info(customerTelephone, customerEmail);
-        this.logger.info('Work Order Value:', this.workOrder.value);
-        this.customerPopup.hide();
-        this.isLoading = false;
-      }, 1000);
-    } else {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Unexpected Response',
-        detail: 'Server did not confirm save operation.',
-        life: 6000,
-      });
-      this.isLoading = false;
-    }
-  }
-
-
-  async checkIfCustomerExists(customerName: string): Promise<boolean> {
-    try {
-      const response = await firstValueFrom(
-        this.customerService.isCustomerExists(customerName).pipe(
-          catchError((err) => {
-            console.log(err);
-            throw err;
-          })
-        )
-      );
-      return response; // Assuming the API returns `true` if the customer exists
-    } catch (error) {
-      console.error('Error checking if customer exists:', error);
-      return false; // Handle errors gracefully
-    }
-  }
-
-  async getCustomerName(customerId: number): Promise<string> {
-    try {
-      this.isLoading = true;
-      const response = await firstValueFrom(
-        this.customerService.getCustomerName(customerId).pipe(
-          catchError((err) => {
-            console.log(err);
-            throw err;
-          })
-        )
-      );
-      return response.customerName;
-    } catch (error) {
-      console.error('Error checking if customer exists:', error);
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 500);
-      return ''; // Handle errors gracefully
-    }
-  }
-
-
-  onCancelCreateCustomer() {
-    this.logger.info('on cancel');
-  }
-
-  private clearFieldErrors(): void {
-    const fields = ['customerName', 'email', 'telephone', 'customerTypeName'];
-    fields.forEach(field => {
-      const control = this.workOrder.get(field);
-      if (control?.errors) {
-        control.setErrors(null);
+        return EMPTY;
       }
-    });
-  }
 
-  // Reset form method
-  private resetCustomerForm(): void {
-    this.customer.get('customerName')?.setErrors(null);
-    this.customer.get('telephone')?.setErrors(null);
-    this.customer.get('email')?.setErrors(null);
-    this.customer.get('digitalServiceId')?.setErrors(null);
+      return this.customerService.upsertCustomer(this.customer.value);
+    }),
 
-    this.customer.patchValue({
-      customerId: [0],
-      customerName: [''],
-      customerType: [],
-      customerTag: [],
-      organizationNo: [],
-      vatId: [],
-      invoiceCreditDays: [0],
-      isCreditAllowed: [true],
-      telephone: [],
-      email: [''],
-      digitalServiceId: [''],
-    });
-    this.clearFieldErrors();
-  }
+    finalize(() => {
+      this.showCustomerSpinner = false;
+    })
+  ).subscribe({
+    next: (res: any) => {
+      if (res === true) {
+          this.workOrder.patchValue({ 
+            customerId: this.customer.get('customerId')?.value,
+            customerName: this.customer.get('customerName')?.value,
+            customerTelephone: this.customer.get('telephone')?.value,
+            customerEmail: this.customer.get('email')?.value
+          });  
+          this.selectedCustomerName = this.customer.get('customerName')?.value;
+          this.messageService.add({
+            severity: 'success',
+            summary: this.sharedService.T('success'),
+            icon: 'pi pi-check-circle',
+            life: 6000
+          });
+          this.customerPopup.hide();
+      } else {
+        // Backend returned something unexpected
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Something went wrong while saving the customer!',
+          life: 6000,
+        });
+      }
+    },
+    error: (err) => {
+      this.logger.error('upsertCustomer pipeline error', err);
+    }
+  });
+}
 
-  //(copy from customer-input)
-
-
-  filterCustomer(event: any) {
+filterCustomer(event: any) {
     let query = event.query;
     this.customerService
       .getCustomerByPrefix(query)
@@ -866,6 +760,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.selectedCustomerName = null;
   }
 
+  onCancelCreateCustomer() {
+    this.customerPopup.hide();
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

@@ -15,6 +15,7 @@ import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-employee-crud',
@@ -29,7 +30,8 @@ import { ToastModule } from 'primeng/toast';
     DatePickerModule,
     ProgressSpinnerModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    TextareaModule
   ],
   templateUrl: './employee-crud.component.html',
   styleUrls: ['./employee-crud.component.css'],
@@ -45,14 +47,6 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
 
   duplicateNameMessage: string = '';
 
-  // Dropdown Options
-  readonly calendarColorOptions = [
-    { text: '🔵 Blue', value: 'blue' },
-    { text: '🟢 Green', value: '#579467' },
-    { text: '🔴 Red', value: 'red' },
-    { text: '🟡 Yellow', value: 'yellow' },
-    { text: '🟣 Purple', value: 'purple' }
-  ];
   activeOptions = [
     { text: 'Active', value: true },
     { text: 'Inactive', value: false }
@@ -67,10 +61,28 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
     private messageService: MessageService, 
     private route: ActivatedRoute,
     
-  ) { }
+  ) { 
+  this.employee = this.fb.group({
+      employeeId: [0, [Validators.required]],
+      personNumber: ['', [Validators.required]],
+      fullName: ['', [Validators.required]],
+      jobTitle: this.sharedService.getDefaultEnum('jobTitle').value,
+      hireDate: ['', [Validators.required]],
+      terminationDate: [''],
+      monthlySalary: [0],
+      street: [''],
+      postNo: [''],
+      city: [''],
+      country: this.sharedService.getDefaultEnum('country').value,
+      telephone: ['',[Validators.required]],
+      email: ['', [Validators.email]],
+      skills: [''],
+      certifications: [''],
+      isActive: [true],
+      isUpdate: false
+    });
+  
 
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   checkNameAvailability(fullName: string): Promise<boolean> {
@@ -99,38 +111,6 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     const employeeId = Number(this.route.snapshot.params['id']);
-    this.initializeForm();
-    this.loadEmployeeData(employeeId);
-  }
-
-  initializeForm(): void {
-    this.employee = this.fb.group({
-      employeeId: [0, [Validators.required]],
-      personNumber: ['', [Validators.required]],
-      fullName: ['', [Validators.required]],
-      friendlyName: [''],
-      jobTitle: ['', [Validators.required]],
-      hireDate: ['', [Validators.required]],
-      terminationDate: [''],
-      monthlySalary: [0],
-      calendarColor: [''],
-      street: [''],
-      postNo: [''],
-      city: [''],
-      country: [''],
-      telephone: [''],
-      email: ['', [Validators.email]],
-      skills: [''],
-      certifications: [''],
-      employeeCountry: [''],
-      isActive: [true],
-      isUpdate: false
-    });
-  }
-
-  loadEmployeeData(employeeId: number): void {
-    this.logger.info('Loading Employee Data:');
-    this.isLoading = true;
     this.employeeService.getEmployee(employeeId)
       .pipe(
         finalize(() => { this.isLoading = false; }),
@@ -139,52 +119,39 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: any) => {
           if (response) {
-            this.logger.info('Loaded Employee Data:');
-            this.logger.info(response.data);
-            this.employee.patchValue(response.data);
             this.isNewObject = response.isNewObject;
+            if(this.isNewObject){
+              this.employee.patchValue({employeeId: response.data.employeeId, isActive: true});
+            } else {
+            this.employee.patchValue(response.data);
+            }
           }
         },
         error: (err) => {
           this.logger.error('Error loading employee:', err);
         }
       });
+
+
   }
 
-  setPageHeaderForCreate(): void {
-  }
-
-  onFullNameFocus() {
-    this.duplicateNameMessage = '';
-  }
 
   async onFormSubmit() {
-    this.employee.markAllAsTouched();
 
-    // Validate required fields
     if (this.employee.invalid) {
-      if (this.employee.get('fullName')?.hasError('required')) {
-        this.showError('Full Name is required.');
-      } else if (this.employee.get('personNumber')?.hasError('required')) {
-        this.showError('Person Number is required.');
-      } else if (this.employee.get('jobTitle')?.hasError('required')) {
-        this.showError('Job Title is required.');
-      } else if (this.employee.get('hireDate')?.hasError('required')) {
-        this.showError('Hire Date is required.');
-      } else if (this.employee.get('email')?.hasError('email')) {
-        this.showError('Please enter a valid Digital Workshop (e.g. workshop@example.com)');
-      } else {
-        this.showError('Please fill all required fields correctly.');
-      }
-      this.scrollToTop();
+      this.employee.markAllAsTouched();
       return;
     }
 
     // Validate 12-digit Person Number
     const personNumber = this.employee.get('personNumber')?.value;
     if (personNumber && personNumber.length !== 12) {
-      this.showError('Person Number must be exactly 12 digits.');
-      this.scrollToTop();
+      this.messageService.add({
+              severity: 'error',
+              summary: this.sharedService.T('error'),
+              detail: this.sharedService.T('Person Number must be exactly 12 digits.'),
+              life: 8000
+            });
       return;
     }
 
@@ -192,21 +159,27 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
     if (this.isNewObject) {
       const fullName = this.employee.get('fullName')?.value?.trim();
       if (fullName) {
-        this.isCheckingName = true;
         try {
           const exists = await this.checkNameAvailability(fullName);
           this.isCheckingName = false;
 
           if (exists) {
-            this.duplicateNameMessage = 'An employee with this name already exists.';
-            this.showError(this.duplicateNameMessage);
-            this.scrollToTop();
+            this.messageService.add({
+              severity: 'error',
+              summary: this.sharedService.T('error'),
+              detail: this.sharedService.T('employee name already exists.'),
+              life: 8000
+            });
+
             return;
           }
         } catch (error) {
-          this.isCheckingName = false;
-          console.error('Error checking name:', error);
-          this.showError('Error while checking employee name. Please try again.');
+            this.messageService.add({
+              severity: 'error',
+              summary: this.sharedService.T('error'),
+              detail: this.sharedService.T('genericErrorContactSupport'),
+              life: 8000
+            });
           return;
         }
       }
@@ -225,45 +198,31 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
           if (res) {
             const empRes = res as IEmployee;
             const name = empRes.fullName || employee.fullName || 'Employee';
-
-            this.showSuccess(
-              this.isNewObject
-                ? `Employee "${name}" has been created successfully`
-                : `Employee "${name}" has been updated successfully`
-            );
-
-            this.scrollToTop();
-
-            // Navigate immediately after confirming success
+            this.messageService.add({       
+              severity: 'success',
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle',
+              life: 6000,
+            });
             this.router.navigate(['sv/employee']);
           } else {
-            this.showError('Failed to save employee.');
-            this.scrollToTop();
+            this.messageService.add({
+              severity: 'error',
+              summary: this.sharedService.T('error'),
+              detail: this.sharedService.T('genericErrorContactSupport'),
+              life: 8000
+            });
           }
         },
         error: (error) => {
-          this.logger.error('Error while saving employee:', error);
-          this.showError('Error occurred while saving employee.');
+            this.messageService.add({
+              severity: 'error',
+              summary: this.sharedService.T('error'),
+              detail: this.sharedService.T('genericErrorContactSupport'),
+              life: 8000
+            });
         }
       });
-  }
-
-  showError(message: string) {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Validation Error',
-      detail: message,
-      life: 8000
-    });
-  }
-
-  showSuccess(message: string) {
-    this.messageService.add({
-      severity: 'success',
-      summary: this.sharedService.T('success'),
-      icon: 'pi pi-check-circle',
-      life: 8000
-    });
   }
 
   onCancelForm() {
@@ -283,24 +242,6 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
   }
 
   onPersonNumberKeyPress(event: KeyboardEvent) {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode < 48 || charCode > 57) {
-      event.preventDefault();
-    }
-  }
-
-  onTelephoneInput(event: any) {
-    const value = event.target.value.replace(/\D/g, '');
-    this.employee.get('telephone')?.setValue(value, { emitEvent: false });
-
-    if (value.length > 0 && value.length < 7) {
-      this.employee.get('telephone')?.setErrors({ invalidTelephone: true });
-    } else {
-      this.employee.get('telephone')?.setErrors(null);
-    }
-  }
-
-  onTelephoneKeyPress(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();

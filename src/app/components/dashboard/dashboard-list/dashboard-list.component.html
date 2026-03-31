@@ -141,7 +141,7 @@
             <!-- <div class="bg-lightBlue h-2.5 rounded-full" [style.width.%]="(currentMonthSale / currentMonthSaleTarget) * 100"></div> -->
           <p-progressbar [value]="progressPercentage" />
           </div>
-          <p class="text-xs text-gray-500">{{ percentage | number:'1.0-0' }}% {{this.sharedService.T('achieved')}}</p>
+          <p class="text-xs text-gray-500">{{ progressPercentage }}% {{this.sharedService.T('achieved')}}</p>
         </div>
       </div>
     </div>

@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   invalidMessage: string = '';
   isDialogVisible: boolean = false;
   isLoading: boolean = false; // Loader control variable
-  imagesUrl = environment.production ? `${environment.CDN_URL}/images/` : 'assets/images/';
+  imagesUrl = 'assets/images/';
   
   
   mobileMenuOpen = false;

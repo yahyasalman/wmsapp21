@@ -1,0 +1,1592 @@
+[
+    {
+        "data-description": "Bränsletrycksensor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Bromsbelägg bak (alla)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Bromsbelägg fram (alla)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Bromsljuskontakt",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Bromsok, bakre (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.3
+    },
+    {
+        "data-description": "Bromsok, bakre (ett)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Bromsok, främre (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Bromsok, främre (ett)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Bromsservo - högerstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Bromsservo - vänsterstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Bromsskivor bak (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Bromsskivor bak (båda) - inklusive belägg",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.3
+    },
+    {
+        "data-description": "Bromsskivor fram (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Bromsskivor fram (båda) - inklusive belägg",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Bromsslang, bakre (en)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Bromsslang, främre (en)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Bytesmotor, kompl.",
+        "data-action": "Dem.\/mon.",
+        "data-time": 13.8
+    },
+    {
+        "data-description": "Bytesmotor, kompl. - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 13.7
+    },
+    {
+        "data-description": "Central styrenhet (CPU)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Cigarettändare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Cylinderlock - flyttning detaljer",
+        "data-action": "Isär\/ihop",
+        "data-time": 10.4
+    },
+    {
+        "data-description": "Cylinderlockspackning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 7.9
+    },
+    {
+        "data-description": "Dieselpartikelfilter",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.0
+    },
+    {
+        "data-description": "Dimstrålkastare - en",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Dörrspegel - en",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Drev, hastighetsmätare (drivande)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 4.9
+    },
+    {
+        "data-description": "Drev, hastighetsmätare (drivet)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 4.9
+    },
+    {
+        "data-description": "Drivaxel - höger",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Drivaxel - höger - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Drivaxel - vänster",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Drivaxel - vänster - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Drivaxelknut, inre - höger",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Drivaxelknut, inre - höger - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Drivaxelknut, inre - vänster",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Drivaxelknut, inre - vänster - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Drivaxelknut, yttre - höger",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Drivaxelknut, yttre - höger - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Drivaxelknut, yttre - vänster",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Drivaxelknut, yttre - vänster - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Drivaxelns inre tätning - höger",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.0
+    },
+    {
+        "data-description": "Drivaxelns inre tätning - höger - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.6
+    },
+    {
+        "data-description": "Drivaxelns inre tätning - vänster",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Drivaxelns inre tätning - vänster - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Expansionstank",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Expansionsventil - fram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.2
+    },
+    {
+        "data-description": "Fjäder",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Fjäder (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.6
+    },
+    {
+        "data-description": "Fjäderben kompl.",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Fjäderben kompl. (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.5
+    },
+    {
+        "data-description": "Fjädringsstyrdon",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Förångare - fram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 8.3
+    },
+    {
+        "data-description": "Förångare - fram - vänsterstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 8.3
+    },
+    {
+        "data-description": "Främre bilbälte",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Främre stötfångare - komplett",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Främre stötfångare - komplett",
+        "data-action": "Dem.\/byt",
+        "data-time": 2.2
+    },
+    {
+        "data-description": "Gaspedal - högerstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Gaspedal - vänsterstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Gasurladdningsstrålkastare - båda",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.6
+    },
+    {
+        "data-description": "Gasurladdningsstrålkastare - en",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.3
+    },
+    {
+        "data-description": "Generator",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.2
+    },
+    {
+        "data-description": "Geometri, hela bilen",
+        "data-action": "Kont.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Givare, luftflöde\/luftmassa",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Givare, motorvarvtal",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Glödlampa för blinkers, fram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Glödlampa för gasurladdningsstrålkastare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Glödningsrelä (ett)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Glödstift (alla)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Gummidamask, inre drivaxelknut - höger",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.6
+    },
+    {
+        "data-description": "Gummidamask, inre drivaxelknut - höger - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Gummidamask, inre drivaxelknut - vänster",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.6
+    },
+    {
+        "data-description": "Gummidamask, inre drivaxelknut - vänster - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Gummidamask, yttre drivaxelknut - höger",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.6
+    },
+    {
+        "data-description": "Gummidamask, yttre drivaxelknut - höger - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Gummidamask, yttre drivaxelknut - vänster",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.6
+    },
+    {
+        "data-description": "Gummidamask, yttre drivaxelknut - vänster - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Gummidamasker, kuggstång",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Gummidamasker, kuggstång (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Hissmotor, bakruta",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Hissmotor, framruta",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Hjälpaggregatdrivrem",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Hjälpaggregatdrivremmens spännare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Hjälpram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 5.1
+    },
+    {
+        "data-description": "Hjälpram\/tvärbalk",
+        "data-action": "Dem.\/mon.",
+        "data-time": 3.9
+    },
+    {
+        "data-description": "Hjul",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Hjul (alla)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Hjul (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Hjulinställning bak (toe-in)",
+        "data-action": "Kont.\/just.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Hjulinställning fram (toe-in)",
+        "data-action": "Kont.\/just.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Hjulsensor - bak (en)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Hjulsensor - fram (en)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Högtryckspump (common rail)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.4
+    },
+    {
+        "data-description": "Huvudcylinder - högerstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Huvudcylinder - vänsterstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.7
+    },
+    {
+        "data-description": "Huvudcylinder, högerstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Huvudcylinder, vänsterstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Hydrauliskt manöversystem",
+        "data-action": "Lufta",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Hydraulsystem",
+        "data-action": "Lufta",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Inloppsgrenrör",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Innerbelysning - bak",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Innerbelysning - fram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Insprutare (alla)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Instrumentpanel",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Kamaxellägessensor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Kamaxelns främre tätning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.3
+    },
+    {
+        "data-description": "Kamaxlar (båda\/alla)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 4.3
+    },
+    {
+        "data-description": "Kamrem",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.9
+    },
+    {
+        "data-description": "Kartläsarlampa",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Katalysator",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Komplett värmepaket",
+        "data-action": "Dem.\/mon.",
+        "data-time": 7.6
+    },
+    {
+        "data-description": "Kompressionsprov",
+        "data-action": "Kont.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Kompressor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 3.1
+    },
+    {
+        "data-description": "Kompressor för luftfjädring",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Kondensor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.8
+    },
+    {
+        "data-description": "Krockkudde - förare",
+        "data-action": "Dem.\/byt",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Krockkudde - passagerare",
+        "data-action": "Dem.\/byt",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Kupéfilter",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Kylare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.8
+    },
+    {
+        "data-description": "Kylfläkt",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Kylvätska\/frostskydd",
+        "data-action": "Tappa\/fyll",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Laddluftkylare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Lambdasensor - bakre",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Lambdasensor - fram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Lamell, tryckplatta och lager",
+        "data-action": "Dem.\/mon.",
+        "data-time": 8.5
+    },
+    {
+        "data-description": "Lampa, framdörr",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Låscylinder, handskfack",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Ledning, kompressor till kondensor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.5
+    },
+    {
+        "data-description": "Luftfilterenhet",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Luftfilterinsats",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Luftfjädringsbehållare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Magnetventil\/manöverdon, centrallås bak",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Magnetventil\/manöverdon, centrallås baklucka",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Magnetventil\/manöverdon, centrallås fram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Manövercylinder",
+        "data-action": "Dem.\/mon.",
+        "data-time": 7.9
+    },
+    {
+        "data-description": "Manöversystem",
+        "data-action": "Kont.\/just.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "MAP-sensor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Modulator",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.2
+    },
+    {
+        "data-description": "Motor för backspeglar",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Motor för sollucka",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Motor för strålkastarspolare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Motor, enbart",
+        "data-action": "Dem.\/mon.",
+        "data-time": 8.2
+    },
+    {
+        "data-description": "Motor, enbart - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 8.0
+    },
+    {
+        "data-description": "Motorfäste - bakre",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.3
+    },
+    {
+        "data-description": "Motorfäste - främre",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Motorhuvens frigöringsvajer",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Motorolja",
+        "data-action": "Byte",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Motorolja och filter",
+        "data-action": "Byte",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Nedre länkarm",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Nedre länkarm, bak",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Nedre länkarm, bak (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.5
+    },
+    {
+        "data-description": "Nedre länkarm, bak - bussning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Nedre länkarm, fram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Automatväxellådsolja",
+        "data-action": "Tappa\/fyll",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Avgasåterledningskylare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.3
+    },
+    {
+        "data-description": "Avgasåterledningsventil",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.3
+    },
+    {
+        "data-description": "Avgasgrenrör",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.2
+    },
+    {
+        "data-description": "Avgasmottryckssensor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Axeltapp",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Axeltapp (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.5
+    },
+    {
+        "data-description": "Axlar, växelväljare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Bagagerumslampa",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Bakljusgrupp",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Bakre bilbälte - mittre",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Bakre bilbälte - yttre",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Bakre rördel\/ljuddämpare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Bakre sidoruta",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Bakre stötfångare - komplett",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Bakre stötfångare - komplett",
+        "data-action": "Dem.\/byt",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Bakruta",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Balansaxel",
+        "data-action": "Dem.\/mon.",
+        "data-time": 4.9
+    },
+    {
+        "data-description": "Bärarm, nedre (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.9
+    },
+    {
+        "data-description": "Bärstag (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 3.1
+    },
+    {
+        "data-description": "Batteri",
+        "data-action": "Kont.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Batteri",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Bilbälteslås - fram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Bilbälteslås - mittre bak",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Bilbälteslås - yttre bak",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Blinkers - en",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Bränslefilter",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Bränslefilter (serie)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Bränslefördelningsrör",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Bränslenivåsensor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Bränslepump - i tank",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Bränsletank",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.5
+    },
+    {
+        "data-description": "Nedre länkarm, fram (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Nedre länkarm, fram - bussning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Oljefilter",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Oljepump",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.6
+    },
+    {
+        "data-description": "Oljetråg",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.3
+    },
+    {
+        "data-description": "Oljetryck",
+        "data-action": "Kont.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Oljetrycksgivare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Övre länkarm",
+        "data-action": "Dem.\/mon.",
+        "data-time": 3.0
+    },
+    {
+        "data-description": "Övre länkarm, fram",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Övre länkarm, fram - båda",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Packning för avgasgrenrör",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.2
+    },
+    {
+        "data-description": "Packning för inloppsgrenrör",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Parkeringsbromsmanöverdon",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Parkeringsbromsmanöverdon - båda",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Pedalbussning - högerstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Pedalbussning - vänsterstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Provtryckning av system",
+        "data-action": "Kont.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Radio\/kassettenhet",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.3
+    },
+    {
+        "data-description": "Ratt",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Rattlås",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Relä-\/säkringsdosa (kombinerad)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Returfjäder, pedal",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Sensor, omgivningstemperatur",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Signalhorn",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.3
+    },
+    {
+        "data-description": "Skyltbelysning - en",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Solsensor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Spänningsregulator",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.3
+    },
+    {
+        "data-description": "Spegelglas och fäste",
+        "data-action": "Dem.\/byt",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Spindelled - nedre",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Spindelled - nedre (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Spjällhus",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Spoiler",
+        "data-action": "Dem.\/byt",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Spolarbehållare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Spolarmotor (främre)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Spolarmunstycke",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Spolarmunstycke - båda",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.6
+    },
+    {
+        "data-description": "Startmotor - med dragmagnet",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.9
+    },
+    {
+        "data-description": "Stötdämpare (par) - luftfjädring",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Stötdämpare - luftfjädring",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Stötfångargrill",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Strålkastare - båda",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.4
+    },
+    {
+        "data-description": "Strålkastare - en",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Strålkastarglas - båda",
+        "data-action": "Dem.\/byt",
+        "data-time": 2.7
+    },
+    {
+        "data-description": "Strålkastarglas - ett",
+        "data-action": "Dem.\/byt",
+        "data-time": 2.0
+    },
+    {
+        "data-description": "Strålkastarinställning",
+        "data-action": "Kont.\/just.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Strömställare blinkers",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Strömställare, backljus",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Strömställare, torkare\/spolning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Styrdon",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.7
+    },
+    {
+        "data-description": "Styrdon för aktivt kurvljus - ett",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.5
+    },
+    {
+        "data-description": "Styrdon för krockkuddar",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Styrled",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Styrled (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Styrled (båda) - utan hjulinställning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Styrled - utan hjulinställning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Styrstag",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Styrstag (båda)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.2
+    },
+    {
+        "data-description": "Styrstag (båda) - utan hjulinställning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Styrstag - utan hjulinställning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Styrväxel",
+        "data-action": "Dem.\/mon.",
+        "data-time": 3.9
+    },
+    {
+        "data-description": "System, evakuering\/fyllning",
+        "data-action": "Kont.\/just.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "System, läcktest",
+        "data-action": "Kont.\/just.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Takantenn",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Tätning, ingående axel",
+        "data-action": "Dem.\/mon.",
+        "data-time": 8.0
+    },
+    {
+        "data-description": "Temperatursensor - fram - vänster",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Termostat",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Torkararm - båda",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Torkarblad - båda",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Torkarlänkage",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Torpedplåt",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Turbokompressor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.2
+    },
+    {
+        "data-description": "Uppblåsbar gardin - en",
+        "data-action": "Dem.\/byt",
+        "data-time": 3.0
+    },
+    {
+        "data-description": "Vakuumpump (diesel)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Vakuumslang till inloppsrör",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Värmeelement - högerstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 7.1
+    },
+    {
+        "data-description": "Värmeelement - vänsterstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 7.1
+    },
+    {
+        "data-description": "Värmefläktmotor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Varnarkontakt för parkeringsbroms",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Service",
+        "data-action": "",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Vätskebehållare (separat)",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Vätskebehållare (separat) - vänsterstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Vätskefiltertorkare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.9
+    },
+    {
+        "data-description": "Vattenpump",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.5
+    },
+    {
+        "data-description": "Växellådsolja - byte",
+        "data-action": "Tappa\/fyll",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Växellänkage",
+        "data-action": "Kont.\/just.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Växellänkage",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.6
+    },
+    {
+        "data-description": "Växelväljare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 3.2
+    },
+    {
+        "data-description": "Växlingsarm",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Vevaxelns bakre tätning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 8.3
+    },
+    {
+        "data-description": "Vevaxelns bakre tätning - AT",
+        "data-action": "Dem.\/mon.",
+        "data-time": 8.0
+    },
+    {
+        "data-description": "Vevaxelns främre tätning",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.2
+    },
+    {
+        "data-description": "Vevaxelns remskiva",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.5
+    },
+    {
+        "data-description": "Vevaxelns remskiva - svängningsdämpare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.5
+    },
+    {
+        "data-description": "Vevhusventilation",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Vindrute",
+        "data-action": "Dem.\/byt",
+        "data-time": 3.0
+    },
+    {
+        "data-description": "Vindrutetorkarmotor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Waste gate manöverdon",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Dörruta-Framdörr",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Dörruta-Bakdörr",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Fönsterhissmekanism-Bakdörr",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Fönsterhissmekanism-Framdörr",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Hjulnav, kompl.-Framaxel",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.5
+    },
+    {
+        "data-description": "Hjulnav, kompl.-Bakaxel",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.1
+    },
+    {
+        "data-description": "Hjulnav, kompl. (båda)-Bakaxel",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.1
+    },
+    {
+        "data-description": "Hjulnav, kompl. (båda)-Framaxel",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Krängningshämmare-Främre fjädringssystem",
+        "data-action": "Dem.\/mon.",
+        "data-time": 3.0
+    },
+    {
+        "data-description": "Krängningshämmare-Bakre fjädringssystem",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Krängningshämmare - yttre stag-Bakre ",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Krängningshämmare - yttre stag-Främre",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Krängningshämmare - yttre stag (båda)-Främre ",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Krängningshämmare - yttre stag (båda)-Bakre ",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Kylvätsketemperatursensor",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Låscylinder-Framdörr",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Låscylinder-Baklucka",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Oljekylare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 2.0
+    },
+    {
+        "data-description": "Pedal - högerstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.6
+    },
+    {
+        "data-description": "Pedal - vänsterstyrd",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Spolarmunstycke - ett",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.3
+    },
+    {
+        "data-description": "Stötdämpare-Bakre fjädringssystem",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.4
+    },
+    {
+        "data-description": "Stötdämpare-Främre fjädringssystem",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.8
+    },
+    {
+        "data-description": "Stötdämpare (par)-Främre fjädringssystem",
+        "data-action": "Dem.\/mon.",
+        "data-time": 1.6
+    },
+    {
+        "data-description": "Stötdämpare (par)-Bakre fjädringssystem",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.7
+    },
+    {
+        "data-description": "Styrenhet",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.9
+    },
+    {
+        "data-description": "Torkararm-Vindrutetorkare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Torkararm-Bakrutetorkare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.2
+    },
+    {
+        "data-description": "Torkarblad-Bakrutetorkare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Torkarblad-Vindrutetorkare",
+        "data-action": "Dem.\/mon.",
+        "data-time": 0.1
+    },
+    {
+        "data-description": "Växellåda-Växellåda och kopplingshus",
+        "data-action": "Dem.\/mon.",
+        "data-time": 7.7
+    },
+    {
+        "data-description": "A\/C Service",
+        "data-action": "ink. 150g",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Arbetskostnad",
+        "data-action": "ink. förbrukningsmaterial",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "däckförvaring ",
+        "data-action": "1 säsong",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "däckomläggning",
+        "data-action": "",
+        "data-time": 4.0
+    },
+    {
+        "data-description": "Hjulbyte",
+        "data-action": "",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Hjulinställning",
+        "data-action": "",
+        "data-time": 1.0
+    },
+    {
+        "data-description": "Felsökning",
+        "data-action": "mindre end 1 time",
+        "data-time": 1.0
+    }
+]

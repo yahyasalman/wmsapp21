@@ -9,9 +9,10 @@ export const LOG_LEVEL = {
 
 export const environment = {
     production: false,
-    CDN_URL:'https://resources-aqafbng2e5acccgu.z01.azurefd.net',
     //BASE_URL:'https://wmstestapi-addgaegmecamcyb4.westeurope-01.azurewebsites.net',
     BASE_URL:'https://localhost:7061',
     logLevel: LOG_LEVEL.debug,
     Version:'2.13T'
   };
+
+  //CDN_URL:'https://resources-aqafbng2e5acccgu.z01.azurefd.net',

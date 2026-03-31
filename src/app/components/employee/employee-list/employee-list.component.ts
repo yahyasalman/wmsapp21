@@ -58,42 +58,19 @@ export class EmployeeListComponent implements OnDestroy {
   getEmployees() {
     this.isLoading = true;
     this.employeeService
-      .getEmployees(this.filters)
+      .getAllEmployees()
       .pipe(
         finalize(() => { this.isLoading = false; }),
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (res) => {
-          const objectData: any = res.objectList;
-          this.employees = objectData;
+          this.employees = res;
         },
         error: (err) => {
           this.logger.error(err);
         }
       });
-  }
-
-
-  onPageChange(e: any) {
-    this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-    this.getEmployees();
-  }
-
-  onPageSizeChange(event: any) {
-    this.filters.patchValue({ pageSize: event.value });
-     this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getEmployees();
-  }
-
-  sortColumn(e: any) {
-    if (e) {
-      let pageIndex = e.first / e.rows;
-      this.pager.firstPage = e.first;
-      this.filters.patchValue({ currentPage: (++pageIndex).toString(), pageSize: e.rows, sortDir: e.sortOrder, sortBy: e.sortField });
-       this.sharedService.updateFiltersInNavigation(this.filters);
-      this.getEmployees();
-    }
   }
 
   deleteEmployee(employeeId: number) {
@@ -124,7 +101,7 @@ export class EmployeeListComponent implements OnDestroy {
   }
 
   redirectToEmployeeCrudComponent() {
-    this.router.navigate(['sv/employee/crud', 0]);
+    this.router.navigate(['sv/employee/crud']);
   }
 
   loadFilterOptions(): void {

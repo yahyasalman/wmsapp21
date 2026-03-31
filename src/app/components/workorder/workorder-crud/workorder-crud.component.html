@@ -1,8 +1,8 @@
-<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+<!-- <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
     <div class="bg-white rounded-lg p-8 shadow-lg">
     <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
     </div>
-</div>
+</div> -->
 <!-- header start -->
 <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
   <div class="">
@@ -69,7 +69,7 @@
         <label class="block mb-2">{{ this.sharedService.T('customerName') }}</label>
         <div class="col-span-3">
                     <p-iconfield>
-                    <p-inputicon class=" icon-primary pi pi-users" />
+                    <p-inputicon class=" icon-primary pi pi-user" />
 
           <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
             [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
@@ -110,10 +110,9 @@
                 </div>
                 <!-- Customer Name -->
                 <div class="mb-6">
-                  <label class="block mb-2" for="customerName">{{ this.sharedService.T('customerName') }}
-                    <span class="text-red-500">*</span></label>
+                  <label class="block mb-2" for="customerName">{{ this.sharedService.T('customerName') }}</label>
                   <input type="text" formControlName="customerName"
-                    [invalid]="customer.get('customerName')?.touched && customer.get('customerName')?.errors"
+                    [invalid]="!customer.get('customerName')?.value || duplicateCustomerName"
                     class="w-full" pInputText />
 
                 </div>
@@ -121,14 +120,14 @@
                 <div class="grid grid-cols-2 gap-6">
                   <div class="mb-6">
                     <label class="block mb-2" for="organizationNo">{{
-                      this.sharedService.T('organizationNr')
+                      this.sharedService.T('organizationNumber')
                       }}</label>
                     <input type="text" formControlName="organizationNo"
                        class="w-full"
                       pInputText />
                   </div>
                   <div class="mb-6">
-                    <label class="block mb-2" for="vatId">{{ this.sharedService.T('vatregNr') }}</label>
+                    <label class="block mb-2" for="vatId">{{ this.sharedService.T('vatRegistrationNumber') }}</label>
                     <input type="text" formControlName="vatId"
                       class="w-full" pInputText />
                   </div>
@@ -167,8 +166,16 @@
 
                 </div>
                 <div class="mb-6">
-                  <p-button [raised]="true" label="{{ this.sharedService.T('createCustomer') }}" size="large"
-                    icon="pi pi-plus" (click)="onCreateCustomer()"></p-button>
+                  <p-button 
+                  [raised]="true" 
+                  label="{{ this.sharedService.T('createCustomer') }}" 
+                  size="large"
+                  icon="{{ showCustomerSpinner ? 'pi pi-spinner pi-spin' : 'pi pi-plus' }}" 
+                  (click)="saveCustomer()"
+                  [disabled]="showCustomerSpinner"
+                  ></p-button>
+
+
 
                   <p-button size="large" severity="secondary" class="ms-4" label="{{ this.sharedService.T('cancel') }}"
                     (click)="onCancelCreateCustomer()"></p-button>
@@ -209,10 +216,10 @@
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('Verkstadstjänster') }}</label>
 
-        <p-multiselect *ngIf="services && services.length" [options]="services" [(ngModel)]="selectedServices"
+        <p-multiselect [options]="services" [(ngModel)]="selectedServices"
           [ngModelOptions]="{ standalone: true }" optionLabel="productName" placeholder="select"
           (onChange)="onSelectService($event)" [maxSelectedLabels]="5" class="w-full"
-          [invalid]="!this.workOrder.get('selectedServices')?.value || this.workOrder.get('selectedServices')?.value.length === 0"   />
+          [invalid]="selectedServices.length === 0"   />
 
 
       </div>
@@ -320,8 +327,10 @@
     <div class="mt-4">
       <p-button [raised]="true"
         label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }} {{ this.sharedService.T('workorder') }}"
-        icon="pi pi-plus" size="large" (click)="onFormSubmit()"></p-button>
-      <p-button size="large" severity="secondary" class="ms-4" label="{{ this.sharedService.T('cancel') }}"
+        icon="{{ showSpinner ? 'pi pi-spinner pi-spin' : 'pi pi-plus' }}" 
+        [disabled]="showSpinner"
+        size="large" (click)="saveWorkOrder()"></p-button>
+        <p-button size="large" severity="secondary" class="ms-4" label="{{ this.sharedService.T('cancel') }}"
         (click)="onCancelForm()"></p-button>
     </div>
   </div>
